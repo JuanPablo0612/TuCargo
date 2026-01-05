@@ -9,13 +9,23 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TextFieldLabelPosition
 import androidx.compose.material3.TextFieldLabelScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+
+@Composable
+private fun textFieldColors() = TextFieldDefaults.colors(
+    errorIndicatorColor = Color.Transparent,
+    focusedIndicatorColor = Color.Transparent,
+    unfocusedIndicatorColor = Color.Transparent,
+    disabledIndicatorColor = Color.Transparent,
+)
+
+@Composable
+private fun textFieldShape() = MaterialTheme.shapes.large
 
 @Composable
 fun RoundedTextField(
@@ -56,13 +66,8 @@ fun RoundedTextField(
         onKeyboardAction = onKeyboardAction,
         lineLimits = lineLimits,
         labelPosition = TextFieldLabelPosition.Above(),
-        shape = MaterialTheme.shapes.large,
-        colors = TextFieldDefaults.colors(
-            errorIndicatorColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-        )
+        shape = textFieldShape(),
+        colors = textFieldColors(),
     )
 }
 
@@ -97,12 +102,7 @@ fun SecureRoundedTextField(
         inputTransformation = inputTransformation,
         onKeyboardAction = onKeyboardAction,
         labelPosition = TextFieldLabelPosition.Above(),
-        shape = MaterialTheme.shapes.large,
-        colors = TextFieldDefaults.colors(
-            errorIndicatorColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-        )
+        shape = textFieldShape(),
+        colors = textFieldColors(),
     )
 }
