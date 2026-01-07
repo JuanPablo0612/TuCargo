@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +24,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.local_shipping
 import tucargo.composeapp.generated.resources.motorcycle
 import tucargo.composeapp.generated.resources.package_2
+import tucargo.composeapp.generated.resources.welcome_driver_button
+import tucargo.composeapp.generated.resources.welcome_send_cargo_button
+import tucargo.composeapp.generated.resources.welcome_subtitle
+import tucargo.composeapp.generated.resources.welcome_title
+import tucargo.composeapp.generated.resources.welcome_version
 
 @Composable
 fun WelcomeScreenContent() {
@@ -60,12 +65,12 @@ fun WelcomeScreenContent() {
                 )
             }
             Text(
-                text = "TuCargo",
+                text = stringResource(Res.string.welcome_title),
                 modifier = Modifier.padding(top = 16.dp),
                 style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold)
             )
             Text(
-                text = "Motorcycle Logistics",
+                text = stringResource(Res.string.welcome_subtitle),
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -81,7 +86,7 @@ fun WelcomeScreenContent() {
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = "I need to send cargo", modifier = Modifier.padding(vertical = 8.dp))
+                Text(text = stringResource(Res.string.welcome_send_cargo_button), modifier = Modifier.padding(vertical = 8.dp))
                 Spacer(modifier = Modifier.weight(1f))
             }
             OutlinedButton(
@@ -94,10 +99,10 @@ fun WelcomeScreenContent() {
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = "I am a driver", modifier = Modifier.padding(vertical = 8.dp))
+                Text(text = stringResource(Res.string.welcome_driver_button), modifier = Modifier.padding(vertical = 8.dp))
                 Spacer(modifier = Modifier.weight(1f))
             }
-            Text(text = "Version 1.0.0", modifier = Modifier.padding(vertical = 32.dp))
+            Text(text = stringResource(Res.string.welcome_version), modifier = Modifier.padding(vertical = 32.dp))
         }
     }
 }

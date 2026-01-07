@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name" translatable="false">TuCargo</string>
+    <string name="welcome_title">TuCargo</string>
+    <string name="welcome_subtitle">Motorcycle Logistics</string>
+    <string name="welcome_send_cargo_button">I need to send cargo</string>
+    <string name="welcome_driver_button">I am a driver</string>
+    <string name="welcome_version">Version 1.0.0</string>
+    <string name="login_title">Welcome Back</string>
+    <string name="login_subtitle">Log in to access your courier dashboard and start delivering.</string>
+    <string name="login_email_label">Email Address</string>
+    <string name="login_email_placeholder">courier@tucargo.com</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_password_placeholder">********</string>
+    <string name="login_login_button">Log In</string>
+    <string name="login_forgot_password_button">Forgot Password?</string>
+</resources>

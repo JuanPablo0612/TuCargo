@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_title">TuCargo</string>
+    <string name="welcome_subtitle">Logística en Motocicleta</string>
+    <string name="welcome_send_cargo_button">Necesito enviar una carga</string>
+    <string name="welcome_driver_button">Soy un conductor</string>
+    <string name="welcome_version">Versión 1.0.0</string>
+    <string name="login_title">Bienvenido de nuevo</string>
+    <string name="login_subtitle">Inicia sesión para acceder a tu panel de mensajería y comenzar a entregar.</string>
+    <string name="login_email_label">Correo electrónico</string>
+    <string name="login_email_placeholder">mensajero@tucargo.com</string>
+    <string name="login_password_label">Contraseña</string>
+    <string name="login_password_placeholder">********</string>
+    <string name="login_login_button">Iniciar Sesión</string>
+    <string name="login_forgot_password_button">¿Olvidaste tu contraseña?</string>
+</resources>

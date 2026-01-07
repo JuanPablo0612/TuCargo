@@ -27,9 +27,18 @@ import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.arrow_forward
+import tucargo.composeapp.generated.resources.login_email_label
+import tucargo.composeapp.generated.resources.login_email_placeholder
+import tucargo.composeapp.generated.resources.login_forgot_password_button
+import tucargo.composeapp.generated.resources.login_login_button
+import tucargo.composeapp.generated.resources.login_password_label
+import tucargo.composeapp.generated.resources.login_password_placeholder
+import tucargo.composeapp.generated.resources.login_subtitle
+import tucargo.composeapp.generated.resources.login_title
 import tucargo.composeapp.generated.resources.mail
 import tucargo.composeapp.generated.resources.motorcycle
 import tucargo.composeapp.generated.resources.visibility
@@ -64,12 +73,12 @@ fun LoginScreenContent(
         }
         Spacer(modifier = Modifier.height(32.dp))
         Text(
-            text = "Welcome Back",
+            text = stringResource(Res.string.login_title),
             modifier = Modifier.padding(bottom = 16.dp),
             style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold)
         )
         Text(
-            text = "Log in to access your courier dashboard and start delivering.",
+            text = stringResource(Res.string.login_subtitle),
             modifier = Modifier.padding(bottom = 32.dp),
             style = MaterialTheme.typography.bodyLarge
         )
@@ -78,12 +87,12 @@ fun LoginScreenContent(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             label = {
                 Text(
-                    text = "Email Address",
+                    text = stringResource(Res.string.login_email_label),
                     style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                 )
             },
             placeholder = {
-                Text(text = "courier@tucargo.com")
+                Text(text = stringResource(Res.string.login_email_placeholder))
             },
             trailingIcon = {
                 Icon(
@@ -97,12 +106,12 @@ fun LoginScreenContent(
             modifier = Modifier.fillMaxWidth(),
             label = {
                 Text(
-                    text = "Password",
+                    text = stringResource(Res.string.login_password_label),
                     style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                 )
             },
             placeholder = {
-                Text(text = "********")
+                Text(text = stringResource(Res.string.login_password_placeholder))
             },
             trailingIcon = {
                 Icon(
@@ -119,7 +128,7 @@ fun LoginScreenContent(
                 .padding(bottom = 16.dp)
         ) {
             Text(
-                text = "Log In",
+                text = stringResource(Res.string.login_login_button),
                 modifier = Modifier.padding(vertical = 8.dp),
             )
             Icon(
@@ -131,7 +140,7 @@ fun LoginScreenContent(
             onClick = onForgotPasswordClick,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Forgot Password?")
+            Text(text = stringResource(Res.string.login_forgot_password_button))
         }
     }
 }
