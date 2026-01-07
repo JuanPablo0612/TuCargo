@@ -29,10 +29,10 @@ import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import tucargo.composeapp.generated.resources.Res
-import tucargo.composeapp.generated.resources.arrow_forward_24px
-import tucargo.composeapp.generated.resources.mail_24
-import tucargo.composeapp.generated.resources.motorcycle_24
-import tucargo.composeapp.generated.resources.visibility_24px
+import tucargo.composeapp.generated.resources.arrow_forward
+import tucargo.composeapp.generated.resources.mail
+import tucargo.composeapp.generated.resources.motorcycle
+import tucargo.composeapp.generated.resources.visibility
 
 @Composable
 fun LoginScreenContent(
@@ -56,9 +56,9 @@ fun LoginScreenContent(
                 .padding(16.dp),
         ) {
             Icon(
-                painter = painterResource(Res.drawable.motorcycle_24),
+                painter = painterResource(Res.drawable.motorcycle),
                 contentDescription = null,
-                modifier = Modifier.size(30.dp),
+                modifier = Modifier.size(32.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
         }
@@ -87,7 +87,7 @@ fun LoginScreenContent(
             },
             trailingIcon = {
                 Icon(
-                    painter = painterResource(Res.drawable.mail_24),
+                    painter = painterResource(Res.drawable.mail),
                     contentDescription = null
                 )
             }
@@ -106,7 +106,7 @@ fun LoginScreenContent(
             },
             trailingIcon = {
                 Icon(
-                    painter = painterResource(Res.drawable.visibility_24px),
+                    painter = painterResource(Res.drawable.visibility),
                     contentDescription = null
                 )
             }
@@ -123,7 +123,7 @@ fun LoginScreenContent(
                 modifier = Modifier.padding(vertical = 8.dp),
             )
             Icon(
-                painter = painterResource(Res.drawable.arrow_forward_24px),
+                painter = painterResource(Res.drawable.arrow_forward),
                 contentDescription = null
             )
         }
