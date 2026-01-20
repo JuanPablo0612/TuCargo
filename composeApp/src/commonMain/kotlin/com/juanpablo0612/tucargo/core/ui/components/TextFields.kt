@@ -15,6 +15,7 @@ import androidx.compose.material3.TextFieldLabelScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 private fun textFieldColors() = TextFieldDefaults.colors(
@@ -85,6 +86,7 @@ fun SecureRoundedTextField(
     supportingText: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     inputTransformation: InputTransformation? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
     onKeyboardAction: KeyboardActionHandler? = null,
 ) {
     SecureTextField(
@@ -100,6 +102,7 @@ fun SecureRoundedTextField(
         supportingText = supportingText,
         isError = isError,
         inputTransformation = inputTransformation,
+        keyboardOptions = keyboardOptions.copy(autoCorrectEnabled = false),
         onKeyboardAction = onKeyboardAction,
         labelPosition = TextFieldLabelPosition.Above(),
         shape = textFieldShape(),
