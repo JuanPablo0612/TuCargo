@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
@@ -45,6 +46,16 @@ import tucargo.composeapp.generated.resources.login_title
 import tucargo.composeapp.generated.resources.mail
 import tucargo.composeapp.generated.resources.motorcycle
 import tucargo.composeapp.generated.resources.visibility
+
+@Composable
+fun LoginScreen(viewModel: LoginViewModel = viewModel(), onForgotPasswordClick: () -> Unit) {
+    LoginScreenContent(
+        emailState = viewModel.emailState,
+        passwordState = viewModel.passwordState,
+        onLoginClick = viewModel::onLogin,
+        onForgotPasswordClick = onForgotPasswordClick
+    )
+}
 
 @Composable
 fun LoginScreenContent(
