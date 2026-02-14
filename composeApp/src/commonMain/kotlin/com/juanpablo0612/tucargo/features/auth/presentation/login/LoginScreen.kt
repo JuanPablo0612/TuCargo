@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
@@ -32,7 +33,6 @@ import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.arrow_forward
 import tucargo.composeapp.generated.resources.login_email_label
