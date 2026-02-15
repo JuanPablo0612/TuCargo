@@ -18,12 +18,7 @@ fun App() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            LoginScreenContent(
-                emailState = rememberTextFieldState(),
-                passwordState = rememberTextFieldState(),
-                onLoginClick = {},
-                onForgotPasswordClick = {}
-            )
+
         }
     }
 }

@@ -26,7 +26,7 @@ private fun textFieldColors() = TextFieldDefaults.colors(
 )
 
 @Composable
-private fun textFieldShape() = MaterialTheme.shapes.medium
+private fun textFieldShape() = MaterialTheme.shapes.small
 
 @Composable
 fun RoundedTextField(

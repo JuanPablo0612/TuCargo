@@ -152,9 +152,8 @@ fun LoginScreenContent(
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = { onAction(LoginAction.Login) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium
         ) {
             Text(
                 text = stringResource(Res.string.login_login_button),
@@ -165,6 +164,7 @@ fun LoginScreenContent(
                 contentDescription = null
             )
         }
+        Spacer(modifier = Modifier.height(8.dp))
         TextButton(
             onClick = onForgotPasswordClick,
             modifier = Modifier.fillMaxWidth()
