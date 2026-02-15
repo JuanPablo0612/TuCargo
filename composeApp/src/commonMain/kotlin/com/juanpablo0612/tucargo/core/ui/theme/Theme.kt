@@ -260,6 +260,7 @@ fun TuCargoTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
+        shapes = AppShapes,
         typography = AppTypography,
         content = content
     )
