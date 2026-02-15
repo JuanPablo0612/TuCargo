@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
@@ -49,19 +51,22 @@ import tucargo.composeapp.generated.resources.visibility
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel = viewModel(), onForgotPasswordClick: () -> Unit) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LoginScreenContent(
+        uiState = uiState,
         emailState = viewModel.emailState,
         passwordState = viewModel.passwordState,
-        onLoginClick = viewModel::onLogin,
+        onAction = viewModel::onAction,
         onForgotPasswordClick = onForgotPasswordClick
     )
 }
 
 @Composable
 fun LoginScreenContent(
+    uiState: LoginState,
     emailState: TextFieldState,
     passwordState: TextFieldState,
-    onLoginClick: () -> Unit,
+    onAction: (LoginAction) -> Unit,
     onForgotPasswordClick: () -> Unit
 ) {
     Column(
@@ -114,7 +119,11 @@ fun LoginScreenContent(
                     contentDescription = null
                 )
             },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+            onKeyboardAction = { performDefaultAction ->
+                onAction(LoginAction.ValidateEmail)
+                performDefaultAction()
+            }
         )
         SecureRoundedTextField(
             state = passwordState,
@@ -134,11 +143,15 @@ fun LoginScreenContent(
                     contentDescription = null
                 )
             },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+            onKeyboardAction = { performDefaultAction ->
+                onAction(LoginAction.ValidatePassword)
+                performDefaultAction()
+            }
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = onLoginClick,
+            onClick = { onAction(LoginAction.Login) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
@@ -166,9 +179,10 @@ fun LoginScreenContent(
 fun LoginScreenContentPreview() {
     TuCargoTheme {
         LoginScreenContent(
+            uiState = LoginState(),
             emailState = rememberTextFieldState(),
             passwordState = rememberTextFieldState(),
-            onLoginClick = {},
+            onAction = {},
             onForgotPasswordClick = {}
         )
     }
