@@ -9,8 +9,12 @@
     <string name="login_subtitle">Log in to access your courier dashboard and start delivering.</string>
     <string name="login_email_label">Email Address</string>
     <string name="login_email_placeholder">courier@tucargo.com</string>
+    <string name="login_email_error">Please enter a valid email address</string>
     <string name="login_password_label">Password</string>
     <string name="login_password_placeholder">********</string>
+    <string name="login_password_error">Password must be at least 8 characters long</string>
     <string name="login_login_button">Log In</string>
     <string name="login_forgot_password_button">Forgot Password?</string>
+    <string name="login_invalid_credentials_error">Invalid email or password</string>
+    <string name="unknown_error">An unknown error occurred</string>
 </resources>

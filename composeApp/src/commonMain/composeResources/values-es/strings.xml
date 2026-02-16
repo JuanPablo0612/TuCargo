@@ -9,8 +9,12 @@
     <string name="login_subtitle">Inicia sesión para acceder a tu panel de mensajería y comenzar a entregar.</string>
     <string name="login_email_label">Correo electrónico</string>
     <string name="login_email_placeholder">mensajero@tucargo.com</string>
+    <string name="login_email_error">Por favor ingrese una dirección de correo electrónico válida</string>
     <string name="login_password_label">Contraseña</string>
     <string name="login_password_placeholder">********</string>
+    <string name="login_password_error">La contraseña debe tener al menos 8 caracteres</string>
     <string name="login_login_button">Iniciar Sesión</string>
     <string name="login_forgot_password_button">¿Olvidaste tu contraseña?</string>
+    <string name="login_invalid_credentials_error">Credenciales inválidas</string>
+    <string name="unknown_error">Ha ocurrido un error desconocido</string>
 </resources>
