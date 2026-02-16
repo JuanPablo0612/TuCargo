@@ -16,5 +16,6 @@
     <string name="login_login_button">Iniciar Sesión</string>
     <string name="login_forgot_password_button">¿Olvidaste tu contraseña?</string>
     <string name="login_invalid_credentials_error">Credenciales inválidas</string>
+    <string name="network_error">Ha ocurrido un error de red. Inténtalo de nuevo más tarde.</string>
     <string name="unknown_error">Ha ocurrido un error desconocido</string>
 </resources>

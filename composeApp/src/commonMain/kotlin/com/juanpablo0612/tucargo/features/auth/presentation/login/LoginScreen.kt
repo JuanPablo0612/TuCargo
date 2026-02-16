@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
@@ -41,6 +42,7 @@ import tucargo.composeapp.generated.resources.login_email_error
 import tucargo.composeapp.generated.resources.login_email_label
 import tucargo.composeapp.generated.resources.login_email_placeholder
 import tucargo.composeapp.generated.resources.login_forgot_password_button
+import tucargo.composeapp.generated.resources.login_invalid_credentials_error
 import tucargo.composeapp.generated.resources.login_login_button
 import tucargo.composeapp.generated.resources.login_password_error
 import tucargo.composeapp.generated.resources.login_password_label
@@ -49,6 +51,8 @@ import tucargo.composeapp.generated.resources.login_subtitle
 import tucargo.composeapp.generated.resources.login_title
 import tucargo.composeapp.generated.resources.mail
 import tucargo.composeapp.generated.resources.motorcycle
+import tucargo.composeapp.generated.resources.network_error
+import tucargo.composeapp.generated.resources.unknown_error
 import tucargo.composeapp.generated.resources.visibility
 
 @Composable
@@ -103,6 +107,19 @@ internal fun LoginScreenContent(
                 text = stringResource(Res.string.login_subtitle),
                 style = MaterialTheme.typography.bodyLarge
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            uiState.loginError?.let {
+                val errorMessageResource = when (it) {
+                    LoginError.InvalidCredentials -> Res.string.login_invalid_credentials_error
+                    LoginError.NetworkError ->Res.string.network_error
+                    LoginError.UnknownError -> Res.string.unknown_error
+                }
+
+                ErrorCard(
+                    message = stringResource(errorMessageResource),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
             RoundedTextField(
                 state = emailState,
@@ -137,7 +154,7 @@ internal fun LoginScreenContent(
                     performDefaultAction()
                 }
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             SecureRoundedTextField(
                 state = passwordState,
                 modifier = Modifier.fillMaxWidth(),
@@ -202,7 +219,7 @@ internal fun LoginScreenContent(
 fun LoginScreenContentPreview() {
     TuCargoTheme {
         LoginScreenContent(
-            uiState = LoginState(),
+            uiState = LoginState(loginError = LoginError.InvalidCredentials),
             emailState = rememberTextFieldState(),
             passwordState = rememberTextFieldState(),
             onAction = {},

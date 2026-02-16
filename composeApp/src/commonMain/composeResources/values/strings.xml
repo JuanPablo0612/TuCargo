@@ -16,5 +16,6 @@
     <string name="login_login_button">Log In</string>
     <string name="login_forgot_password_button">Forgot Password?</string>
     <string name="login_invalid_credentials_error">Invalid email or password</string>
+    <string name="network_error">A network error occurred. Please try again later.</string>
     <string name="unknown_error">An unknown error occurred</string>
 </resources>
