@@ -29,13 +29,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.arrow_forward
 import tucargo.composeapp.generated.resources.login_email_error
@@ -56,7 +56,7 @@ import tucargo.composeapp.generated.resources.unknown_error
 import tucargo.composeapp.generated.resources.visibility
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = viewModel(), onForgotPasswordClick: () -> Unit) {
+fun LoginScreen(viewModel: LoginViewModel = koinViewModel(), onForgotPasswordClick: () -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LoginScreenContent(
         uiState = uiState,
@@ -111,7 +111,7 @@ internal fun LoginScreenContent(
             uiState.loginError?.let {
                 val errorMessageResource = when (it) {
                     LoginError.InvalidCredentials -> Res.string.login_invalid_credentials_error
-                    LoginError.NetworkError ->Res.string.network_error
+                    LoginError.NetworkError -> Res.string.network_error
                     LoginError.UnknownError -> Res.string.unknown_error
                 }
 
