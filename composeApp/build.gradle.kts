@@ -13,7 +13,7 @@ plugins {
 kotlin {
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
     
@@ -29,6 +29,9 @@ kotlin {
     
     sourceSets {
         androidMain.dependencies {
+            implementation("com.google.maps.android:maps-compose:4.3.3")
+            implementation("com.google.android.gms:play-services-maps:18.2.0")
+            implementation("com.google.android.gms:play-services-location:21.2.0")
             implementation(libs.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
@@ -80,12 +83,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 dependencies {
     debugImplementation(libs.ui.tooling)
 }
-
