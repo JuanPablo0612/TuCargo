@@ -1,21 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="welcome_title">TuCargo</string>
-    <string name="welcome_subtitle">Logística en Motocicleta</string>
-    <string name="welcome_send_cargo_button">Necesito enviar una carga</string>
-    <string name="welcome_driver_button">Soy un conductor</string>
-    <string name="welcome_version">Versión 1.0.0</string>
+    <string name="app_name">TuCargo</string>
     <string name="login_title">Bienvenido de nuevo</string>
-    <string name="login_subtitle">Inicia sesión para acceder a tu panel de mensajería y comenzar a entregar.</string>
+    <string name="login_subtitle">Ingresa tus credenciales para continuar</string>
     <string name="login_email_label">Correo electrónico</string>
-    <string name="login_email_placeholder">mensajero@tucargo.com</string>
-    <string name="login_email_error">Por favor ingrese una dirección de correo electrónico válida</string>
+    <string name="login_email_placeholder">ejemplo@tucargo.com</string>
     <string name="login_password_label">Contraseña</string>
-    <string name="login_password_placeholder">********</string>
-    <string name="login_password_error">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="login_password_placeholder">Mínimo 8 caracteres</string>
     <string name="login_login_button">Iniciar Sesión</string>
     <string name="login_forgot_password_button">¿Olvidaste tu contraseña?</string>
-    <string name="login_invalid_credentials_error">Credenciales inválidas</string>
-    <string name="network_error">Ha ocurrido un error de red. Inténtalo de nuevo más tarde.</string>
-    <string name="unknown_error">Ha ocurrido un error desconocido</string>
+    <string name="login_register_link">¿No tienes cuenta? Regístrate</string>
+    <string name="login_email_error">Correo electrónico inválido</string>
+    <string name="login_password_error">Contraseña incorrecta</string>
+    <string name="login_invalid_credentials_error">Credenciales incorrectas. Intenta de nuevo.</string>
+    <string name="network_error">Error de conexión. Revisa tu internet.</string>
+    <string name="unknown_error">Ocurrió un error inesperado.</string>
+    <string name="welcome_title">TuCargo</string>
+    <string name="welcome_subtitle">Transporte de carga ligera y rápida</string>
+    <string name="welcome_send_cargo_button">Enviar Carga</string>
+    <string name="welcome_driver_button">Soy Conductor</string>
+    <string name="welcome_version">v1.0.0</string>
 </resources>
