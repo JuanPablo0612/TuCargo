@@ -23,7 +23,7 @@ fun ErrorCard(
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             title?.let {

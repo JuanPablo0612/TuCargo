@@ -1,3 +1,5 @@
+// RUTA: composeApp/src/commonMain/kotlin/com/juanpablo0612/tucargo/features/auth/presentation/welcome/WelcomeScreen.kt
+
 package com.juanpablo0612.tucargo.features.auth.presentation.welcome
 
 import androidx.compose.foundation.background
@@ -21,9 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import tucargo.composeapp.generated.resources.Res
@@ -37,7 +37,10 @@ import tucargo.composeapp.generated.resources.welcome_title
 import tucargo.composeapp.generated.resources.welcome_version
 
 @Composable
-fun WelcomeScreenContent() {
+fun WelcomeScreen(
+    onSendCargoClick: () -> Unit = {},
+    onDriverClick: () -> Unit = {}
+) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -75,42 +78,42 @@ fun WelcomeScreenContent() {
             )
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                onClick = {},
+                onClick = onSendCargoClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.package_2),
-                    contentDescription = null
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.primary
                 )
+            ) {
+                Icon(painter = painterResource(Res.drawable.package_2), contentDescription = null)
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = stringResource(Res.string.welcome_send_cargo_button), modifier = Modifier.padding(vertical = 8.dp))
+                Text(
+                    text = stringResource(Res.string.welcome_send_cargo_button),
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
                 Spacer(modifier = Modifier.weight(1f))
             }
             OutlinedButton(
-                onClick = {},
+                onClick = onDriverClick,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary)
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.motorcycle),
-                    contentDescription = null
+                Icon(painter = painterResource(Res.drawable.motorcycle), contentDescription = null)
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = stringResource(Res.string.welcome_driver_button),
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = stringResource(Res.string.welcome_driver_button), modifier = Modifier.padding(vertical = 8.dp))
-                Spacer(modifier = Modifier.weight(1f))
             }
-            Text(text = stringResource(Res.string.welcome_version), modifier = Modifier.padding(vertical = 32.dp))
+            Text(
+                text = stringResource(Res.string.welcome_version),
+                modifier = Modifier.padding(vertical = 32.dp)
+            )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun WelcomeScreenContentPreview() {
-    TuCargoTheme {
-        WelcomeScreenContent()
     }
 }

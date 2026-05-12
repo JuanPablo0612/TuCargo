@@ -9,12 +9,12 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.juanpablo0612.tucargo"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
 
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
 
         androidResources {
@@ -35,6 +35,8 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.maps.compose)
+            implementation(libs.play.services.maps)
         }
         commonMain.dependencies {
             implementation(libs.runtime)
@@ -54,6 +56,8 @@ kotlin {
             implementation(libs.firebase.storage)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.materialIconsExtended)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -65,3 +69,6 @@ dependencies {
     androidRuntimeClasspath(libs.ui.tooling)
 }
 
+tasks.register("assembleDebug") {
+    dependsOn("assembleAndroidMain")
+}

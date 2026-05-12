@@ -1,3 +1,5 @@
+// RUTA: composeApp/src/commonMain/kotlin/com/juanpablo0612/tucargo/features/auth/presentation/login/LoginScreen.kt
+
 package com.juanpablo0612.tucargo.features.auth.presentation.login
 
 import androidx.compose.foundation.background
@@ -13,12 +15,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,13 +30,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
-import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -56,14 +58,28 @@ import tucargo.composeapp.generated.resources.unknown_error
 import tucargo.composeapp.generated.resources.visibility
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = koinViewModel(), onForgotPasswordClick: () -> Unit) {
+fun LoginScreen(
+    viewModel: LoginViewModel = koinViewModel(),
+    onForgotPasswordClick: () -> Unit,
+    onRegisterClick: () -> Unit,
+    onLoginSuccess: (String) -> Unit
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Observamos el éxito del login y pasamos el rol a la navegación
+    LaunchedEffect(uiState.isLoginSuccess, uiState.userRole) {
+        if (uiState.isLoginSuccess && uiState.userRole != null) {
+            onLoginSuccess(uiState.userRole!!)
+        }
+    }
+
     LoginScreenContent(
         uiState = uiState,
         emailState = viewModel.emailState,
         passwordState = viewModel.passwordState,
         onAction = viewModel::onAction,
-        onForgotPasswordClick = onForgotPasswordClick
+        onForgotPasswordClick = onForgotPasswordClick,
+        onRegisterClick = onRegisterClick
     )
 }
 
@@ -73,22 +89,24 @@ internal fun LoginScreenContent(
     emailState: TextFieldState,
     passwordState: TextFieldState,
     onAction: (LoginAction) -> Unit,
-    onForgotPasswordClick: () -> Unit
+    onForgotPasswordClick: () -> Unit,
+    onRegisterClick: () -> Unit
 ) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(8.dp)
+                .padding(16.dp)
         ) {
+            // ... (mismo código de cabecera e inputs)
             Spacer(modifier = Modifier.height(32.dp))
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .clip(shape = MaterialTheme.shapes.medium)
-                    .background(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
-                    .padding(16.dp),
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+                    .padding(16.dp)
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.motorcycle),
@@ -109,14 +127,13 @@ internal fun LoginScreenContent(
             )
             Spacer(modifier = Modifier.height(8.dp))
             uiState.loginError?.let {
-                val errorMessageResource = when (it) {
+                val errorRes = when (it) {
                     LoginError.InvalidCredentials -> Res.string.login_invalid_credentials_error
                     LoginError.NetworkError -> Res.string.network_error
                     LoginError.UnknownError -> Res.string.unknown_error
                 }
-
                 ErrorCard(
-                    message = stringResource(errorMessageResource),
+                    message = stringResource(errorRes),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -130,19 +147,12 @@ internal fun LoginScreenContent(
                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                placeholder = {
-                    Text(text = stringResource(Res.string.login_email_placeholder))
-                },
+                placeholder = { Text(stringResource(Res.string.login_email_placeholder)) },
                 trailingIcon = {
-                    Icon(
-                        painter = painterResource(Res.drawable.mail),
-                        contentDescription = null
-                    )
+                    Icon(painterResource(Res.drawable.mail), contentDescription = null)
                 },
                 supportingText = if (!uiState.isEmailValid) {
-                    {
-                        Text(text = stringResource(Res.string.login_email_error))
-                    }
+                    { Text(stringResource(Res.string.login_email_error)) }
                 } else null,
                 isError = !uiState.isEmailValid,
                 keyboardOptions = KeyboardOptions(
@@ -164,19 +174,12 @@ internal fun LoginScreenContent(
                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                placeholder = {
-                    Text(text = stringResource(Res.string.login_password_placeholder))
-                },
+                placeholder = { Text(stringResource(Res.string.login_password_placeholder)) },
                 trailingIcon = {
-                    Icon(
-                        painter = painterResource(Res.drawable.visibility),
-                        contentDescription = null
-                    )
+                    Icon(painterResource(Res.drawable.visibility), contentDescription = null)
                 },
                 supportingText = if (!uiState.isPasswordValid) {
-                    {
-                        Text(text = stringResource(Res.string.login_password_error))
-                    }
+                    { Text(stringResource(Res.string.login_password_error)) }
                 } else null,
                 isError = !uiState.isPasswordValid,
                 keyboardOptions = KeyboardOptions(
@@ -192,38 +195,36 @@ internal fun LoginScreenContent(
             Button(
                 onClick = { onAction(LoginAction.Login) },
                 modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.medium,
+                enabled = !uiState.isLoading
             ) {
-                Text(
-                    text = stringResource(Res.string.login_login_button),
-                    modifier = Modifier.padding(vertical = 8.dp),
-                )
-                Icon(
-                    painter = painterResource(Res.drawable.arrow_forward),
-                    contentDescription = null
-                )
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(
+                        text = stringResource(Res.string.login_login_button),
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                    Icon(painterResource(Res.drawable.arrow_forward), contentDescription = null)
+                }
             }
             Spacer(modifier = Modifier.height(8.dp))
             TextButton(
                 onClick = onForgotPasswordClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(Res.string.login_forgot_password_button))
+                Text(stringResource(Res.string.login_forgot_password_button))
+            }
+            TextButton(
+                onClick = onRegisterClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("¿No tienes cuenta? Regístrate")
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenContentPreview() {
-    TuCargoTheme {
-        LoginScreenContent(
-            uiState = LoginState(loginError = LoginError.InvalidCredentials),
-            emailState = rememberTextFieldState(),
-            passwordState = rememberTextFieldState(),
-            onAction = {},
-            onForgotPasswordClick = {}
-        )
     }
 }
