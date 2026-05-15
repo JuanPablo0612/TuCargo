@@ -24,6 +24,8 @@ import com.juanpablo0612.tucargo.data.trip.Trip
 import com.juanpablo0612.tucargo.data.trip.TripStatus
 import com.juanpablo0612.tucargo.data.user.User
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import tucargo.composeapp.generated.resources.*
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.arrow_forward
@@ -107,7 +109,7 @@ internal fun ClientHomeScreenContent(
                             Icon(painterResource(Res.drawable.package_2), contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Nuevo Envío",
+                                text = stringResource(Res.string.client_home_new_trip_button),
                                 modifier = Modifier.weight(1f).padding(vertical = 6.dp)
                             )
                             Icon(painterResource(Res.drawable.arrow_forward), contentDescription = null)
@@ -131,10 +133,10 @@ internal fun ClientHomeScreenContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Últimos Envíos",
+                                text = stringResource(Res.string.client_home_recent_trips_title),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                             )
-                            TextButton(onClick = { }) { Text("Ver todos") }
+                            TextButton(onClick = { }) { Text(stringResource(Res.string.client_home_view_all_button)) }
                         }
                     }
 
@@ -213,7 +215,7 @@ private fun ClientTopAppBar(user: User, onSignOut: () -> Unit) {
             IconButton(onClick = onSignOut) {
                 Icon(
                     painter = painterResource(Res.drawable.arrow_forward),
-                    contentDescription = "Cerrar sesión"
+                    contentDescription = stringResource(Res.string.client_home_sign_out_desc)
                 )
             }
         }
@@ -225,20 +227,20 @@ private fun ClientTopAppBar(user: User, onSignOut: () -> Unit) {
 private fun GreetingSection(userName: String, modifier: Modifier = Modifier) {
     val now = Clock.System.now()
     val instant = kotlinx.datetime.Instant.fromEpochMilliseconds(now.toEpochMilliseconds())
-    val greeting = when (instant.toLocalDateTime(TimeZone.currentSystemDefault()).hour) {
-        in 0..11 -> "Buenos días"
-        in 12..17 -> "Buenas tardes"
-        else -> "Buenas noches"
+    val greetingRes = when (instant.toLocalDateTime(TimeZone.currentSystemDefault()).hour) {
+        in 0..11 -> Res.string.client_home_greeting_morning
+        in 12..17 -> Res.string.client_home_greeting_afternoon
+        else -> Res.string.client_home_greeting_evening
     }
 
     Column(modifier = modifier) {
         Text(
-            text = greeting,
+            text = stringResource(greetingRes),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = if (userName.isNotEmpty()) userName.split(" ").first() else "Cliente",
+            text = if (userName.isNotEmpty()) userName.split(" ").first() else stringResource(Res.string.client_home_default_user_name),
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
         )
     }
@@ -254,8 +256,8 @@ private fun StatsCard(tripsCount: Int, modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            StatItem(value = tripsCount.toString(), label = "Envíos recientes")
-            StatItem(value = "Activo", label = "Estado de cuenta")
+            StatItem(value = tripsCount.toString(), label = stringResource(Res.string.client_home_stats_trips_label))
+            StatItem(value = stringResource(Res.string.client_home_stats_status_active), label = stringResource(Res.string.client_home_stats_status_label))
         }
     }
 }
@@ -280,7 +282,7 @@ private fun StatItem(value: String, label: String) {
 private fun MapSection(latitude: Double, longitude: Double, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(
-            text = "Tu Ubicación",
+            text = stringResource(Res.string.client_home_your_location_title),
             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 8.dp)
         )
@@ -322,13 +324,13 @@ private fun TripCard(trip: Trip, modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = trip.origin.address.ifEmpty { "Origen no especificado" },
+                    text = trip.origin.address.ifEmpty { stringResource(Res.string.client_home_trip_origin_empty) },
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "→ ${trip.destination.address.ifEmpty { "Destino no especificado" }}",
+                    text = "→ ${trip.destination.address.ifEmpty { stringResource(Res.string.client_home_trip_destination_empty) }}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -356,11 +358,21 @@ private fun TripStatusBadge(status: TripStatus) {
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Text(
-            text = status.displayName(),
+            text = stringResource(status.toDisplayNameRes()),
             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
             color = fg
         )
     }
+}
+
+private fun TripStatus.toDisplayNameRes() = when (this) {
+    TripStatus.SEARCHING -> Res.string.trip_status_searching
+    TripStatus.ASSIGNED -> Res.string.trip_status_assigned
+    TripStatus.ON_WAY -> Res.string.trip_status_on_way
+    TripStatus.ARRIVED_PICKUP -> Res.string.trip_status_arrived_pickup
+    TripStatus.IN_PROGRESS -> Res.string.trip_status_in_progress
+    TripStatus.COMPLETED -> Res.string.trip_status_completed
+    TripStatus.CANCELLED -> Res.string.trip_status_cancelled
 }
 
 @Composable
@@ -382,12 +394,12 @@ private fun EmptyTripsSection(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Sin envíos recientes",
+                text = stringResource(Res.string.client_home_empty_trips_title),
                 style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "Crea tu primer envío usando el botón de arriba",
+                text = stringResource(Res.string.client_home_empty_trips_subtitle),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.outline
             )

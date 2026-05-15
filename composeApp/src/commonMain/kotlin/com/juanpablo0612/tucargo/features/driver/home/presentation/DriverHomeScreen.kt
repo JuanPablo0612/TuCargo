@@ -9,6 +9,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.juanpablo0612.tucargo.features.driver.home.presentation.components.AvailabilityButton
 import com.juanpablo0612.tucargo.features.driver.home.presentation.components.BalanceCard
+import org.jetbrains.compose.resources.stringResource
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.driver_home_active_desc
+import tucargo.composeapp.generated.resources.driver_home_active_trips_title
+import tucargo.composeapp.generated.resources.driver_home_empty_trips_message
+import tucargo.composeapp.generated.resources.driver_home_offline_desc
+import tucargo.composeapp.generated.resources.driver_home_sign_out_button
+import tucargo.composeapp.generated.resources.driver_home_title
+import tucargo.composeapp.generated.resources.driver_home_trip_id_label
+import tucargo.composeapp.generated.resources.driver_home_trip_status_in_progress
+import tucargo.composeapp.generated.resources.driver_home_view_trip_button
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,9 +36,9 @@ fun DriverHomeScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text("Panel del Conductor", style = MaterialTheme.typography.titleMedium)
+                        Text(stringResource(Res.string.driver_home_title), style = MaterialTheme.typography.titleMedium)
                         Text(
-                            text = if (state.isAvailable) "Estás activo para recibir viajes" else "Desconectado",
+                            text = if (state.isAvailable) stringResource(Res.string.driver_home_active_desc) else stringResource(Res.string.driver_home_offline_desc),
                             style = MaterialTheme.typography.bodySmall,
                             color = if (state.isAvailable) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                         )
@@ -35,7 +46,7 @@ fun DriverHomeScreen(
                 },
                 actions = {
                     TextButton(onClick = onSignOut) {
-                        Text("Salir", color = MaterialTheme.colorScheme.error)
+                        Text(stringResource(Res.string.driver_home_sign_out_button), color = MaterialTheme.colorScheme.error)
                     }
                 }
             )
@@ -73,7 +84,7 @@ fun DriverHomeScreen(
                 // 3. Título de Viajes Activos[cite: 1]
                 item {
                     Text(
-                        text = "Viajes en curso",
+                        text = stringResource(Res.string.driver_home_active_trips_title),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -88,7 +99,7 @@ fun DriverHomeScreen(
                             )
                         ) {
                             Text(
-                                "No tienes viajes activos en este momento.",
+                                stringResource(Res.string.driver_home_empty_trips_message),
                                 modifier = Modifier.padding(24.dp),
                                 style = MaterialTheme.typography.bodyMedium,
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -109,11 +120,11 @@ fun DriverHomeScreen(
 fun ActiveTripItem(tripId: String) {
     OutlinedCard(modifier = Modifier.fillMaxWidth()) {
         ListItem(
-            headlineContent = { Text("Viaje ID: ${tripId.take(8)}") },
-            supportingContent = { Text("Estado: En curso") },
+            headlineContent = { Text(stringResource(Res.string.driver_home_trip_id_label, tripId.take(8))) },
+            supportingContent = { Text(stringResource(Res.string.driver_home_trip_status_in_progress)) },
             trailingContent = {
                 Button(onClick = { /* Navegar a detalles */ }) {
-                    Text("Ver")
+                    Text(stringResource(Res.string.driver_home_view_trip_button))
                 }
             }
         )

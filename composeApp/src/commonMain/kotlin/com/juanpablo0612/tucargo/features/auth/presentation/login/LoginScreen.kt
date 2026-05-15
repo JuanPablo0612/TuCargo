@@ -48,6 +48,7 @@ import tucargo.composeapp.generated.resources.login_invalid_credentials_error
 import tucargo.composeapp.generated.resources.login_login_button
 import tucargo.composeapp.generated.resources.login_password_error
 import tucargo.composeapp.generated.resources.login_password_label
+import tucargo.composeapp.generated.resources.login_register_link
 import tucargo.composeapp.generated.resources.login_password_placeholder
 import tucargo.composeapp.generated.resources.login_subtitle
 import tucargo.composeapp.generated.resources.login_title
@@ -223,7 +224,7 @@ internal fun LoginScreenContent(
                 onClick = onRegisterClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("¿No tienes cuenta? Regístrate")
+                Text(stringResource(Res.string.login_register_link))
             }
         }
     }

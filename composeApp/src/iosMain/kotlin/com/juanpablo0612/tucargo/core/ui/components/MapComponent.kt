@@ -1,5 +1,8 @@
 package com.juanpablo0612.tucargo.core.ui.components
 
+import org.jetbrains.compose.resources.stringResource
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.map_not_available_ios
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +25,6 @@ actual fun MapComponent(
         modifier = modifier.fillMaxSize().background(Color.LightGray),
         contentAlignment = Alignment.Center
     ) {
-        Text("Mapa no disponible en iOS (Simulador/Actual)")
+        Text(stringResource(Res.string.map_not_available_ios))
     }
 }

@@ -1,5 +1,8 @@
 package com.juanpablo0612.tucargo.core.ui.components
 
+import org.jetbrains.compose.resources.stringResource
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.map_your_location
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -51,7 +54,7 @@ actual fun MapComponent(
     ) {
         Marker(
             state = markerState,
-            title = "Tu ubicación"
+            title = stringResource(Res.string.map_your_location)
         )
     }
 }

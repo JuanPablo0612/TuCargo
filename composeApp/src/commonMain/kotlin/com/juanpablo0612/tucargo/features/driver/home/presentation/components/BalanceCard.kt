@@ -1,5 +1,9 @@
 package com.juanpablo0612.tucargo.features.driver.home.presentation.components
 
+import org.jetbrains.compose.resources.stringResource
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.driver_home_balance_title
+import tucargo.composeapp.generated.resources.driver_home_completed_trips_msg
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -25,7 +29,7 @@ fun BalanceCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Tu Balance",
+                text = stringResource(Res.string.driver_home_balance_title),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
@@ -40,7 +44,7 @@ fun BalanceCard(
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.2f)
             )
             Text(
-                text = "Has completado $totalTrips viajes", // Estadísticas de viajes[cite: 1]
+                text = stringResource(Res.string.driver_home_completed_trips_msg, totalTrips), // Estadísticas de viajes[cite: 1]
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )

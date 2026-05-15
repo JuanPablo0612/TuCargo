@@ -19,6 +19,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
+import org.jetbrains.compose.resources.stringResource
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.docs_back_button
+import tucargo.composeapp.generated.resources.docs_back_label
+import tucargo.composeapp.generated.resources.docs_front_label
+import tucargo.composeapp.generated.resources.docs_submit_button
+import tucargo.composeapp.generated.resources.docs_success_message
+import tucargo.composeapp.generated.resources.docs_subtitle
+import tucargo.composeapp.generated.resources.docs_title
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -58,14 +67,14 @@ internal fun DocumentScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Identity Verification",
+                text = stringResource(Res.string.docs_title),
                 style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Please upload a clear photo of your identity card (both sides).",
+                text = stringResource(Res.string.docs_subtitle),
                 style = MaterialTheme.typography.bodyLarge
             )
 
@@ -82,7 +91,7 @@ internal fun DocumentScreenContent(
 
             // Selector Frontal
             DocumentPickerItem(
-                label = "Front Side ID",
+                label = stringResource(Res.string.docs_front_label),
                 isLoaded = uiState.idFrontPath != null,
                 onClick = { onAction(DocumentAction.OnFrontPhotoSelected("simulated_path_front")) }
             )
@@ -91,7 +100,7 @@ internal fun DocumentScreenContent(
 
             // Selector Trasero
             DocumentPickerItem(
-                label = "Back Side ID",
+                label = stringResource(Res.string.docs_back_label),
                 isLoaded = uiState.idBackPath != null,
                 onClick = { onAction(DocumentAction.OnBackPhotoSelected("simulated_path_back")) }
             )
@@ -112,7 +121,7 @@ internal fun DocumentScreenContent(
                     )
                 } else {
                     Text(
-                        text = if (uiState.isUploadSuccess) "Documents Uploaded" else "Continue",
+                        text = if (uiState.isUploadSuccess) stringResource(Res.string.docs_success_message) else stringResource(Res.string.docs_submit_button),
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
@@ -122,7 +131,7 @@ internal fun DocumentScreenContent(
                 onClick = onBackClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Go Back")
+                Text(text = stringResource(Res.string.docs_back_button))
             }
         }
     }

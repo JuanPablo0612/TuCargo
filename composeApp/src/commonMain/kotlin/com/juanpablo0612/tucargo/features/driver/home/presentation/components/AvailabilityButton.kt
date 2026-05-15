@@ -1,5 +1,9 @@
 package com.juanpablo0612.tucargo.features.driver.home.presentation.components
 
+import org.jetbrains.compose.resources.stringResource
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.driver_home_availability_go_online
+import tucargo.composeapp.generated.resources.driver_home_availability_online
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -48,7 +52,7 @@ fun AvailabilityButton(
             )
             Spacer(Modifier.width(12.dp))
             Text(
-                text = if (isAvailable) "ESTÁS EN LÍNEA" else "PONERSE EN LÍNEA",
+                text = if (isAvailable) stringResource(Res.string.driver_home_availability_online) else stringResource(Res.string.driver_home_availability_go_online),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )

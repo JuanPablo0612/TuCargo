@@ -31,7 +31,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.register_back_button
+import tucargo.composeapp.generated.resources.register_button
+import tucargo.composeapp.generated.resources.register_confirm_password_label
+import tucargo.composeapp.generated.resources.register_email_label
+import tucargo.composeapp.generated.resources.register_name_label
+import tucargo.composeapp.generated.resources.register_password_label
+import tucargo.composeapp.generated.resources.register_title
 
 @Composable
 fun RegisterScreen(
@@ -74,10 +83,10 @@ fun RegisterScreenContent(
             .verticalScroll(rememberScrollState())
     ) {
         TextButton(onClick = onBackClick) {
-            Text("← Volver")
+            Text(stringResource(Res.string.register_back_button))
         }
         Text(
-            text = "Crea tu cuenta",
+            text = stringResource(Res.string.register_title),
             style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -87,13 +96,13 @@ fun RegisterScreenContent(
         }
         RoundedTextField(
             state = nameState,
-            label = { Text("Nombre Completo") },
+            label = { Text(stringResource(Res.string.register_name_label)) },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
         RoundedTextField(
             state = emailState,
-            label = { Text("Correo Electrónico") },
+            label = { Text(stringResource(Res.string.register_email_label)) },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -102,7 +111,7 @@ fun RegisterScreenContent(
         )
         SecureRoundedTextField(
             state = passwordState,
-            label = { Text("Contraseña") },
+            label = { Text(stringResource(Res.string.register_password_label)) },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -111,7 +120,7 @@ fun RegisterScreenContent(
         )
         SecureRoundedTextField(
             state = confirmPasswordState,
-            label = { Text("Confirmar Contraseña") },
+            label = { Text(stringResource(Res.string.register_confirm_password_label)) },
             modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -130,7 +139,7 @@ fun RegisterScreenContent(
                     strokeWidth = 2.dp
                 )
             } else {
-                Text("Registrarse")
+                Text(stringResource(Res.string.register_button))
             }
         }
     }
