@@ -7,8 +7,7 @@ data class DocumentState(
     val isLoading: Boolean = false,
     val idFrontPath: String? = null,
     val idBackPath: String? = null,
-    val errorMessage: String? = null,
-    val isUploadSuccess: Boolean = false
+    val errorMessage: String? = null
 )
 
 sealed interface DocumentAction {

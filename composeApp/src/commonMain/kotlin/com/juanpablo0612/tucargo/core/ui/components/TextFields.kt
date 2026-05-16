@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
-private fun textFieldColors() = TextFieldDefaults.colors(
+internal fun textFieldColors() = TextFieldDefaults.colors(
     errorIndicatorColor = Color.Transparent,
     focusedIndicatorColor = Color.Transparent,
     unfocusedIndicatorColor = Color.Transparent,
@@ -26,7 +26,7 @@ private fun textFieldColors() = TextFieldDefaults.colors(
 )
 
 @Composable
-private fun textFieldShape() = MaterialTheme.shapes.small
+internal fun textFieldShape() = MaterialTheme.shapes.small
 
 @Composable
 fun RoundedTextField(

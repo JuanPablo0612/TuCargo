@@ -3,32 +3,49 @@ package com.juanpablo0612.tucargo.features.auth.presentation.documents
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
+import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.docs_back_button
 import tucargo.composeapp.generated.resources.docs_back_label
 import tucargo.composeapp.generated.resources.docs_front_label
 import tucargo.composeapp.generated.resources.docs_submit_button
-import tucargo.composeapp.generated.resources.docs_success_message
 import tucargo.composeapp.generated.resources.docs_subtitle
 import tucargo.composeapp.generated.resources.docs_title
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DocumentScreen(
@@ -38,10 +55,8 @@ fun DocumentScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    androidx.compose.runtime.LaunchedEffect(uiState.isUploadSuccess) {
-        if (uiState.isUploadSuccess) {
-            onSuccessNavigate()
-        }
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { onSuccessNavigate() }
     }
 
     DocumentScreenContent(
@@ -68,7 +83,8 @@ internal fun DocumentScreenContent(
 
             Text(
                 text = stringResource(Res.string.docs_title),
-                style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.semantics { heading() }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -80,7 +96,6 @@ internal fun DocumentScreenContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Módulo de Error consistente con tu Login
             uiState.errorMessage?.let {
                 ErrorCard(
                     message = it,
@@ -89,7 +104,6 @@ internal fun DocumentScreenContent(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // Selector Frontal
             DocumentPickerItem(
                 label = stringResource(Res.string.docs_front_label),
                 isLoaded = uiState.idFrontPath != null,
@@ -98,7 +112,6 @@ internal fun DocumentScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Selector Trasero
             DocumentPickerItem(
                 label = stringResource(Res.string.docs_back_label),
                 isLoaded = uiState.idBackPath != null,
@@ -121,8 +134,9 @@ internal fun DocumentScreenContent(
                     )
                 } else {
                     Text(
-                        text = if (uiState.isUploadSuccess) stringResource(Res.string.docs_success_message) else stringResource(Res.string.docs_submit_button),
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        text = stringResource(Res.string.docs_submit_button),
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -138,7 +152,7 @@ internal fun DocumentScreenContent(
 }
 
 @Composable
-fun DocumentPickerItem(
+internal fun DocumentPickerItem(
     label: String,
     isLoaded: Boolean,
     onClick: () -> Unit
@@ -154,11 +168,11 @@ fun DocumentPickerItem(
             .clip(MaterialTheme.shapes.medium)
             .background(containerColor)
             .border(2.dp, borderColor, MaterialTheme.shapes.medium)
-            .clickable { onClick() },
+            .clickable(onClick = onClick)
+            .semantics { role = Role.Button },
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            // Círculo indicador personalizado (SIN ICONOS)
             Box(
                 modifier = Modifier
                     .size(36.dp)
@@ -176,8 +190,21 @@ fun DocumentPickerItem(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold
             )
         }
+    }
+}
+
+@Preview
+@Composable
+internal fun DocumentScreenContentPreview() {
+    TuCargoTheme {
+        DocumentScreenContent(
+            uiState = DocumentState(),
+            onAction = {},
+            onBackClick = {}
+        )
     }
 }

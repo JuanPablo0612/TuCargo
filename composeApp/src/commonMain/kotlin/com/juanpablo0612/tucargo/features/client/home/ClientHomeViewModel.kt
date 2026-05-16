@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.data.trip.TripRepository
 import com.juanpablo0612.tucargo.data.user.UserRepository
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,7 +55,7 @@ class ClientHomeViewModel(
             _uiState.update { it.copy(isLoadingTrips = true) }
             tripRepository.getClientTrips(userId).fold(
                 onSuccess = { trips ->
-                    _uiState.update { it.copy(recentTrips = trips, isLoadingTrips = false) }
+                    _uiState.update { it.copy(recentTrips = trips.toPersistentList(), isLoadingTrips = false) }
                 },
                 onFailure = { e ->
                     _uiState.update { it.copy(errorMessage = e.message, isLoadingTrips = false) }

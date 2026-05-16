@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.data.user.UserRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,6 +19,9 @@ class DocumentViewModel(
 
     private val _uiState = MutableStateFlow(DocumentState())
     val uiState = _uiState.asStateFlow()
+
+    private val _navigationEvent = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val navigationEvent = _navigationEvent.asSharedFlow()
 
     fun onAction(action: DocumentAction) {
         when (action) {
@@ -42,7 +47,8 @@ class DocumentViewModel(
                 val userId = userRepository.getCurrentUserId() ?: throw Exception("Usuario no autenticado")
                 // El userId se usará para el path de Firebase Storage: "docs/$userId/..."
                 delay(1500)
-                _uiState.update { it.copy(isLoading = false, isUploadSuccess = true) }
+                _uiState.update { it.copy(isLoading = false) }
+                _navigationEvent.tryEmit(Unit)
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(isLoading = false, errorMessage = e.message ?: "Error al subir documentos")

@@ -4,7 +4,7 @@
     <string name="welcome_subtitle">Motorcycle Logistics</string>
     <string name="welcome_send_cargo_button">I need to send cargo</string>
     <string name="welcome_driver_button">I am a driver</string>
-    <string name="welcome_version">Version 1.0.0</string>
+    <string name="welcome_version">Version %1$s</string>
 
     <!-- Login -->
     <string name="login_title">Welcome Back</string>
@@ -63,13 +63,13 @@
     <string name="driver_home_sign_out_button">Exit</string>
     <string name="driver_home_active_trips_title">Trips in progress</string>
     <string name="driver_home_empty_trips_message">You don\'t have any active trips at this time.</string>
-    <string name="driver_home_trip_id_label">Trip ID: %s</string>
+    <string name="driver_home_trip_id_label">Trip ID: %1$s</string>
     <string name="driver_home_trip_status_in_progress">Status: In progress</string>
     <string name="driver_home_view_trip_button">View</string>
     <string name="driver_home_availability_online">YOU ARE ONLINE</string>
     <string name="driver_home_availability_go_online">GO ONLINE</string>
     <string name="driver_home_balance_title">Your Balance</string>
-    <string name="driver_home_completed_trips_msg">You have completed %d trips</string>
+    <string name="driver_home_completed_trips_msg">You have completed %1$d trips</string>
 
     <!-- Trip Status -->
     <string name="trip_status_searching">Searching driver</string>
@@ -87,4 +87,7 @@
     <!-- Errors -->
     <string name="network_error">A network error occurred. Please try again later.</string>
     <string name="unknown_error">An unknown error occurred</string>
+
+    <!-- Accessibility content descriptions -->
+    <string name="cd_toggle_password_visibility">Toggle password visibility</string>
 </resources>

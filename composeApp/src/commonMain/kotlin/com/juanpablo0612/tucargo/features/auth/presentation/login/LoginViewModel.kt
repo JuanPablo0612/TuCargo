@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.data.auth.AuthRepository
 import com.juanpablo0612.tucargo.data.common.DataException
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,6 +21,9 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginState())
     val uiState: StateFlow<LoginState> = _uiState.asStateFlow()
+
+    private val _navigationEvent = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val navigationEvent = _navigationEvent.asSharedFlow()
 
     val emailState = TextFieldState()
     val passwordState = TextFieldState()
@@ -55,14 +60,9 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 email = emailState.text.toString(),
                 password = passwordState.text.toString()
             ).fold(
-                onSuccess = { user -> // 'user' viene del repositorio
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            isLoginSuccess = true,
-                            userRole = user.role // Guardamos el rol en el estado para la navegación
-                        )
-                    }
+                onSuccess = { user ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    _navigationEvent.tryEmit(user.role)
                 },
                 onFailure = { e ->
                     val error = when (e) {

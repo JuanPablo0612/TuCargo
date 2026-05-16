@@ -217,3 +217,6 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF1D1F27)
 val surfaceContainerDarkHighContrast = Color(0xFF2E3038)
 val surfaceContainerHighDarkHighContrast = Color(0xFF393B44)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF45464F)
+
+val AvailableGreen = Color(0xFF4CAF50)
+val OnAvailableGreen = Color.White

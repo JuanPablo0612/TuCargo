@@ -22,7 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -35,6 +35,13 @@ import tucargo.composeapp.generated.resources.welcome_send_cargo_button
 import tucargo.composeapp.generated.resources.welcome_subtitle
 import tucargo.composeapp.generated.resources.welcome_title
 import tucargo.composeapp.generated.resources.welcome_version
+import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
+
+@Preview
+@Composable
+fun WelcomeScreenPreview() {
+    TuCargoTheme { WelcomeScreen() }
+}
 
 @Composable
 fun WelcomeScreen(
@@ -70,7 +77,7 @@ fun WelcomeScreen(
             Text(
                 text = stringResource(Res.string.welcome_title),
                 modifier = Modifier.padding(top = 16.dp),
-                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.displayMedium
             )
             Text(
                 text = stringResource(Res.string.welcome_subtitle),
@@ -111,7 +118,7 @@ fun WelcomeScreen(
                 Spacer(modifier = Modifier.weight(1f))
             }
             Text(
-                text = stringResource(Res.string.welcome_version),
+                text = stringResource(Res.string.welcome_version, "1.0.0"),
                 modifier = Modifier.padding(vertical = 32.dp)
             )
         }

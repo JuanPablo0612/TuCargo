@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">TuCargo</string>
+    <string name="app_name" translatable="false">TuCargo</string>
     <string name="welcome_title">TuCargo</string>
     <string name="welcome_subtitle">Transporte de carga ligera y rápida</string>
     <string name="welcome_send_cargo_button">Enviar Carga</string>
     <string name="welcome_driver_button">Soy Conductor</string>
-    <string name="welcome_version">v1.0.0</string>
+    <string name="welcome_version">v%1$s</string>
 
     <!-- Login -->
     <string name="login_title">Bienvenido de nuevo</string>
@@ -63,13 +63,13 @@
     <string name="driver_home_sign_out_button">Salir</string>
     <string name="driver_home_active_trips_title">Viajes en curso</string>
     <string name="driver_home_empty_trips_message">No tienes viajes activos en este momento.</string>
-    <string name="driver_home_trip_id_label">Viaje ID: %s</string>
+    <string name="driver_home_trip_id_label">Viaje ID: %1$s</string>
     <string name="driver_home_trip_status_in_progress">Estado: En curso</string>
     <string name="driver_home_view_trip_button">Ver</string>
     <string name="driver_home_availability_online">ESTÁS EN LÍNEA</string>
     <string name="driver_home_availability_go_online">PONERSE EN LÍNEA</string>
     <string name="driver_home_balance_title">Tu Balance</string>
-    <string name="driver_home_completed_trips_msg">Has completado %d viajes</string>
+    <string name="driver_home_completed_trips_msg">Has completado %1$d viajes</string>
 
     <!-- Trip Status -->
     <string name="trip_status_searching">Buscando conductor</string>
@@ -87,4 +87,7 @@
     <!-- Errors -->
     <string name="network_error">Error de conexión. Revisa tu internet.</string>
     <string name="unknown_error">Ocurrió un error inesperado.</string>
+
+    <!-- Accesibilidad -->
+    <string name="cd_toggle_password_visibility">Mostrar u ocultar contraseña</string>
 </resources>

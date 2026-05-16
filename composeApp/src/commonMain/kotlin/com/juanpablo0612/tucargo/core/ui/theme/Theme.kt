@@ -5,7 +5,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 private val lightScheme = lightColorScheme(
@@ -248,6 +250,16 @@ val unspecified_scheme = ColorFamily(
     Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
+@Immutable
+data class ExtendedColors(
+    val available: Color,
+    val onAvailable: Color
+)
+
+val LocalExtendedColors = compositionLocalOf {
+    ExtendedColors(available = AvailableGreen, onAvailable = OnAvailableGreen)
+}
+
 @Composable
 fun TuCargoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -258,10 +270,17 @@ fun TuCargoTheme(
         else -> lightScheme
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        shapes = AppShapes,
-        typography = AppTypography,
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalExtendedColors provides ExtendedColors(
+            available = AvailableGreen,
+            onAvailable = OnAvailableGreen
+        )
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            shapes = AppShapes,
+            typography = AppTypography,
+            content = content
+        )
+    }
 }

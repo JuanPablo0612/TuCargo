@@ -7,6 +7,7 @@ import com.juanpablo0612.tucargo.data.trip.TripStatus
 import com.juanpablo0612.tucargo.data.user.UserRepository
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn

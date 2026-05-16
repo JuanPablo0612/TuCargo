@@ -1,5 +1,3 @@
-// RUTA: composeApp/src/commonMain/kotlin/com/juanpablo0612/tucargo/features/auth/presentation/login/LoginScreen.kt
-
 package com.juanpablo0612.tucargo.features.auth.presentation.login
 
 import androidx.compose.foundation.background
@@ -27,19 +25,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
+import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.arrow_forward
+import tucargo.composeapp.generated.resources.cd_toggle_password_visibility
 import tucargo.composeapp.generated.resources.login_email_error
 import tucargo.composeapp.generated.resources.login_email_label
 import tucargo.composeapp.generated.resources.login_email_placeholder
@@ -67,10 +69,9 @@ fun LoginScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Observamos el éxito del login y pasamos el rol a la navegación
-    LaunchedEffect(uiState.isLoginSuccess, uiState.userRole) {
-        if (uiState.isLoginSuccess && uiState.userRole != null) {
-            onLoginSuccess(uiState.userRole!!)
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { role ->
+            onLoginSuccess(role)
         }
     }
 
@@ -100,7 +101,6 @@ internal fun LoginScreenContent(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            // ... (mismo código de cabecera e inputs)
             Spacer(modifier = Modifier.height(32.dp))
             Box(
                 contentAlignment = Alignment.Center,
@@ -119,7 +119,8 @@ internal fun LoginScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
             Text(
                 text = stringResource(Res.string.login_title),
-                style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.semantics { heading() }
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -145,7 +146,7 @@ internal fun LoginScreenContent(
                 label = {
                     Text(
                         text = stringResource(Res.string.login_email_label),
-                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.labelLarge
                     )
                 },
                 placeholder = { Text(stringResource(Res.string.login_email_placeholder)) },
@@ -172,12 +173,15 @@ internal fun LoginScreenContent(
                 label = {
                     Text(
                         text = stringResource(Res.string.login_password_label),
-                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.labelLarge
                     )
                 },
                 placeholder = { Text(stringResource(Res.string.login_password_placeholder)) },
                 trailingIcon = {
-                    Icon(painterResource(Res.drawable.visibility), contentDescription = null)
+                    Icon(
+                        painterResource(Res.drawable.visibility),
+                        contentDescription = stringResource(Res.string.cd_toggle_password_visibility)
+                    )
                 },
                 supportingText = if (!uiState.isPasswordValid) {
                     { Text(stringResource(Res.string.login_password_error)) }
@@ -227,5 +231,20 @@ internal fun LoginScreenContent(
                 Text(stringResource(Res.string.login_register_link))
             }
         }
+    }
+}
+
+@Preview
+@Composable
+internal fun LoginScreenContentPreview() {
+    TuCargoTheme {
+        LoginScreenContent(
+            uiState = LoginState(),
+            emailState = rememberTextFieldState(),
+            passwordState = rememberTextFieldState(),
+            onAction = {},
+            onForgotPasswordClick = {},
+            onRegisterClick = {}
+        )
     }
 }

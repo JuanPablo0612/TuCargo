@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
@@ -27,10 +31,15 @@ fun ErrorCard(
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             title?.let {
-                Text(text = it)
+                Text(text = it, style = MaterialTheme.typography.titleSmall)
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            Text(text = message)
+            Text(
+                text = message,
+                modifier = Modifier.semantics {
+                    liveRegion = LiveRegionMode.Polite
+                }
+            )
         }
     }
 }
@@ -39,6 +48,8 @@ fun ErrorCard(
 @Composable
 fun ErrorCardPreview() {
     TuCargoTheme {
-        ErrorCard(message = "An unknown error occurred")
+        Surface {
+            ErrorCard(message = "An unknown error occurred", title = "Error")
+        }
     }
 }
