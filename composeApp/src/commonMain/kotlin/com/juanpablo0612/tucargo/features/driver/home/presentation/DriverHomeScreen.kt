@@ -51,7 +51,7 @@ fun DriverHomeScreen(
     viewModel: DriverHomeViewModel = koinViewModel(),
     onSignOut: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {

@@ -3,10 +3,22 @@ package com.juanpablo0612.tucargo.di
 import com.juanpablo0612.tucargo.core.location.LocationProvider
 import com.juanpablo0612.tucargo.core.location.MockLocationProvider
 import com.juanpablo0612.tucargo.data.auth.AuthRepository
+import com.juanpablo0612.tucargo.data.auth.AuthRepositoryImpl
 import com.juanpablo0612.tucargo.data.config.SystemConfig
 import com.juanpablo0612.tucargo.data.trip.TripRepository
+import com.juanpablo0612.tucargo.data.trip.TripRepositoryImpl
 import com.juanpablo0612.tucargo.data.trip.TripTrackingManager
 import com.juanpablo0612.tucargo.data.user.UserRepository
+import com.juanpablo0612.tucargo.data.user.UserRepositoryImpl
+import com.juanpablo0612.tucargo.domain.usecase.CreateTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.IsUserLoggedInUseCase
+import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
+import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
+import com.juanpablo0612.tucargo.domain.usecase.SignOutUseCase
+import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.register.RegisterViewModel
@@ -34,16 +46,27 @@ val dataModule = module {
     // Configuración del sistema (Singleton)
     single { SystemConfig() }
 
-    // Repositorios con inyección automática
-    singleOf(::AuthRepository)
-    singleOf(::UserRepository)
-    singleOf(::TripRepository)
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
+    single<TripRepository> { TripRepositoryImpl(get()) }
     
     // Scope global para procesos en segundo plano (como el tracking)
     single { CoroutineScope(Dispatchers.Default + SupervisorJob()) }
     
     // Manager de tracking necesita el scope inyectado
     single { TripTrackingManager(get(), get(), get()) }
+}
+
+val domainModule = module {
+    singleOf(::LoginUseCase)
+    singleOf(::RegisterUseCase)
+    singleOf(::GetCurrentUserUseCase)
+    singleOf(::GetCurrentUserIdUseCase)
+    singleOf(::IsUserLoggedInUseCase)
+    singleOf(::SignOutUseCase)
+    singleOf(::UpdateDriverStatusUseCase)
+    singleOf(::GetClientTripsUseCase)
+    singleOf(::CreateTripUseCase)
 }
 
 val viewModelModule = module {
@@ -55,7 +78,7 @@ val viewModelModule = module {
 }
 
 val appModule = module {
-    includes(dataModule, viewModelModule)
+    includes(dataModule, domainModule, viewModelModule)
 }
 
 fun initKoin(configuration: KoinAppDeclaration? = null) {

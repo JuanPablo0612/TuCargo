@@ -4,8 +4,10 @@ package com.juanpablo0612.tucargo.features.client.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.data.trip.TripRepository
-import com.juanpablo0612.tucargo.data.user.UserRepository
+import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.SignOutUseCase
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,8 +16,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ClientHomeViewModel(
-    private val userRepository: UserRepository,
-    private val tripRepository: TripRepository
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
+    private val getClientTripsUseCase: GetClientTripsUseCase,
+    private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ClientHomeState())
@@ -30,7 +34,7 @@ class ClientHomeViewModel(
             ClientHomeAction.LoadData -> loadData()
             ClientHomeAction.RefreshTrips -> loadRecentTrips()
             ClientHomeAction.NewTrip -> { }
-            ClientHomeAction.SignOut -> viewModelScope.launch { userRepository.signOut() }
+            ClientHomeAction.SignOut -> viewModelScope.launch { signOutUseCase() }
             is ClientHomeAction.OnLocationUpdated -> _uiState.update {
                 it.copy(userLatitude = action.latitude, userLongitude = action.longitude)
             }
@@ -40,7 +44,7 @@ class ClientHomeViewModel(
     private fun loadData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-            userRepository.getCurrentUser().fold(
+            getCurrentUserUseCase().fold(
                 onSuccess = { user -> _uiState.update { it.copy(user = user) } },
                 onFailure = { e -> _uiState.update { it.copy(errorMessage = e.message) } }
             )
@@ -50,10 +54,10 @@ class ClientHomeViewModel(
     }
 
     private fun loadRecentTrips() {
-        val userId = userRepository.getCurrentUserId() ?: return
+        val userId = getCurrentUserIdUseCase() ?: return
         viewModelScope.launch {
             _uiState.update { it.copy(isLoadingTrips = true) }
-            tripRepository.getClientTrips(userId).fold(
+            getClientTripsUseCase(userId).fold(
                 onSuccess = { trips ->
                     _uiState.update { it.copy(recentTrips = trips.toPersistentList(), isLoadingTrips = false) }
                 },

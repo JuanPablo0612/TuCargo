@@ -5,25 +5,19 @@ package com.juanpablo0612.tucargo.features.auth.presentation.login
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.data.auth.AuthRepository
+import com.juanpablo0612.tucargo.core.ui.event.UiEvent
 import com.juanpablo0612.tucargo.data.common.DataException
-import kotlinx.coroutines.flow.MutableSharedFlow
+import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-// ... (mismos imports que ya tienes)
-
-class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
+class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginState())
     val uiState: StateFlow<LoginState> = _uiState.asStateFlow()
-
-    private val _navigationEvent = MutableSharedFlow<String>(extraBufferCapacity = 1)
-    val navigationEvent = _navigationEvent.asSharedFlow()
 
     val emailState = TextFieldState()
     val passwordState = TextFieldState()
@@ -56,13 +50,12 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, loginError = null) }
-            authRepository.login(
+            loginUseCase(
                 email = emailState.text.toString(),
                 password = passwordState.text.toString()
             ).fold(
                 onSuccess = { user ->
-                    _uiState.update { it.copy(isLoading = false) }
-                    _navigationEvent.tryEmit(user.role)
+                    _uiState.update { it.copy(isLoading = false, navigationEvent = UiEvent(user.role)) }
                 },
                 onFailure = { e ->
                     val error = when (e) {

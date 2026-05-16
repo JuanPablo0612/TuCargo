@@ -4,24 +4,20 @@ package com.juanpablo0612.tucargo.features.auth.presentation.documents
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.data.user.UserRepository
+import com.juanpablo0612.tucargo.core.ui.event.UiEvent
+import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DocumentViewModel(
-    private val userRepository: UserRepository
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DocumentState())
     val uiState = _uiState.asStateFlow()
-
-    private val _navigationEvent = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
-    val navigationEvent = _navigationEvent.asSharedFlow()
 
     fun onAction(action: DocumentAction) {
         when (action) {
@@ -44,11 +40,10 @@ class DocumentViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             try {
-                val userId = userRepository.getCurrentUserId() ?: throw Exception("Usuario no autenticado")
+                val userId = getCurrentUserIdUseCase() ?: throw Exception("Usuario no autenticado")
                 // El userId se usará para el path de Firebase Storage: "docs/$userId/..."
                 delay(1500)
-                _uiState.update { it.copy(isLoading = false) }
-                _navigationEvent.tryEmit(Unit)
+                _uiState.update { it.copy(isLoading = false, navigationEvent = UiEvent(Unit)) }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(isLoading = false, errorMessage = e.message ?: "Error al subir documentos")

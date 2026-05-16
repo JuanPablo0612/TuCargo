@@ -1,13 +1,15 @@
 package com.juanpablo0612.tucargo.features.auth.presentation.documents
 
 import androidx.compose.runtime.Immutable
+import com.juanpablo0612.tucargo.core.ui.event.UiEvent
 
 @Immutable
 data class DocumentState(
     val isLoading: Boolean = false,
     val idFrontPath: String? = null,
     val idBackPath: String? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val navigationEvent: UiEvent<Unit>? = null
 )
 
 sealed interface DocumentAction {
