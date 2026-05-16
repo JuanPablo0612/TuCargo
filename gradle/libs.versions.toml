@@ -29,6 +29,7 @@ kotlinx-serialization-json = "1.11.0"
 kotlinx-datetime = "0.6.1"
 maps-compose = "6.4.1"
 google-maps = "19.0.0"
+buildKonfig = "0.21.0"
 
 [libraries]
 runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "runtime" }
@@ -73,3 +74,4 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }

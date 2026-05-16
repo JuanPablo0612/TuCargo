@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -6,6 +8,14 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.buildKonfig)
+}
+
+val secrets = Properties().apply {
+    val secretsFile = rootProject.file("secrets.properties")
+    if (secretsFile.exists()) {
+        load(secretsFile.inputStream())
+    }
 }
 
 kotlin {
@@ -62,6 +72,13 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+    }
+}
+
+buildkonfig {
+    packageName = "com.juanpablo0612.tucargo"
+    defaultConfigs {
+        buildConfigField(Type.STRING, "GOOGLE_MAPS_API_KEY", secrets.getProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
 }
 

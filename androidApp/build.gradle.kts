@@ -1,10 +1,18 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.googleServices)
+}
+
+val secrets = Properties().apply {
+    val secretsFile = rootProject.file("secrets.properties")
+    if (secretsFile.exists()) {
+        load(secretsFile.inputStream())
+    }
 }
 
 kotlin {
@@ -33,6 +41,8 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = secrets.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
     }
     packaging {
         resources {
