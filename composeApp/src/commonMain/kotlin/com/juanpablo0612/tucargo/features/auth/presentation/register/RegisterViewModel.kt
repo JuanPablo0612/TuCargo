@@ -1,5 +1,3 @@
-// RUTA: composeApp/src/commonMain/kotlin/com/juanpablo0612/tucargo/features/auth/presentation/register/RegisterViewModel.kt
-
 package com.juanpablo0612.tucargo.features.auth.presentation.register
 
 import androidx.compose.foundation.text.input.TextFieldState
@@ -31,31 +29,31 @@ class RegisterViewModel(private val registerUseCase: RegisterUseCase) : ViewMode
         val confirmPassword = confirmPasswordState.text.toString()
 
         if (name.isBlank() || email.isBlank() || password.isBlank()) {
-            _uiState.update { it.copy(errorMessage = "Por favor completa todos los campos") }
+            _uiState.update { it.copy(error = RegisterError.FieldsRequired) }
             return
         }
         if (password != confirmPassword) {
-            _uiState.update { it.copy(errorMessage = "Las contraseñas no coinciden") }
+            _uiState.update { it.copy(error = RegisterError.PasswordMismatch) }
             return
         }
         if (password.length < 8) {
-            _uiState.update { it.copy(errorMessage = "La contraseña debe tener al menos 8 caracteres") }
+            _uiState.update { it.copy(error = RegisterError.PasswordTooShort) }
             return
         }
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            _uiState.update { it.copy(isLoading = true, error = null) }
             registerUseCase(email, password, name).fold(
                 onSuccess = {
                     _uiState.update { it.copy(isLoading = false, navigationEvent = UiEvent(Unit)) }
                 },
                 onFailure = { e ->
-                    val msg = when (e) {
-                        is DataException.UserAlreadyExists -> "Este correo ya está registrado"
-                        is DataException.Network -> "Error de red, intenta de nuevo"
-                        else -> e.message ?: "Error desconocido"
+                    val error = when (e) {
+                        is DataException.UserAlreadyExists -> RegisterError.UserAlreadyExists
+                        is DataException.Network -> RegisterError.NetworkError
+                        else -> RegisterError.UnknownError
                     }
-                    _uiState.update { it.copy(isLoading = false, errorMessage = msg) }
+                    _uiState.update { it.copy(isLoading = false, error = error) }
                 }
             )
         }

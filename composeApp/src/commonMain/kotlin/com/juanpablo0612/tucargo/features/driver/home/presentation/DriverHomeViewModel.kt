@@ -58,8 +58,8 @@ class DriverHomeViewModel(
                         isAvailable = user.isOnline
                     )
                 }
-            }.onFailure { e ->
-                _uiState.update { it.copy(isLoading = false, error = e.message) }
+            }.onFailure {
+                _uiState.update { it.copy(isLoading = false, error = DriverHomeError.LoadDriverError) }
             }
         }
     }
@@ -75,7 +75,7 @@ class DriverHomeViewModel(
                     _uiState.update {
                         it.copy(
                             isAvailable = !available,
-                            error = "Error de conexión con la base de datos"
+                            error = DriverHomeError.ToggleAvailabilityError
                         )
                     }
                 }

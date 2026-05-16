@@ -6,6 +6,6 @@ import com.juanpablo0612.tucargo.core.ui.event.UiEvent
 @Immutable
 data class RegisterState(
     val isLoading: Boolean = false,
-    val errorMessage: String? = null,
+    val error: RegisterError? = null,
     val navigationEvent: UiEvent<Unit>? = null
 )

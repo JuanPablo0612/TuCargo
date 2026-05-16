@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import com.juanpablo0612.tucargo.features.driver.home.presentation.components.AvailabilityButton
 import com.juanpablo0612.tucargo.features.driver.home.presentation.components.BalanceCard
@@ -40,6 +41,8 @@ import tucargo.composeapp.generated.resources.driver_home_active_trips_title
 import tucargo.composeapp.generated.resources.driver_home_empty_trips_message
 import tucargo.composeapp.generated.resources.driver_home_offline_desc
 import tucargo.composeapp.generated.resources.driver_home_sign_out_button
+import tucargo.composeapp.generated.resources.driver_home_availability_error
+import tucargo.composeapp.generated.resources.driver_home_load_error
 import tucargo.composeapp.generated.resources.driver_home_title
 import tucargo.composeapp.generated.resources.driver_home_trip_id_label
 import tucargo.composeapp.generated.resources.driver_home_trip_status_in_progress
@@ -101,6 +104,21 @@ fun DriverHomeScreen(
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
+                state.error?.let { driverError ->
+                    item(key = "error_banner", contentType = "error") {
+                        val errorRes = when (driverError) {
+                            DriverHomeError.LoadDriverError -> Res.string.driver_home_load_error
+                            DriverHomeError.ToggleAvailabilityError -> Res.string.driver_home_availability_error
+                        }
+                        ErrorCard(
+                            message = stringResource(errorRes),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                        )
+                    }
+                }
+
                 item(key = "availability_button", contentType = "availability") {
                     androidx.compose.foundation.layout.Spacer(Modifier.padding(top = 8.dp))
                     AvailabilityButton(

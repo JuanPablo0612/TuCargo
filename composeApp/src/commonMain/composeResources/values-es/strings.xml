@@ -87,6 +87,17 @@
     <!-- Errors -->
     <string name="network_error">Error de conexión. Revisa tu internet.</string>
     <string name="unknown_error">Ocurrió un error inesperado.</string>
+    <string name="register_fields_required">Por favor completa todos los campos</string>
+    <string name="register_passwords_mismatch">Las contraseñas no coinciden</string>
+    <string name="register_password_too_short">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="register_user_already_exists">Este correo ya está registrado</string>
+    <string name="docs_both_sides_required">Por favor sube ambas caras del documento</string>
+    <string name="docs_user_not_authenticated">Sesión expirada. Inicia sesión nuevamente.</string>
+    <string name="docs_upload_error">Error al subir documentos. Intenta de nuevo.</string>
+    <string name="driver_home_load_error">No se pudo cargar la información del conductor.</string>
+    <string name="driver_home_availability_error">Error de conexión. No se pudo actualizar disponibilidad.</string>
+    <string name="client_home_load_error">No se pudo cargar tu información. Intenta de nuevo.</string>
+    <string name="client_home_trips_error">No se pudieron cargar los envíos recientes.</string>
 
     <!-- Accesibilidad -->
     <string name="cd_toggle_password_visibility">Mostrar u ocultar contraseña</string>

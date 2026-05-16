@@ -43,8 +43,11 @@ import tucargo.composeapp.generated.resources.docs_back_button
 import tucargo.composeapp.generated.resources.docs_back_label
 import tucargo.composeapp.generated.resources.docs_front_label
 import tucargo.composeapp.generated.resources.docs_submit_button
+import tucargo.composeapp.generated.resources.docs_both_sides_required
 import tucargo.composeapp.generated.resources.docs_subtitle
 import tucargo.composeapp.generated.resources.docs_title
+import tucargo.composeapp.generated.resources.docs_upload_error
+import tucargo.composeapp.generated.resources.docs_user_not_authenticated
 
 @Composable
 fun DocumentScreen(
@@ -93,9 +96,14 @@ internal fun DocumentScreenContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            uiState.errorMessage?.let {
+            uiState.error?.let {
+                val errorRes = when (it) {
+                    DocumentError.BothSidesRequired -> Res.string.docs_both_sides_required
+                    DocumentError.UserNotAuthenticated -> Res.string.docs_user_not_authenticated
+                    DocumentError.UploadError -> Res.string.docs_upload_error
+                }
                 ErrorCard(
-                    message = it,
+                    message = stringResource(errorRes),
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))

@@ -41,7 +41,13 @@ import tucargo.composeapp.generated.resources.register_confirm_password_label
 import tucargo.composeapp.generated.resources.register_email_label
 import tucargo.composeapp.generated.resources.register_name_label
 import tucargo.composeapp.generated.resources.register_password_label
+import tucargo.composeapp.generated.resources.network_error
+import tucargo.composeapp.generated.resources.register_fields_required
+import tucargo.composeapp.generated.resources.register_passwords_mismatch
+import tucargo.composeapp.generated.resources.register_password_too_short
 import tucargo.composeapp.generated.resources.register_title
+import tucargo.composeapp.generated.resources.register_user_already_exists
+import tucargo.composeapp.generated.resources.unknown_error
 
 @Composable
 fun RegisterScreen(
@@ -91,8 +97,16 @@ internal fun RegisterScreenContent(
                 modifier = Modifier.semantics { heading() }
             )
             Spacer(modifier = Modifier.height(24.dp))
-            uiState.errorMessage?.let {
-                ErrorCard(message = it, modifier = Modifier.fillMaxWidth())
+            uiState.error?.let {
+                val errorRes = when (it) {
+                    RegisterError.FieldsRequired -> Res.string.register_fields_required
+                    RegisterError.PasswordMismatch -> Res.string.register_passwords_mismatch
+                    RegisterError.PasswordTooShort -> Res.string.register_password_too_short
+                    RegisterError.UserAlreadyExists -> Res.string.register_user_already_exists
+                    RegisterError.NetworkError -> Res.string.network_error
+                    RegisterError.UnknownError -> Res.string.unknown_error
+                }
+                ErrorCard(message = stringResource(errorRes), modifier = Modifier.fillMaxWidth())
                 Spacer(modifier = Modifier.height(12.dp))
             }
             RoundedTextField(

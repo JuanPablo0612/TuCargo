@@ -43,10 +43,10 @@ class ClientHomeViewModel(
 
     private fun loadData() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            _uiState.update { it.copy(isLoading = true, error = null) }
             getCurrentUserUseCase().fold(
                 onSuccess = { user -> _uiState.update { it.copy(user = user) } },
-                onFailure = { e -> _uiState.update { it.copy(errorMessage = e.message) } }
+                onFailure = { _uiState.update { it.copy(error = ClientHomeError.LoadUserError) } }
             )
             loadRecentTrips()
             _uiState.update { it.copy(isLoading = false) }
@@ -61,8 +61,8 @@ class ClientHomeViewModel(
                 onSuccess = { trips ->
                     _uiState.update { it.copy(recentTrips = trips.toPersistentList(), isLoadingTrips = false) }
                 },
-                onFailure = { e ->
-                    _uiState.update { it.copy(errorMessage = e.message, isLoadingTrips = false) }
+                onFailure = {
+                    _uiState.update { it.copy(error = ClientHomeError.LoadTripsError, isLoadingTrips = false) }
                 }
             )
         }

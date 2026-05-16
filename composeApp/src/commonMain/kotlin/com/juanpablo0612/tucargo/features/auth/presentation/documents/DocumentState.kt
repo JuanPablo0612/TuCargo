@@ -8,7 +8,7 @@ data class DocumentState(
     val isLoading: Boolean = false,
     val idFrontPath: String? = null,
     val idBackPath: String? = null,
-    val errorMessage: String? = null,
+    val error: DocumentError? = null,
     val navigationEvent: UiEvent<Unit>? = null
 )
 

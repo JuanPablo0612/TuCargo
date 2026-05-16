@@ -1,5 +1,3 @@
-// RUTA: composeApp/src/commonMain/kotlin/com/juanpablo0612/tucargo/features/auth/presentation/documents/DocumentViewModel.kt
-
 package com.juanpablo0612.tucargo.features.auth.presentation.documents
 
 import androidx.lifecycle.ViewModel
@@ -22,9 +20,9 @@ class DocumentViewModel(
     fun onAction(action: DocumentAction) {
         when (action) {
             is DocumentAction.OnFrontPhotoSelected ->
-                _uiState.update { it.copy(idFrontPath = action.path, errorMessage = null) }
+                _uiState.update { it.copy(idFrontPath = action.path, error = null) }
             is DocumentAction.OnBackPhotoSelected ->
-                _uiState.update { it.copy(idBackPath = action.path, errorMessage = null) }
+                _uiState.update { it.copy(idBackPath = action.path, error = null) }
             DocumentAction.OnSubmit -> performUpload()
             DocumentAction.OnBackClick -> { }
         }
@@ -33,21 +31,23 @@ class DocumentViewModel(
     private fun performUpload() {
         val state = _uiState.value
         if (state.idFrontPath == null || state.idBackPath == null) {
-            _uiState.update { it.copy(errorMessage = "Por favor sube ambas caras del documento") }
+            _uiState.update { it.copy(error = DocumentError.BothSidesRequired) }
             return
         }
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            _uiState.update { it.copy(isLoading = true, error = null) }
+            val userId = getCurrentUserIdUseCase()
+            if (userId == null) {
+                _uiState.update { it.copy(isLoading = false, error = DocumentError.UserNotAuthenticated) }
+                return@launch
+            }
             try {
-                val userId = getCurrentUserIdUseCase() ?: throw Exception("Usuario no autenticado")
-                // El userId se usará para el path de Firebase Storage: "docs/$userId/..."
+                // userId will be used for the Firebase Storage path: "docs/$userId/..."
                 delay(1500)
                 _uiState.update { it.copy(isLoading = false, navigationEvent = UiEvent(Unit)) }
             } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(isLoading = false, errorMessage = e.message ?: "Error al subir documentos")
-                }
+                _uiState.update { it.copy(isLoading = false, error = DocumentError.UploadError) }
             }
         }
     }

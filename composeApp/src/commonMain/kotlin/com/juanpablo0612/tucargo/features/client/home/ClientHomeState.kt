@@ -14,7 +14,7 @@ data class ClientHomeState(
     val isLoadingTrips: Boolean = false,
     val userLatitude: Double = 4.7110,
     val userLongitude: Double = -74.0721,
-    val errorMessage: String? = null
+    val error: ClientHomeError? = null
 )
 
 sealed interface ClientHomeAction {

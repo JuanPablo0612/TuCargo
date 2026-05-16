@@ -13,5 +13,5 @@ data class DriverHomeState(
     val balance: Double = 0.0,
     val totalTrips: Int = 0,
     val activeTrips: ImmutableList<Trip> = persistentListOf(),
-    val error: String? = null
+    val error: DriverHomeError? = null
 )

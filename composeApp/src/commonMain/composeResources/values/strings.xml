@@ -87,6 +87,17 @@
     <!-- Errors -->
     <string name="network_error">A network error occurred. Please try again later.</string>
     <string name="unknown_error">An unknown error occurred</string>
+    <string name="register_fields_required">Please fill in all fields</string>
+    <string name="register_passwords_mismatch">Passwords don\'t match</string>
+    <string name="register_password_too_short">Password must be at least 8 characters long</string>
+    <string name="register_user_already_exists">This email is already registered</string>
+    <string name="docs_both_sides_required">Please upload both sides of the document</string>
+    <string name="docs_user_not_authenticated">User session expired. Please log in again.</string>
+    <string name="docs_upload_error">Error uploading documents. Please try again.</string>
+    <string name="driver_home_load_error">Could not load driver data. Please try again.</string>
+    <string name="driver_home_availability_error">Connection error. Could not update availability.</string>
+    <string name="client_home_load_error">Could not load your data. Please try again.</string>
+    <string name="client_home_trips_error">Could not load recent trips.</string>
 
     <!-- Accessibility content descriptions -->
     <string name="cd_toggle_password_visibility">Toggle password visibility</string>

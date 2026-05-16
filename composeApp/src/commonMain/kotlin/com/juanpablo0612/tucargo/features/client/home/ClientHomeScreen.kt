@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.MapComponent
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import com.juanpablo0612.tucargo.data.trip.Trip
@@ -57,7 +58,9 @@ import tucargo.composeapp.generated.resources.client_home_empty_trips_title
 import tucargo.composeapp.generated.resources.client_home_greeting_afternoon
 import tucargo.composeapp.generated.resources.client_home_greeting_evening
 import tucargo.composeapp.generated.resources.client_home_greeting_morning
+import tucargo.composeapp.generated.resources.client_home_load_error
 import tucargo.composeapp.generated.resources.client_home_new_trip_button
+import tucargo.composeapp.generated.resources.client_home_trips_error
 import tucargo.composeapp.generated.resources.client_home_recent_trips_title
 import tucargo.composeapp.generated.resources.client_home_sign_out_desc
 import tucargo.composeapp.generated.resources.client_home_stats_status_active
@@ -129,6 +132,21 @@ internal fun ClientHomeScreenContent(
                 }
             } else {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    uiState.error?.let { clientError ->
+                        item(key = "error_banner", contentType = "error") {
+                            val errorRes = when (clientError) {
+                                ClientHomeError.LoadUserError -> Res.string.client_home_load_error
+                                ClientHomeError.LoadTripsError -> Res.string.client_home_trips_error
+                            }
+                            ErrorCard(
+                                message = stringResource(errorRes),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                        }
+                    }
+
                     item(key = "greeting", contentType = "greeting") {
                         GreetingSection(
                             userName = uiState.user.fullName,
