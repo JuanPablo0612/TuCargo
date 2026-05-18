@@ -31,6 +31,7 @@ kotlinxCollectionsImmutable = "0.3.7"
 maps-compose = "6.4.1"
 google-maps = "19.0.0"
 buildKonfig = "0.21.0"
+filekit = "0.14.1"
 
 [libraries]
 runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "runtime" }
@@ -67,6 +68,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "maps-compose" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "google-maps" }
+filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

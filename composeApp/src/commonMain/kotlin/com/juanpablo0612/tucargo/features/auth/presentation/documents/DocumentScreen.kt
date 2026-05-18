@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
@@ -72,6 +74,13 @@ internal fun DocumentScreenContent(
     onAction: (DocumentAction) -> Unit,
     onBackClick: () -> Unit
 ) {
+    val frontLauncher = rememberFilePickerLauncher(type = FileKitType.Image) { file ->
+        file?.let { onAction(DocumentAction.OnFrontPhotoSelected(it)) }
+    }
+    val backLauncher = rememberFilePickerLauncher(type = FileKitType.Image) { file ->
+        file?.let { onAction(DocumentAction.OnBackPhotoSelected(it)) }
+    }
+
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -111,16 +120,16 @@ internal fun DocumentScreenContent(
 
             DocumentPickerItem(
                 label = stringResource(Res.string.docs_front_label),
-                isLoaded = uiState.idFrontPath != null,
-                onClick = { onAction(DocumentAction.OnFrontPhotoSelected("simulated_path_front")) }
+                isLoaded = uiState.idFront != null,
+                onClick = { frontLauncher.launch() }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             DocumentPickerItem(
                 label = stringResource(Res.string.docs_back_label),
-                isLoaded = uiState.idBackPath != null,
-                onClick = { onAction(DocumentAction.OnBackPhotoSelected("simulated_path_back")) }
+                isLoaded = uiState.idBack != null,
+                onClick = { backLauncher.launch() }
             )
 
             Spacer(modifier = Modifier.weight(1f))

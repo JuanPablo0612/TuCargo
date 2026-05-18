@@ -4,6 +4,8 @@ import com.juanpablo0612.tucargo.core.location.LocationProvider
 import com.juanpablo0612.tucargo.core.location.MockLocationProvider
 import com.juanpablo0612.tucargo.data.auth.AuthRepository
 import com.juanpablo0612.tucargo.data.auth.AuthRepositoryImpl
+import com.juanpablo0612.tucargo.data.document.DocumentRepository
+import com.juanpablo0612.tucargo.data.document.DocumentRepositoryImpl
 import com.juanpablo0612.tucargo.data.config.SystemConfig
 import com.juanpablo0612.tucargo.data.trip.TripRepository
 import com.juanpablo0612.tucargo.data.trip.TripRepositoryImpl
@@ -11,6 +13,7 @@ import com.juanpablo0612.tucargo.data.trip.TripTrackingManager
 import com.juanpablo0612.tucargo.data.user.UserRepository
 import com.juanpablo0612.tucargo.data.user.UserRepositoryImpl
 import com.juanpablo0612.tucargo.domain.usecase.CreateTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.UploadDocumentsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
@@ -27,6 +30,7 @@ import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeVie
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
+import dev.gitlive.firebase.storage.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -39,6 +43,8 @@ import org.koin.dsl.module
 val dataModule = module {
     single { Firebase.auth }
     single { Firebase.firestore }
+    single { Firebase.storage }
+    single<DocumentRepository> { DocumentRepositoryImpl(get(), get()) }
     
     // Proveedor de ubicación (fácil de cambiar a RealLocationProvider después)
     single<LocationProvider> { MockLocationProvider() }
@@ -67,6 +73,7 @@ val domainModule = module {
     singleOf(::UpdateDriverStatusUseCase)
     singleOf(::GetClientTripsUseCase)
     singleOf(::CreateTripUseCase)
+    singleOf(::UploadDocumentsUseCase)
 }
 
 val viewModelModule = module {
