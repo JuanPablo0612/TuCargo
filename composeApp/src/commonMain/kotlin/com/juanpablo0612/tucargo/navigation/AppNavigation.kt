@@ -10,7 +10,10 @@ import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentSc
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.register.RegisterScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.welcome.WelcomeScreen
+import com.juanpablo0612.tucargo.features.client.cargo.CargoDetailsScreen
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeScreen
+import com.juanpablo0612.tucargo.features.client.order.ReviewOrderScreen
+import com.juanpablo0612.tucargo.features.client.route.SetRouteScreen
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeScreen
 import kotlinx.serialization.Serializable
 
@@ -19,6 +22,9 @@ import kotlinx.serialization.Serializable
 @Serializable object Register
 @Serializable object Documents
 @Serializable object ClientHome
+@Serializable object SetRoute
+@Serializable object CargoDetails
+@Serializable object ReviewOrder
 @Serializable object DriverHome // Nueva ruta para el conductor
 
 @Composable
@@ -69,10 +75,37 @@ fun AppNavigation() {
 
         composable<ClientHome> {
             ClientHomeScreen(
-                // quitamos 'onNewShipment' si tu Composable no lo tiene
+                onNewTrip = { navController.navigate(SetRoute) },
                 onSignOut = {
                     navController.navigate(Welcome) {
                         popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable<SetRoute> {
+            SetRouteScreen(
+                onBackClick = { navController.popBackStack() },
+                onChooseOnMapClick = { navController.navigate(CargoDetails) },
+                onSuggestionClick = { _ -> navController.navigate(CargoDetails) }
+            )
+        }
+
+        composable<CargoDetails> {
+            CargoDetailsScreen(
+                onBackClick = { navController.popBackStack() },
+                onContinueClick = { _ -> navController.navigate(ReviewOrder) }
+            )
+        }
+
+        composable<ReviewOrder> {
+            ReviewOrderScreen(
+                onBackClick = { navController.popBackStack() },
+                onRequestDriverClick = { 
+                    // Regresamos a Home o vamos a Tracking
+                    navController.navigate(ClientHome) {
+                        popUpTo<ClientHome> { inclusive = true }
                     }
                 }
             )

@@ -10,13 +10,15 @@ class TripRepositoryImpl(firestore: FirebaseFirestore) : TripRepository {
     private val tripsCollection = firestore.collection("trips")
 
     override suspend fun getClientTrips(clientId: String, limit: Int): Result<List<Trip>> = safeCall {
+        // Lógica Senior: Eliminamos orderBy temporalmente para evitar fallos por falta de índices en Firestore
+        // y asegurar que los viajes se carguen correctamente.
         tripsCollection
             .where { "client_id" equalTo clientId }
-            .orderBy("created_at", Direction.DESCENDING)
             .limit(limit)
             .get()
             .documents
             .map { it.data<Trip>() }
+            .sortedByDescending { it.createdAt } // Ordenamos en memoria para mayor seguridad inicial
     }
 
     override suspend fun createTrip(trip: Trip): Result<String> = safeCall {

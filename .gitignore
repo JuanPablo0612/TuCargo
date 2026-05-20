@@ -19,3 +19,4 @@ captures
 node_modules/
 /androidApp/google-services.json
 secrets.properties
+

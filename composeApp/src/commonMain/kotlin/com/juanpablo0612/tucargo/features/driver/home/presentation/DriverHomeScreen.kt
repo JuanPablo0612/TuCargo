@@ -1,52 +1,33 @@
 package com.juanpablo0612.tucargo.features.driver.home.presentation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
-import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
-import com.juanpablo0612.tucargo.features.driver.home.presentation.components.AvailabilityButton
-import com.juanpablo0612.tucargo.features.driver.home.presentation.components.BalanceCard
+import com.juanpablo0612.tucargo.core.ui.theme.BackgroundGray
+import com.juanpablo0612.tucargo.core.ui.theme.PrimaryBlue
+import com.juanpablo0612.tucargo.core.ui.theme.TextDarkGray
+import com.juanpablo0612.tucargo.core.ui.theme.TextLightGray
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import tucargo.composeapp.generated.resources.Res
-import tucargo.composeapp.generated.resources.driver_home_active_desc
-import tucargo.composeapp.generated.resources.driver_home_active_trips_title
-import tucargo.composeapp.generated.resources.driver_home_empty_trips_message
-import tucargo.composeapp.generated.resources.driver_home_offline_desc
-import tucargo.composeapp.generated.resources.driver_home_sign_out_button
-import tucargo.composeapp.generated.resources.driver_home_availability_error
-import tucargo.composeapp.generated.resources.driver_home_load_error
-import tucargo.composeapp.generated.resources.driver_home_title
-import tucargo.composeapp.generated.resources.driver_home_trip_id_label
-import tucargo.composeapp.generated.resources.driver_home_trip_status_in_progress
-import tucargo.composeapp.generated.resources.driver_home_view_trip_button
+import tucargo.composeapp.generated.resources.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,141 +41,211 @@ fun DriverHomeScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    androidx.compose.foundation.layout.Column {
-                        Text(
-                            text = stringResource(Res.string.driver_home_title),
-                            style = MaterialTheme.typography.titleMedium
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = null,
+                            modifier = Modifier.size(32.dp),
+                            tint = Color.Gray
                         )
-                        Text(
-                            text = if (state.isAvailable)
-                                stringResource(Res.string.driver_home_active_desc)
-                            else
-                                stringResource(Res.string.driver_home_offline_desc),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (state.isAvailable)
-                                MaterialTheme.colorScheme.primary
-                            else
-                                MaterialTheme.colorScheme.error
-                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Text(
+                                text = "Status: ${if (state.isAvailable) "Online" else "Offline"}",
+                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                            )
+                        }
                     }
                 },
                 actions = {
-                    TextButton(onClick = onSignOut) {
-                        Text(
-                            text = stringResource(Res.string.driver_home_sign_out_button),
-                            color = MaterialTheme.colorScheme.error
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Default.HelpOutline, contentDescription = null)
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+            )
+        },
+        bottomBar = {
+            NavigationBar(containerColor = Color.White) {
+                NavigationBarItem(
+                    selected = true,
+                    onClick = {},
+                    icon = { Icon(Icons.Default.Home, null) },
+                    label = { Text(stringResource(Res.string.driver_nav_home)) },
+                    colors = NavigationBarItemDefaults.colors(selectedIconColor = PrimaryBlue, selectedTextColor = PrimaryBlue)
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = {},
+                    icon = { Icon(Icons.Default.Wallet, null) },
+                    label = { Text(stringResource(Res.string.driver_nav_wallet)) }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = {},
+                    icon = { Icon(Icons.Default.Person, null) },
+                    label = { Text(stringResource(Res.string.driver_nav_profile)) }
+                )
+            }
+        },
+        containerColor = BackgroundGray
+    ) { padding ->
+        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item { Spacer(Modifier.height(8.dp)) }
+
+                // Tarjeta de Resumen de Ganancias
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(20.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.driver_current_balance),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = Color.Gray
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .background(Color(0xFFF3F4F6))
+                                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(Res.string.driver_weekly),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Gray
+                                    )
+                                }
+                            }
+                            Text(
+                                text = "$25.000",
+                                style = MaterialTheme.typography.headlineLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 32.sp
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = stringResource(Res.string.driver_today_earnings, "$120.50"),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF10B981),
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+
+                // Bloques de Estadísticas
+                item {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        StatBlock(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.Motorcycle,
+                            value = "0",
+                            label = stringResource(Res.string.driver_todays_trips)
+                        )
+                        StatBlock(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.AccessTime,
+                            value = "0h 0m",
+                            label = stringResource(Res.string.driver_online_time)
                         )
                     }
                 }
+
+                item { Spacer(Modifier.height(100.dp)) } // Espacio para el botón flotante central
+            }
+
+            // Botón Central "GO ONLINE"
+            Column(
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Surface(
+                    onClick = { viewModel.toggleAvailability(!state.isAvailable) },
+                    modifier = Modifier.size(120.dp),
+                    shape = CircleShape,
+                    color = PrimaryBlue,
+                    shadowElevation = 8.dp
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PowerSettingsNew,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(32.dp)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = if (state.isAvailable) "GO OFFLINE" else "GO ONLINE",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = stringResource(Res.string.driver_go_online_desc),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextDarkGray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 32.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun StatBlock(
+    modifier: Modifier = Modifier,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    value: String,
+    label: String
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = PrimaryBlue,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = value,
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.Gray
             )
         }
-    ) { padding ->
-        if (state.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                state.error?.let { driverError ->
-                    item(key = "error_banner", contentType = "error") {
-                        val errorRes = when (driverError) {
-                            DriverHomeError.LoadDriverError -> Res.string.driver_home_load_error
-                            DriverHomeError.ToggleAvailabilityError -> Res.string.driver_home_availability_error
-                        }
-                        ErrorCard(
-                            message = stringResource(errorRes),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                        )
-                    }
-                }
-
-                item(key = "availability_button", contentType = "availability") {
-                    androidx.compose.foundation.layout.Spacer(Modifier.padding(top = 8.dp))
-                    AvailabilityButton(
-                        isAvailable = state.isAvailable,
-                        onToggle = { viewModel.toggleAvailability(it) }
-                    )
-                }
-
-                item(key = "balance_card", contentType = "balance") {
-                    BalanceCard(
-                        balance = state.balance,
-                        totalTrips = state.totalTrips
-                    )
-                }
-
-                item(key = "trips_header", contentType = "header") {
-                    Text(
-                        text = stringResource(Res.string.driver_home_active_trips_title),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.semantics { heading() }
-                    )
-                }
-
-                if (state.activeTrips.isEmpty()) {
-                    item(key = "empty_state", contentType = "empty") {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                            )
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.driver_home_empty_trips_message),
-                                modifier = Modifier.padding(24.dp),
-                                style = MaterialTheme.typography.bodyMedium,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                } else {
-                    items(
-                        items = state.activeTrips,
-                        key = { it.id },
-                        contentType = { "trip_item" }
-                    ) { trip ->
-                        ActiveTripItem(trip.id)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-internal fun ActiveTripItem(tripId: String) {
-    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-        ListItem(
-            headlineContent = {
-                Text(stringResource(Res.string.driver_home_trip_id_label, tripId.take(8)))
-            },
-            supportingContent = {
-                Text(stringResource(Res.string.driver_home_trip_status_in_progress))
-            },
-            trailingContent = {
-                Button(onClick = { /* Navigate to details */ }) {
-                    Text(stringResource(Res.string.driver_home_view_trip_button))
-                }
-            }
-        )
-    }
-}
-
-@Preview
-@Composable
-internal fun ActiveTripItemPreview() {
-    TuCargoTheme {
-        ActiveTripItem("trip-abc-123-def")
     }
 }

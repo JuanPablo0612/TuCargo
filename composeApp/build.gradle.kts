@@ -47,6 +47,8 @@ kotlin {
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.maps.compose)
             implementation(libs.play.services.maps)
+            implementation(libs.maps.compose)
+            implementation(libs.play.services.maps)
         }
         commonMain.dependencies {
             implementation(libs.runtime)
