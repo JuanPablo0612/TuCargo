@@ -13,21 +13,33 @@
     <string name="login_email_placeholder">ejemplo@tucargo.com</string>
     <string name="login_email_error">Correo electrónico inválido</string>
     <string name="login_password_label">Contraseña</string>
-    <string name="login_password_placeholder">Mínimo 8 caracteres</string>
-    <string name="login_password_error">Contraseña incorrecta</string>
+    <string name="login_password_placeholder">Mínimo 6 caracteres</string>
+    <string name="login_password_error">La contraseña debe tener al menos 6 caracteres</string>
     <string name="login_login_button">Iniciar Sesión</string>
-    <string name="login_forgot_password_button">¿Olvidaste tu contraseña?</string>
+    <string name="login_forgot_password_button">Olvidé mi contraseña</string>
     <string name="login_register_link">¿No tienes cuenta? Regístrate</string>
-    <string name="login_invalid_credentials_error">Credenciales incorrectas. Intenta de nuevo.</string>
+    <string name="login_invalid_credentials_error">Correo o contraseña incorrectos</string>
 
     <!-- Register -->
     <string name="register_back_button">← Volver</string>
     <string name="register_title">Crea tu cuenta</string>
+    <string name="register_role_label">Selecciona tu rol</string>
+    <string name="register_role_client">Soy cliente</string>
+    <string name="register_role_driver">Soy conductor</string>
     <string name="register_name_label">Nombre Completo</string>
     <string name="register_email_label">Correo Electrónico</string>
+    <string name="register_phone_label">Teléfono (formato E.164, ej. +573001234567)</string>
     <string name="register_password_label">Contraseña</string>
     <string name="register_confirm_password_label">Confirmar Contraseña</string>
     <string name="register_button">Registrarse</string>
+
+    <!-- Reset Password -->
+    <string name="reset_password_title">Recuperar Contraseña</string>
+    <string name="reset_password_subtitle">Ingresa tu correo y te enviaremos un enlace</string>
+    <string name="reset_password_email_label">Correo Electrónico</string>
+    <string name="reset_password_submit_button">Enviar Enlace</string>
+    <string name="reset_password_success_message">Te enviamos un enlace a tu correo. Revisa tu bandeja de entrada.</string>
+    <string name="reset_password_email_required_error">Por favor ingresa tu correo electrónico</string>
 
     <!-- Documents -->
     <string name="docs_title">Verificación de Identidad</string>
@@ -85,11 +97,14 @@
     <string name="map_not_available_ios">Mapa no disponible en iOS (Simulador/Actual)</string>
 
     <!-- Errors -->
-    <string name="network_error">Error de conexión. Revisa tu internet.</string>
-    <string name="unknown_error">Ocurrió un error inesperado.</string>
+    <string name="network_error">Sin conexión. Intenta de nuevo.</string>
+    <string name="unknown_error">Ocurrió un error. Intenta de nuevo.</string>
     <string name="register_fields_required">Por favor completa todos los campos</string>
     <string name="register_passwords_mismatch">Las contraseñas no coinciden</string>
-    <string name="register_password_too_short">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="register_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="register_weak_password_error">La contraseña debe tener al menos 6 caracteres, una letra y un número</string>
+    <string name="register_invalid_email_error">Ingresa un correo electrónico válido</string>
+    <string name="register_invalid_phone_error">El teléfono debe estar en formato E.164 (ej. +573001234567)</string>
     <string name="register_user_already_exists">Este correo ya está registrado</string>
     <string name="docs_both_sides_required">Por favor sube ambas caras del documento</string>
     <string name="docs_user_not_authenticated">Sesión expirada. Inicia sesión nuevamente.</string>

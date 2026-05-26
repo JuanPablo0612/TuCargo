@@ -1,6 +1,8 @@
 package com.juanpablo0612.tucargo.features.auth.presentation.register
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +16,7 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,36 +38,43 @@ import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.network_error
 import tucargo.composeapp.generated.resources.register_back_button
 import tucargo.composeapp.generated.resources.register_button
-import tucargo.composeapp.generated.resources.register_confirm_password_label
 import tucargo.composeapp.generated.resources.register_email_label
+import tucargo.composeapp.generated.resources.register_fields_required
+import tucargo.composeapp.generated.resources.register_invalid_email_error
+import tucargo.composeapp.generated.resources.register_invalid_phone_error
 import tucargo.composeapp.generated.resources.register_name_label
 import tucargo.composeapp.generated.resources.register_password_label
-import tucargo.composeapp.generated.resources.network_error
-import tucargo.composeapp.generated.resources.register_fields_required
-import tucargo.composeapp.generated.resources.register_passwords_mismatch
 import tucargo.composeapp.generated.resources.register_password_too_short
+import tucargo.composeapp.generated.resources.register_phone_label
+import tucargo.composeapp.generated.resources.register_role_client
+import tucargo.composeapp.generated.resources.register_role_driver
+import tucargo.composeapp.generated.resources.register_role_label
 import tucargo.composeapp.generated.resources.register_title
 import tucargo.composeapp.generated.resources.register_user_already_exists
+import tucargo.composeapp.generated.resources.register_weak_password_error
 import tucargo.composeapp.generated.resources.unknown_error
 
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel = koinViewModel(),
     onBackClick: () -> Unit,
-    onRegisterSuccess: () -> Unit = {}
+    onRegisterSuccess: (role: String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    uiState.navigationEvent?.consume()?.let { onRegisterSuccess() }
+    uiState.navigationEvent?.consume()?.let { role -> onRegisterSuccess(role) }
 
     RegisterScreenContent(
         uiState = uiState,
         nameState = viewModel.nameState,
         emailState = viewModel.emailState,
+        phoneState = viewModel.phoneState,
         passwordState = viewModel.passwordState,
-        confirmPasswordState = viewModel.confirmPasswordState,
+        selectedRole = viewModel.selectedRole,
+        onRoleSelected = { viewModel.selectedRole = it },
         onRegisterClick = viewModel::onRegister,
         onBackClick = onBackClick
     )
@@ -75,8 +85,10 @@ internal fun RegisterScreenContent(
     uiState: RegisterState,
     nameState: TextFieldState,
     emailState: TextFieldState,
+    phoneState: TextFieldState,
     passwordState: TextFieldState,
-    confirmPasswordState: TextFieldState,
+    selectedRole: String,
+    onRoleSelected: (String) -> Unit,
     onRegisterClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -96,12 +108,32 @@ internal fun RegisterScreenContent(
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.semantics { heading() }
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(Res.string.register_role_label),
+                style = MaterialTheme.typography.labelLarge
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                FilterChip(
+                    selected = selectedRole == "CLIENT",
+                    onClick = { onRoleSelected("CLIENT") },
+                    label = { Text(stringResource(Res.string.register_role_client)) }
+                )
+                FilterChip(
+                    selected = selectedRole == "DRIVER",
+                    onClick = { onRoleSelected("DRIVER") },
+                    label = { Text(stringResource(Res.string.register_role_driver)) }
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             uiState.error?.let {
                 val errorRes = when (it) {
                     RegisterError.FieldsRequired -> Res.string.register_fields_required
-                    RegisterError.PasswordMismatch -> Res.string.register_passwords_mismatch
                     RegisterError.PasswordTooShort -> Res.string.register_password_too_short
+                    RegisterError.WeakPassword -> Res.string.register_weak_password_error
+                    RegisterError.InvalidEmailFormat -> Res.string.register_invalid_email_error
+                    RegisterError.InvalidPhoneFormat -> Res.string.register_invalid_phone_error
                     RegisterError.UserAlreadyExists -> Res.string.register_user_already_exists
                     RegisterError.NetworkError -> Res.string.network_error
                     RegisterError.UnknownError -> Res.string.unknown_error
@@ -128,20 +160,20 @@ internal fun RegisterScreenContent(
                     imeAction = ImeAction.Next
                 )
             )
-            SecureRoundedTextField(
-                state = passwordState,
-                label = { Text(stringResource(Res.string.register_password_label)) },
+            RoundedTextField(
+                state = phoneState,
+                label = { Text(stringResource(Res.string.register_phone_label)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
+                    keyboardType = KeyboardType.Phone,
                     imeAction = ImeAction.Next
                 )
             )
             SecureRoundedTextField(
-                state = confirmPasswordState,
-                label = { Text(stringResource(Res.string.register_confirm_password_label)) },
+                state = passwordState,
+                label = { Text(stringResource(Res.string.register_password_label)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 32.dp),
@@ -177,8 +209,10 @@ internal fun RegisterScreenContentPreview() {
             uiState = RegisterState(),
             nameState = rememberTextFieldState(),
             emailState = rememberTextFieldState(),
+            phoneState = rememberTextFieldState(),
             passwordState = rememberTextFieldState(),
-            confirmPasswordState = rememberTextFieldState(),
+            selectedRole = "CLIENT",
+            onRoleSelected = {},
             onRegisterClick = {},
             onBackClick = {}
         )

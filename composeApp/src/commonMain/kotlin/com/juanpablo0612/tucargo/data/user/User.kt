@@ -20,6 +20,11 @@ data class User(
     @SerialName("current_trip_id")
     val currentTripId: String? = null,
     val rating: Double = 0.0,
+    @SerialName("rating_avg")
+    val ratingAvg: Double = 0.0,
+    @SerialName("rating_count")
+    val ratingCount: Int = 0,
+    val status: String = "ACTIVE",
     @SerialName("fcm_token")
     val fcmToken: String = "",
     val vehicle: Vehicle? = null

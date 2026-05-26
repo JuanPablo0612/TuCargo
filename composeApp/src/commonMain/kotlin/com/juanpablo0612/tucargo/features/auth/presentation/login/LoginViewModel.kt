@@ -1,12 +1,10 @@
-// RUTA: composeApp/src/commonMain/kotlin/com/juanpablo0612/tucargo/features/auth/presentation/login/LoginViewModel.kt
-
 package com.juanpablo0612.tucargo.features.auth.presentation.login
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.core.ui.event.UiEvent
-import com.juanpablo0612.tucargo.data.common.DataException
+import com.juanpablo0612.tucargo.domain.model.AuthError
 import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,14 +29,14 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
     }
 
     private fun validateEmail(): Boolean {
-        val emailRegex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
-        val isValid = emailRegex.matches(emailState.text)
+        val emailRegex = Regex("^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,6}$")
+        val isValid = emailRegex.matches(emailState.text.toString().trim())
         _uiState.update { it.copy(isEmailValid = isValid) }
         return isValid
     }
 
     private fun validatePassword(): Boolean {
-        val isValid = passwordState.text.length >= 8
+        val isValid = passwordState.text.length >= 6
         _uiState.update { it.copy(isPasswordValid = isValid) }
         return isValid
     }
@@ -59,8 +57,8 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
                 },
                 onFailure = { e ->
                     val error = when (e) {
-                        is DataException.InvalidCredentials -> LoginError.InvalidCredentials
-                        is DataException.Network -> LoginError.NetworkError
+                        is AuthError.InvalidCredentials -> LoginError.InvalidCredentials
+                        is AuthError.NetworkError -> LoginError.NetworkError
                         else -> LoginError.UnknownError
                     }
                     _uiState.update { it.copy(isLoading = false, loginError = error) }

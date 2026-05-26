@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.di
 
 import com.juanpablo0612.tucargo.core.location.LocationProvider
 import com.juanpablo0612.tucargo.core.location.MockLocationProvider
+import com.juanpablo0612.tucargo.data.auth.AuthRemoteDataSource
 import com.juanpablo0612.tucargo.data.auth.AuthRepository
 import com.juanpablo0612.tucargo.data.auth.AuthRepositoryImpl
 import com.juanpablo0612.tucargo.data.document.DocumentRepository
@@ -19,12 +20,17 @@ import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.IsUserLoggedInUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
+import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
+import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SignOutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
+import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.register.RegisterViewModel
+import com.juanpablo0612.tucargo.features.auth.presentation.resetpassword.ResetPasswordViewModel
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeViewModel
 import dev.gitlive.firebase.Firebase
@@ -44,22 +50,16 @@ val dataModule = module {
     single { Firebase.auth }
     single { Firebase.firestore }
     single { Firebase.storage }
-    single<DocumentRepository> { DocumentRepositoryImpl(get(), get()) }
-    
-    // Proveedor de ubicación (fácil de cambiar a RealLocationProvider después)
-    single<LocationProvider> { MockLocationProvider() }
-    
-    // Configuración del sistema (Singleton)
-    single { SystemConfig() }
 
-    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
+    single { AuthRemoteDataSource(get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get()) }
+
+    single<DocumentRepository> { DocumentRepositoryImpl(get(), get()) }
+    single<LocationProvider> { MockLocationProvider() }
+    single { SystemConfig() }
     single<UserRepository> { UserRepositoryImpl(get(), get()) }
     single<TripRepository> { TripRepositoryImpl(get()) }
-    
-    // Scope global para procesos en segundo plano (como el tracking)
     single { CoroutineScope(Dispatchers.Default + SupervisorJob()) }
-    
-    // Manager de tracking necesita el scope inyectado
     single { TripTrackingManager(get(), get(), get()) }
 }
 
@@ -74,6 +74,10 @@ val domainModule = module {
     singleOf(::GetClientTripsUseCase)
     singleOf(::CreateTripUseCase)
     singleOf(::UploadDocumentsUseCase)
+
+    factory { LogoutUseCase(get()) }
+    factory { SendPasswordResetEmailUseCase(get()) }
+    factory { ObserveAuthStateUseCase(get()) }
 }
 
 val viewModelModule = module {
@@ -82,6 +86,8 @@ val viewModelModule = module {
     viewModelOf(::DocumentViewModel)
     viewModelOf(::ClientHomeViewModel)
     viewModelOf(::DriverHomeViewModel)
+    viewModelOf(::ResetPasswordViewModel)
+    viewModelOf(::AuthViewModel)
 }
 
 val appModule = module {

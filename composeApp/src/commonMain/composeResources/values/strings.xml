@@ -14,7 +14,7 @@
     <string name="login_email_error">Please enter a valid email address</string>
     <string name="login_password_label">Password</string>
     <string name="login_password_placeholder">********</string>
-    <string name="login_password_error">Password must be at least 8 characters long</string>
+    <string name="login_password_error">Password must be at least 6 characters long</string>
     <string name="login_login_button">Log In</string>
     <string name="login_forgot_password_button">Forgot Password?</string>
     <string name="login_register_link">Don\'t have an account? Register</string>
@@ -23,11 +23,23 @@
     <!-- Register -->
     <string name="register_back_button">← Back</string>
     <string name="register_title">Create your account</string>
+    <string name="register_role_label">Select your role</string>
+    <string name="register_role_client">I need to send cargo</string>
+    <string name="register_role_driver">I am a driver</string>
     <string name="register_name_label">Full Name</string>
     <string name="register_email_label">Email Address</string>
+    <string name="register_phone_label">Phone (E.164, e.g. +573001234567)</string>
     <string name="register_password_label">Password</string>
     <string name="register_confirm_password_label">Confirm Password</string>
     <string name="register_button">Register</string>
+
+    <!-- Reset Password -->
+    <string name="reset_password_title">Reset Password</string>
+    <string name="reset_password_subtitle">Enter your email and we\'ll send you a reset link</string>
+    <string name="reset_password_email_label">Email Address</string>
+    <string name="reset_password_submit_button">Send Reset Link</string>
+    <string name="reset_password_success_message">We sent a link to your email. Check your inbox.</string>
+    <string name="reset_password_email_required_error">Please enter your email address</string>
 
     <!-- Documents -->
     <string name="docs_title">Identity Verification</string>
@@ -89,7 +101,10 @@
     <string name="unknown_error">An unknown error occurred</string>
     <string name="register_fields_required">Please fill in all fields</string>
     <string name="register_passwords_mismatch">Passwords don\'t match</string>
-    <string name="register_password_too_short">Password must be at least 8 characters long</string>
+    <string name="register_password_too_short">Password must be at least 6 characters</string>
+    <string name="register_weak_password_error">Password must have at least 6 characters, one letter and one digit</string>
+    <string name="register_invalid_email_error">Please enter a valid email address</string>
+    <string name="register_invalid_phone_error">Phone must be in E.164 format (e.g. +573001234567)</string>
     <string name="register_user_already_exists">This email is already registered</string>
     <string name="docs_both_sides_required">Please upload both sides of the document</string>
     <string name="docs_user_not_authenticated">User session expired. Please log in again.</string>

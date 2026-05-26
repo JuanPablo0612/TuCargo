@@ -7,5 +7,5 @@ import com.juanpablo0612.tucargo.core.ui.event.UiEvent
 data class RegisterState(
     val isLoading: Boolean = false,
     val error: RegisterError? = null,
-    val navigationEvent: UiEvent<Unit>? = null
+    val navigationEvent: UiEvent<String>? = null
 )
