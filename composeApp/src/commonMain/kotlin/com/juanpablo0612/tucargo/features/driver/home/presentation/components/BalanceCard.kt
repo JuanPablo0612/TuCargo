@@ -1,6 +1,7 @@
 package com.juanpablo0612.tucargo.features.driver.home.presentation.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -21,7 +22,7 @@ import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.driver_home_balance_title
 import tucargo.composeapp.generated.resources.driver_home_completed_trips_msg
 
-private fun Double.toCurrencyString(): String = "$${"%.2f".format(this)}"
+internal fun Double.toCurrencyString(): String = "$${"%.2f".format(this)}"
 
 @Composable
 fun BalanceCard(
@@ -36,8 +37,10 @@ fun BalanceCard(
         )
     ) {
         Column(
-            modifier = Modifier.padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(Res.string.driver_home_balance_title),

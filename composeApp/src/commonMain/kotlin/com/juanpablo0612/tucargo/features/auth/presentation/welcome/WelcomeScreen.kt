@@ -1,5 +1,3 @@
-// RUTA: composeApp/src/commonMain/kotlin/com/juanpablo0612/tucargo/features/auth/presentation/welcome/WelcomeScreen.kt
-
 package com.juanpablo0612.tucargo.features.auth.presentation.welcome
 
 import androidx.compose.foundation.background
@@ -8,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
@@ -31,7 +30,9 @@ import tucargo.composeapp.generated.resources.local_shipping
 import tucargo.composeapp.generated.resources.motorcycle
 import tucargo.composeapp.generated.resources.package_2
 import tucargo.composeapp.generated.resources.welcome_driver_button
+import tucargo.composeapp.generated.resources.welcome_driver_description
 import tucargo.composeapp.generated.resources.welcome_send_cargo_button
+import tucargo.composeapp.generated.resources.welcome_send_cargo_description
 import tucargo.composeapp.generated.resources.welcome_subtitle
 import tucargo.composeapp.generated.resources.welcome_title
 import tucargo.composeapp.generated.resources.welcome_version
@@ -45,81 +46,108 @@ fun WelcomeScreenPreview() {
 
 @Composable
 fun WelcomeScreen(
+    modifier: Modifier = Modifier,
     onSendCargoClick: () -> Unit = {},
-    onDriverClick: () -> Unit = {}
+    onDriverClick: () -> Unit = {},
 ) {
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .safeDrawingPadding(),
-        color = MaterialTheme.colorScheme.primary
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.primary,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .safeDrawingPadding()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Box(
                 modifier = Modifier
-                    .clip(MaterialTheme.shapes.large)
-                    .background(color = MaterialTheme.colorScheme.background)
-                    .padding(16.dp)
+                    .size(100.dp)
+                    .clip(MaterialTheme.shapes.extraLarge)
+                    .background(color = MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.local_shipping),
                     contentDescription = null,
-                    modifier = Modifier.size(60.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                    modifier = Modifier.size(52.dp),
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
             Text(
                 text = stringResource(Res.string.welcome_title),
-                modifier = Modifier.padding(top = 16.dp),
-                style = MaterialTheme.typography.displayMedium
+                modifier = Modifier.padding(top = 20.dp),
+                style = MaterialTheme.typography.displayMedium,
             )
             Text(
                 text = stringResource(Res.string.welcome_subtitle),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f),
             )
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = onSendCargoClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.large,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary
-                )
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ),
             ) {
-                Icon(painter = painterResource(Res.drawable.package_2), contentDescription = null)
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = stringResource(Res.string.welcome_send_cargo_button),
-                    modifier = Modifier.padding(vertical = 8.dp)
+                Icon(
+                    painter = painterResource(Res.drawable.package_2),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(Res.string.welcome_send_cargo_button),
+                        style = MaterialTheme.typography.titleSmall,
+                    )
+                    Text(
+                        text = stringResource(Res.string.welcome_send_cargo_description),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
             }
+            Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
                 onClick = onDriverClick,
                 modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.large,
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
             ) {
-                Icon(painter = painterResource(Res.drawable.motorcycle), contentDescription = null)
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = stringResource(Res.string.welcome_driver_button),
-                    modifier = Modifier.padding(vertical = 8.dp)
+                Icon(
+                    painter = painterResource(Res.drawable.motorcycle),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(Res.string.welcome_driver_button),
+                        style = MaterialTheme.typography.titleSmall,
+                    )
+                    Text(
+                        text = stringResource(Res.string.welcome_driver_description),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
             }
             Text(
                 text = stringResource(Res.string.welcome_version, "1.0.0"),
-                modifier = Modifier.padding(vertical = 32.dp)
+                modifier = Modifier.padding(vertical = 24.dp),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
             )
         }
     }

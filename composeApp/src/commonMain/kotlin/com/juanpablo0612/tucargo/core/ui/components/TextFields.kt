@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.TextField
@@ -19,7 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 internal fun textFieldColors() = TextFieldDefaults.colors(
-    errorIndicatorColor = Color.Transparent,
+    errorIndicatorColor = MaterialTheme.colorScheme.error,
     focusedIndicatorColor = Color.Transparent,
     unfocusedIndicatorColor = Color.Transparent,
     disabledIndicatorColor = Color.Transparent,
@@ -77,6 +78,7 @@ fun SecureRoundedTextField(
     state: TextFieldState,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    textObfuscationMode: TextObfuscationMode = TextObfuscationMode.RevealLastTyped,
     label: @Composable (TextFieldLabelScope.() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
@@ -93,6 +95,7 @@ fun SecureRoundedTextField(
         state = state,
         modifier = modifier,
         enabled = enabled,
+        textObfuscationMode = textObfuscationMode,
         label = label,
         placeholder = placeholder,
         leadingIcon = leadingIcon,

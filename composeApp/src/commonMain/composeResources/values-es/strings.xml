@@ -3,7 +3,9 @@
     <string name="welcome_title">TuCargo</string>
     <string name="welcome_subtitle">Transporte de carga ligera y rápida</string>
     <string name="welcome_send_cargo_button">Enviar Carga</string>
+    <string name="welcome_send_cargo_description">Envía tus paquetes rápidamente</string>
     <string name="welcome_driver_button">Soy Conductor</string>
+    <string name="welcome_driver_description">Gana dinero haciendo entregas</string>
     <string name="welcome_version">v%1$s</string>
 
     <!-- Login -->
@@ -32,6 +34,10 @@
     <string name="register_password_label">Contraseña</string>
     <string name="register_confirm_password_label">Confirmar Contraseña</string>
     <string name="register_button">Registrarse</string>
+    <string name="register_name_placeholder">Juan Pérez</string>
+    <string name="register_email_placeholder">tú@ejemplo.com</string>
+    <string name="register_phone_placeholder">+57 300 123 4567</string>
+    <string name="register_password_placeholder">Mín. 6 caracteres</string>
 
     <!-- Reset Password -->
     <string name="reset_password_title">Recuperar Contraseña</string>
@@ -39,7 +45,9 @@
     <string name="reset_password_email_label">Correo Electrónico</string>
     <string name="reset_password_submit_button">Enviar Enlace</string>
     <string name="reset_password_success_message">Te enviamos un enlace a tu correo. Revisa tu bandeja de entrada.</string>
+    <string name="reset_password_back_to_login_button">Volver al inicio de sesión</string>
     <string name="reset_password_email_required_error">Por favor ingresa tu correo electrónico</string>
+    <string name="reset_password_email_placeholder">tu@correo.com</string>
 
     <!-- Documents -->
     <string name="docs_title">Verificación de Identidad</string>

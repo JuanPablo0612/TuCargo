@@ -33,12 +33,29 @@ class RegisterViewModel(private val registerUseCase: RegisterUseCase) : ViewMode
         val password = passwordState.text.toString()
 
         if (name.isBlank() || email.isBlank() || phone.isBlank() || password.isBlank()) {
-            _uiState.update { it.copy(error = RegisterError.FieldsRequired) }
+            _uiState.update {
+                it.copy(
+                    error = RegisterError.FieldsRequired,
+                    isNameError = name.isBlank(),
+                    isEmailError = email.isBlank(),
+                    isPhoneError = phone.isBlank(),
+                    isPasswordError = password.isBlank(),
+                )
+            }
             return
         }
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    error = null,
+                    isNameError = false,
+                    isEmailError = false,
+                    isPhoneError = false,
+                    isPasswordError = false,
+                )
+            }
             registerUseCase(email, password, name, phone, selectedRole).fold(
                 onSuccess = { user ->
                     _uiState.update {
@@ -60,7 +77,16 @@ class RegisterViewModel(private val registerUseCase: RegisterUseCase) : ViewMode
                         }
                         else -> RegisterError.UnknownError
                     }
-                    _uiState.update { it.copy(isLoading = false, error = error) }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = error,
+                            isNameError = error is RegisterError.FieldsRequired,
+                            isEmailError = error is RegisterError.InvalidEmailFormat,
+                            isPhoneError = error is RegisterError.InvalidPhoneFormat,
+                            isPasswordError = error is RegisterError.WeakPassword || error is RegisterError.PasswordTooShort,
+                        )
+                    }
                 }
             )
         }

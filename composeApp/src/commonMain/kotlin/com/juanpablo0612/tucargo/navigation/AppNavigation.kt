@@ -94,13 +94,16 @@ fun AppNavigation() {
 
         composable<Route.ClientHome> {
             ClientHomeScreen(
-                onSignOut = { authViewModel.logout() }
+                onSignOut = { authViewModel.logout() },
+                onTripClick = { tripId -> navController.navigate(Route.TripDetail(tripId)) },
+                onViewAllClick = { navController.navigate(Route.TripHistory) },
             )
         }
 
         composable<Route.DriverHome> {
             DriverHomeScreen(
-                onSignOut = { authViewModel.logout() }
+                onSignOut = { authViewModel.logout() },
+                onTripClick = { tripId -> navController.navigate(Route.TripActive(tripId)) },
             )
         }
 

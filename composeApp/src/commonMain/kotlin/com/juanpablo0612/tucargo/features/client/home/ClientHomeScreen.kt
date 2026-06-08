@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,11 +31,16 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -43,9 +50,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.MapComponent
+import com.juanpablo0612.tucargo.core.ui.components.TripStatusBadge
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import com.juanpablo0612.tucargo.data.trip.Trip
-import com.juanpablo0612.tucargo.data.trip.TripStatus
 import com.juanpablo0612.tucargo.data.user.User
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -72,14 +79,7 @@ import tucargo.composeapp.generated.resources.client_home_view_all_button
 import tucargo.composeapp.generated.resources.client_home_your_location_title
 import tucargo.composeapp.generated.resources.local_shipping
 import tucargo.composeapp.generated.resources.package_2
-import tucargo.composeapp.generated.resources.trip_status_arrived_pickup
-import tucargo.composeapp.generated.resources.trip_status_assigned
-import tucargo.composeapp.generated.resources.trip_status_cancelled
-import tucargo.composeapp.generated.resources.trip_status_completed
-import tucargo.composeapp.generated.resources.trip_status_in_progress
-import tucargo.composeapp.generated.resources.trip_status_on_way
-import tucargo.composeapp.generated.resources.trip_status_searching
-import kotlin.time.Clock
+import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -88,16 +88,19 @@ fun ClientHomeScreen(
     viewModel: ClientHomeViewModel = koinViewModel(),
     onNewTrip: () -> Unit = {},
     onSignOut: () -> Unit = {},
+    onTripClick: (tripId: String) -> Unit = {},
+    onViewAllClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ClientHomeScreenContent(
         uiState = uiState,
         onAction = viewModel::onAction,
-        onNewTrip = onNewTrip
-    ) {
-        onSignOut()
-    }
+        onNewTrip = onNewTrip,
+        onSignOut = { onSignOut() },
+        onTripClick = onTripClick,
+        onViewAllClick = onViewAllClick,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,7 +109,9 @@ internal fun ClientHomeScreenContent(
     uiState: ClientHomeState,
     onAction: (ClientHomeAction) -> Unit,
     onNewTrip: () -> Unit,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+    onTripClick: (tripId: String) -> Unit = {},
+    onViewAllClick: () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -132,18 +137,24 @@ internal fun ClientHomeScreenContent(
                 }
             } else {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    uiState.error?.let { clientError ->
-                        item(key = "error_banner", contentType = "error") {
-                            val errorRes = when (clientError) {
-                                ClientHomeError.LoadUserError -> Res.string.client_home_load_error
-                                ClientHomeError.LoadTripsError -> Res.string.client_home_trips_error
+                    item(key = "error_banner", contentType = "error") {
+                        AnimatedVisibility(
+                            visible = uiState.error != null,
+                            enter = expandVertically() + fadeIn(),
+                            exit = shrinkVertically() + fadeOut(),
+                        ) {
+                            uiState.error?.let { clientError ->
+                                val errorRes = when (clientError) {
+                                    ClientHomeError.LoadUserError -> Res.string.client_home_load_error
+                                    ClientHomeError.LoadTripsError -> Res.string.client_home_trips_error
+                                }
+                                ErrorCard(
+                                    message = stringResource(errorRes),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                                )
                             }
-                            ErrorCard(
-                                message = stringResource(errorRes),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                            )
                         }
                     }
 
@@ -207,7 +218,7 @@ internal fun ClientHomeScreenContent(
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.semantics { heading() }
                             )
-                            TextButton(onClick = { }) {
+                            TextButton(onClick = onViewAllClick) {
                                 Text(stringResource(Res.string.client_home_view_all_button))
                             }
                         }
@@ -240,6 +251,7 @@ internal fun ClientHomeScreenContent(
                         ) { trip ->
                             TripCard(
                                 trip = trip,
+                                onClick = { onTripClick(trip.id) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp, vertical = 4.dp)
@@ -299,7 +311,7 @@ private fun ClientTopAppBar(user: User, onSignOut: () -> Unit) {
         actions = {
             IconButton(onClick = onSignOut) {
                 Icon(
-                    painter = painterResource(Res.drawable.arrow_forward),
+                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                     contentDescription = stringResource(Res.string.client_home_sign_out_desc)
                 )
             }
@@ -309,12 +321,12 @@ private fun ClientTopAppBar(user: User, onSignOut: () -> Unit) {
 
 @Composable
 private fun GreetingSection(userName: String, modifier: Modifier = Modifier) {
-    val now = Clock.System.now()
-    val instant = kotlinx.datetime.Instant.fromEpochMilliseconds(now.toEpochMilliseconds())
-    val greetingRes = when (instant.toLocalDateTime(TimeZone.currentSystemDefault()).hour) {
-        in 0..11 -> Res.string.client_home_greeting_morning
-        in 12..17 -> Res.string.client_home_greeting_afternoon
-        else -> Res.string.client_home_greeting_evening
+    val greetingRes = remember {
+        when (Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).hour) {
+            in 0..11 -> Res.string.client_home_greeting_morning
+            in 12..17 -> Res.string.client_home_greeting_afternoon
+            else -> Res.string.client_home_greeting_evening
+        }
     }
 
     Column(modifier = modifier) {
@@ -366,12 +378,12 @@ private fun StatItem(value: String, label: String) {
             text = value,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f),
         )
     }
 }
@@ -398,8 +410,9 @@ private fun MapSection(latitude: Double, longitude: Double, modifier: Modifier =
 }
 
 @Composable
-private fun TripCard(trip: Trip, modifier: Modifier = Modifier) {
+private fun TripCard(trip: Trip, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
+        onClick = onClick,
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
@@ -433,65 +446,32 @@ private fun TripCard(trip: Trip, modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
-                Text(
-                    text = "→ ${trip.destination.address.ifEmpty { stringResource(Res.string.client_home_trip_destination_empty) }}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.arrow_forward),
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = trip.destination.address.ifEmpty {
+                            stringResource(Res.string.client_home_trip_destination_empty)
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
             TripStatusBadge(status = trip.status)
         }
     }
-}
-
-@Composable
-private fun TripStatusBadge(status: TripStatus) {
-    val (bg, fg) = when (status) {
-        TripStatus.SEARCHING -> Pair(
-            MaterialTheme.colorScheme.secondaryContainer,
-            MaterialTheme.colorScheme.onSecondaryContainer
-        )
-        TripStatus.ASSIGNED, TripStatus.ON_WAY, TripStatus.ARRIVED_PICKUP -> Pair(
-            MaterialTheme.colorScheme.primaryContainer,
-            MaterialTheme.colorScheme.onPrimaryContainer
-        )
-        TripStatus.IN_PROGRESS -> Pair(
-            MaterialTheme.colorScheme.tertiaryContainer,
-            MaterialTheme.colorScheme.onTertiaryContainer
-        )
-        TripStatus.COMPLETED -> Pair(Color(0xFFD4EDDA), Color(0xFF155724))
-        TripStatus.CANCELLED -> Pair(
-            MaterialTheme.colorScheme.errorContainer,
-            MaterialTheme.colorScheme.onErrorContainer
-        )
-    }
-    Box(
-        modifier = Modifier
-            .clip(MaterialTheme.shapes.extraSmall)
-            .background(bg)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = stringResource(status.toDisplayNameRes()),
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Bold,
-            color = fg
-        )
-    }
-}
-
-private fun TripStatus.toDisplayNameRes() = when (this) {
-    TripStatus.SEARCHING -> Res.string.trip_status_searching
-    TripStatus.ASSIGNED -> Res.string.trip_status_assigned
-    TripStatus.ON_WAY -> Res.string.trip_status_on_way
-    TripStatus.ARRIVED_PICKUP -> Res.string.trip_status_arrived_pickup
-    TripStatus.IN_PROGRESS -> Res.string.trip_status_in_progress
-    TripStatus.COMPLETED -> Res.string.trip_status_completed
-    TripStatus.CANCELLED -> Res.string.trip_status_cancelled
 }
 
 @Composable

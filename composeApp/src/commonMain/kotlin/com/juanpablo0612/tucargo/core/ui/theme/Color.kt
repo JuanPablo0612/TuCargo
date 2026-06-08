@@ -220,3 +220,6 @@ val surfaceContainerHighestDarkHighContrast = Color(0xFF45464F)
 
 val AvailableGreen = Color(0xFF4CAF50)
 val OnAvailableGreen = Color.White
+
+val SuccessGreenContainer = Color(0xFFC8E6C9)
+val OnSuccessGreenContainer = Color(0xFF1B5E20)

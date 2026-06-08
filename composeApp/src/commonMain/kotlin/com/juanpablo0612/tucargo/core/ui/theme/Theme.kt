@@ -253,27 +253,43 @@ val unspecified_scheme = ColorFamily(
 @Immutable
 data class ExtendedColors(
     val available: Color,
-    val onAvailable: Color
+    val onAvailable: Color,
+    val successContainer: Color,
+    val onSuccessContainer: Color,
 )
 
 val LocalExtendedColors = compositionLocalOf {
-    ExtendedColors(available = AvailableGreen, onAvailable = OnAvailableGreen)
+    ExtendedColors(
+        available = AvailableGreen,
+        onAvailable = OnAvailableGreen,
+        successContainer = SuccessGreenContainer,
+        onSuccessContainer = OnSuccessGreenContainer,
+    )
 }
+
+enum class Contrast { Standard, Medium, High }
 
 @Composable
 fun TuCargoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    contrast: Contrast = Contrast.Standard,
     content: @Composable() () -> Unit
 ) {
     val colorScheme = when {
+        darkTheme && contrast == Contrast.High -> highContrastDarkColorScheme
+        darkTheme && contrast == Contrast.Medium -> mediumContrastDarkColorScheme
         darkTheme -> darkScheme
+        contrast == Contrast.High -> highContrastLightColorScheme
+        contrast == Contrast.Medium -> mediumContrastLightColorScheme
         else -> lightScheme
     }
 
     CompositionLocalProvider(
         LocalExtendedColors provides ExtendedColors(
             available = AvailableGreen,
-            onAvailable = OnAvailableGreen
+            onAvailable = OnAvailableGreen,
+            successContainer = SuccessGreenContainer,
+            onSuccessContainer = OnSuccessGreenContainer,
         )
     ) {
         MaterialTheme(
