@@ -34,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +56,7 @@ import io.github.vinceglb.filekit.name
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.docs_back_button
 import tucargo.composeapp.generated.resources.docs_back_label
 import tucargo.composeapp.generated.resources.docs_front_label
 import tucargo.composeapp.generated.resources.docs_submit_button
@@ -72,7 +74,9 @@ fun DocumentScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    uiState.navigationEvent?.consume()?.let { onSuccessNavigate() }
+    LaunchedEffect(uiState.navigationEvent) {
+        uiState.navigationEvent?.consume()?.let { onSuccessNavigate() }
+    }
 
     DocumentScreenContent(
         uiState = uiState,
@@ -108,7 +112,7 @@ internal fun DocumentScreenContent(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
+                            contentDescription = stringResource(Res.string.docs_back_button),
                         )
                     }
                 },

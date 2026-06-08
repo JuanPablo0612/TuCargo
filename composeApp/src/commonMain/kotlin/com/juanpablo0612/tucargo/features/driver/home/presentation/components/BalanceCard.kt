@@ -22,7 +22,12 @@ import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.driver_home_balance_title
 import tucargo.composeapp.generated.resources.driver_home_completed_trips_msg
 
-internal fun Double.toCurrencyString(): String = "$${"%.2f".format(this)}"
+internal fun Double.toCurrencyString(): String {
+    val cents = kotlin.math.round(this * 100).toLong()
+    val intPart = cents / 100
+    val decPart = kotlin.math.abs(cents % 100)
+    return "$$intPart.${decPart.toString().padStart(2, '0')}"
+}
 
 @Composable
 fun BalanceCard(

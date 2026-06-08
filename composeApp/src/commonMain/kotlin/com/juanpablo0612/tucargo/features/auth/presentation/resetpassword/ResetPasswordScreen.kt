@@ -92,7 +92,7 @@ internal fun ResetPasswordScreenContent(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
+                            contentDescription = stringResource(Res.string.reset_password_back_to_login_button),
                         )
                     }
                 },

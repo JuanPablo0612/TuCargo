@@ -59,7 +59,7 @@ fun ErrorCard(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onErrorContainer,
                 modifier = Modifier.semantics {
-                    liveRegion = LiveRegionMode.Polite
+                    liveRegion = LiveRegionMode.Assertive
                 },
             )
         }

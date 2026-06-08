@@ -36,6 +36,7 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -95,7 +96,9 @@ fun RegisterScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    uiState.navigationEvent?.consume()?.let { role -> onRegisterSuccess(role) }
+    LaunchedEffect(uiState.navigationEvent) {
+        uiState.navigationEvent?.consume()?.let { role -> onRegisterSuccess(role) }
+    }
 
     RegisterScreenContent(
         uiState = uiState,

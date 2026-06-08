@@ -58,6 +58,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.app_name
 import tucargo.composeapp.generated.resources.arrow_forward
 import tucargo.composeapp.generated.resources.client_home_default_user_name
 import tucargo.composeapp.generated.resources.client_home_empty_trips_subtitle
@@ -79,9 +80,7 @@ import tucargo.composeapp.generated.resources.client_home_view_all_button
 import tucargo.composeapp.generated.resources.client_home_your_location_title
 import tucargo.composeapp.generated.resources.local_shipping
 import tucargo.composeapp.generated.resources.package_2
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import com.juanpablo0612.tucargo.core.time.currentHour
 
 @Composable
 fun ClientHomeScreen(
@@ -278,14 +277,17 @@ private fun ClientTopAppBar(user: User, onSignOut: () -> Unit) {
                         .background(MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = user.fullName
+                    val initials = remember(user.fullName) {
+                        user.fullName
                             .split(" ")
                             .asSequence()
                             .take(2)
                             .mapNotNull { it.firstOrNull()?.uppercaseChar() }
                             .joinToString("")
-                            .ifEmpty { "U" },
+                            .ifEmpty { "U" }
+                    }
+                    Text(
+                        text = initials,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -294,7 +296,7 @@ private fun ClientTopAppBar(user: User, onSignOut: () -> Unit) {
                 Spacer(modifier = Modifier.width(10.dp))
                 Column {
                     Text(
-                        text = "TuCargo",
+                        text = stringResource(Res.string.app_name),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -322,7 +324,7 @@ private fun ClientTopAppBar(user: User, onSignOut: () -> Unit) {
 @Composable
 private fun GreetingSection(userName: String, modifier: Modifier = Modifier) {
     val greetingRes = remember {
-        when (Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).hour) {
+        when (currentHour()) {
             in 0..11 -> Res.string.client_home_greeting_morning
             in 12..17 -> Res.string.client_home_greeting_afternoon
             else -> Res.string.client_home_greeting_evening

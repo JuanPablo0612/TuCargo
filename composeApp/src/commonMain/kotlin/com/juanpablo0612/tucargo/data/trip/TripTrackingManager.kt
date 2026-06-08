@@ -1,6 +1,13 @@
 package com.juanpablo0612.tucargo.data.trip
 
 import com.juanpablo0612.tucargo.core.location.LocationProvider
+import com.juanpablo0612.tucargo.core.logging.logError
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -31,8 +38,7 @@ class TripTrackingManager(
                 // Obtenemos el flujo de ubicaciones del proveedor
                 locationProvider.getLocations()
                     .distinctUntilChanged { old, new ->
-                        // Evitamos actualizaciones si la distancia es mínima (optimización de batería/datos)
-                        distanceBetween(old.latitude, old.longitude, new.latitude, new.longitude) < 0.0001
+                        haversineDistance(old.latitude, old.longitude, new.latitude, new.longitude) < 10.0
                     }
                     .collectLatest { location ->
                         // Enviamos a Firestore
@@ -44,8 +50,7 @@ class TripTrackingManager(
                         delay(intervalMillis)
                     }
             } catch (e: Exception) {
-                // En producción, usar un Logger adecuado
-                println("Error en tracking: ${e.message}")
+                logError("TripTracking", "Error en tracking: ${e.message}")
             } finally {
                 _isTracking.value = false
             }
@@ -58,13 +63,14 @@ class TripTrackingManager(
         _isTracking.value = false
     }
 
-    /**
-     * Cálculo simple de distancia (Euclidiana) para evitar spam de actualizaciones idénticas.
-     * Para precisión real, se usaría Haversine.
-     */
-    private fun distanceBetween(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val dx = lat1 - lat2
-        val dy = lon1 - lon2
-        return kotlin.math.sqrt(dx * dx + dy * dy)
+    private fun haversineDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val R = 6_371_000.0
+        val toRad = PI / 180.0
+        val phi1 = lat1 * toRad
+        val phi2 = lat2 * toRad
+        val dPhi = (lat2 - lat1) * toRad
+        val dLambda = (lon2 - lon1) * toRad
+        val a = sin(dPhi / 2).pow(2) + cos(phi1) * cos(phi2) * sin(dLambda / 2).pow(2)
+        return R * 2 * atan2(sqrt(a), sqrt(1 - a))
     }
 }

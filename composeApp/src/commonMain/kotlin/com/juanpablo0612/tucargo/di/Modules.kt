@@ -75,9 +75,9 @@ val domainModule = module {
     singleOf(::CreateTripUseCase)
     singleOf(::UploadDocumentsUseCase)
 
-    factory { LogoutUseCase(get()) }
-    factory { SendPasswordResetEmailUseCase(get()) }
-    factory { ObserveAuthStateUseCase(get()) }
+    singleOf(::LogoutUseCase)
+    singleOf(::SendPasswordResetEmailUseCase)
+    singleOf(::ObserveAuthStateUseCase)
 }
 
 val viewModelModule = module {
