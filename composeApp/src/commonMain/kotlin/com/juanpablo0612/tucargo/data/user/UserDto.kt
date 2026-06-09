@@ -4,10 +4,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class User(
+data class UserDto(
     val id: String = "",
     val email: String = "",
-    val role: String = "CLIENT", // "CLIENT" o "DRIVER"
+    val role: String = "CLIENT",
     @SerialName("full_name")
     val fullName: String = "",
     val phone: String = "",

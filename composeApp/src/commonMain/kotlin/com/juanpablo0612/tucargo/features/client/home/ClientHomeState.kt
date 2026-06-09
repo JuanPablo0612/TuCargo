@@ -2,7 +2,7 @@ package com.juanpablo0612.tucargo.features.client.home
 
 import androidx.compose.runtime.Immutable
 import com.juanpablo0612.tucargo.data.trip.Trip
-import com.juanpablo0612.tucargo.data.user.User
+import com.juanpablo0612.tucargo.domain.model.User
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

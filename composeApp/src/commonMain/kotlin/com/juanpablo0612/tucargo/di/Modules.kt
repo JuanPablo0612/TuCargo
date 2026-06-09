@@ -5,6 +5,7 @@ import com.juanpablo0612.tucargo.core.location.MockLocationProvider
 import com.juanpablo0612.tucargo.data.auth.AuthRemoteDataSource
 import com.juanpablo0612.tucargo.data.auth.AuthRepository
 import com.juanpablo0612.tucargo.data.auth.AuthRepositoryImpl
+import com.juanpablo0612.tucargo.data.user.UserRemoteDataSource
 import com.juanpablo0612.tucargo.data.document.DocumentRepository
 import com.juanpablo0612.tucargo.data.document.DocumentRepositoryImpl
 import com.juanpablo0612.tucargo.data.config.SystemConfig
@@ -24,7 +25,6 @@ import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
-import com.juanpablo0612.tucargo.domain.usecase.SignOutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentViewModel
@@ -51,8 +51,9 @@ val dataModule = module {
     single { Firebase.firestore }
     single { Firebase.storage }
 
-    single { AuthRemoteDataSource(get(), get()) }
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    singleOf(::AuthRemoteDataSource)
+    singleOf(::UserRemoteDataSource)
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
 
     single<DocumentRepository> { DocumentRepositoryImpl(get(), get()) }
     single<LocationProvider> { MockLocationProvider() }
@@ -69,7 +70,6 @@ val domainModule = module {
     singleOf(::GetCurrentUserUseCase)
     singleOf(::GetCurrentUserIdUseCase)
     singleOf(::IsUserLoggedInUseCase)
-    singleOf(::SignOutUseCase)
     singleOf(::UpdateDriverStatusUseCase)
     singleOf(::GetClientTripsUseCase)
     singleOf(::CreateTripUseCase)

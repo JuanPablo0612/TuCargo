@@ -1,5 +1,7 @@
 package com.juanpablo0612.tucargo.data.user
 
+import com.juanpablo0612.tucargo.domain.model.User
+
 interface UserRepository {
     suspend fun updateDriverStatus(userId: String, isOnline: Boolean): Result<Unit>
     fun getCurrentUserId(): String?

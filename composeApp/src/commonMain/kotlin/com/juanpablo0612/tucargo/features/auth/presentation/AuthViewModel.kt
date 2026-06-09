@@ -2,7 +2,7 @@ package com.juanpablo0612.tucargo.features.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.data.user.User
+import com.juanpablo0612.tucargo.domain.model.User
 import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import kotlinx.coroutines.flow.SharingStarted

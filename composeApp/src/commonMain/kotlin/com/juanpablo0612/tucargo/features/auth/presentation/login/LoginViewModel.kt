@@ -3,7 +3,8 @@ package com.juanpablo0612.tucargo.features.auth.presentation.login
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.core.ui.event.UiEvent
+import com.juanpablo0612.tucargo.core.validation.EmailValidator
+import com.juanpablo0612.tucargo.core.validation.FieldError
 import com.juanpablo0612.tucargo.domain.model.AuthError
 import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,17 +29,30 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
         }
     }
 
+    fun onNavigated() {
+        _uiState.update { it.copy(successRole = null) }
+    }
+
     private fun validateEmail(): Boolean {
-        val emailRegex = Regex("^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,6}$")
-        val isValid = emailRegex.matches(emailState.text.toString().trim())
-        _uiState.update { it.copy(isEmailValid = isValid) }
-        return isValid
+        val email = emailState.text.toString().trim()
+        val error = when {
+            email.isBlank() -> FieldError.EmailRequired
+            !EmailValidator.isValid(email) -> FieldError.EmailInvalid
+            else -> null
+        }
+        _uiState.update { it.copy(emailError = error) }
+        return error == null
     }
 
     private fun validatePassword(): Boolean {
-        val isValid = passwordState.text.length >= 6
-        _uiState.update { it.copy(isPasswordValid = isValid) }
-        return isValid
+        val password = passwordState.text.toString()
+        val error = when {
+            password.isBlank() -> FieldError.PasswordRequired
+            password.length < 6 -> FieldError.PasswordTooShort
+            else -> null
+        }
+        _uiState.update { it.copy(passwordError = error) }
+        return error == null
     }
 
     private fun onLogin() {
@@ -47,13 +61,13 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
         if (!emailValid || !passwordValid) return
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, loginError = null) }
+            _uiState.update { it.copy(isLoading = true, authError = null) }
             loginUseCase(
                 email = emailState.text.toString(),
                 password = passwordState.text.toString()
             ).fold(
                 onSuccess = { user ->
-                    _uiState.update { it.copy(isLoading = false, navigationEvent = UiEvent(user.role)) }
+                    _uiState.update { it.copy(isLoading = false, successRole = user.role) }
                 },
                 onFailure = { e ->
                     val error = when (e) {
@@ -61,7 +75,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
                         is AuthError.NetworkError -> LoginError.NetworkError
                         else -> LoginError.UnknownError
                     }
-                    _uiState.update { it.copy(isLoading = false, loginError = error) }
+                    _uiState.update { it.copy(isLoading = false, authError = error) }
                 }
             )
         }

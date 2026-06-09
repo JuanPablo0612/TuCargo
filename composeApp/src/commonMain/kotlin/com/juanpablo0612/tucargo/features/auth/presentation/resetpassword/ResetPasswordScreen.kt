@@ -37,12 +37,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.asString
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
@@ -55,7 +56,6 @@ import tucargo.composeapp.generated.resources.network_error
 import tucargo.composeapp.generated.resources.reset_password_back_to_login_button
 import tucargo.composeapp.generated.resources.reset_password_email_label
 import tucargo.composeapp.generated.resources.reset_password_email_placeholder
-import tucargo.composeapp.generated.resources.reset_password_email_required_error
 import tucargo.composeapp.generated.resources.reset_password_submit_button
 import tucargo.composeapp.generated.resources.reset_password_success_message
 import tucargo.composeapp.generated.resources.reset_password_title
@@ -158,14 +158,13 @@ internal fun ResetPasswordScreenContent(
                     Spacer(Modifier.height(16.dp))
 
                     AnimatedVisibility(
-                        visible = uiState.error != null,
+                        visible = uiState.authError != null,
                         enter = expandVertically() + fadeIn(),
                         exit = shrinkVertically() + fadeOut(),
                     ) {
                         Column {
-                            uiState.error?.let {
+                            uiState.authError?.let {
                                 val errorRes = when (it) {
-                                    ResetPasswordError.EmailRequired -> Res.string.reset_password_email_required_error
                                     ResetPasswordError.NetworkError -> Res.string.network_error
                                     ResetPasswordError.UnknownError -> Res.string.unknown_error
                                 }
@@ -189,6 +188,8 @@ internal fun ResetPasswordScreenContent(
                                 contentDescription = null,
                             )
                         },
+                        isError = uiState.emailError != null,
+                        supportingText = uiState.emailError?.let { err -> { Text(err.asString()) } },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
                             autoCorrectEnabled = false,

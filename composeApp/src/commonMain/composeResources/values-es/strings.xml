@@ -1,126 +1,126 @@
 <resources>
     <string name="app_name" translatable="false">TuCargo</string>
+
+    <!-- Bienvenida -->
     <string name="welcome_title">TuCargo</string>
-    <string name="welcome_subtitle">Transporte de carga ligera y rápida</string>
-    <string name="welcome_send_cargo_button">Enviar Carga</string>
-    <string name="welcome_send_cargo_description">Envía tus paquetes rápidamente</string>
-    <string name="welcome_driver_button">Soy Conductor</string>
+    <string name="welcome_subtitle">Logística en motocicleta</string>
+    <string name="welcome_send_cargo_button">Necesito enviar una carga</string>
+    <string name="welcome_send_cargo_description">Envía tus paquetes rápido y seguro</string>
+    <string name="welcome_driver_button">Soy conductor</string>
     <string name="welcome_driver_description">Gana dinero haciendo entregas</string>
     <string name="welcome_version">v%1$s</string>
 
-    <!-- Login -->
+    <!-- Inicio de sesión -->
     <string name="login_title">Bienvenido de nuevo</string>
-    <string name="login_subtitle">Ingresa tus credenciales para continuar</string>
+    <string name="login_subtitle">Ingresa a tu cuenta para comenzar a entregar.</string>
     <string name="login_email_label">Correo electrónico</string>
-    <string name="login_email_placeholder">ejemplo@tucargo.com</string>
-    <string name="login_email_error">Correo electrónico inválido</string>
+    <string name="login_email_placeholder">mensajero@tucargo.com</string>
     <string name="login_password_label">Contraseña</string>
-    <string name="login_password_placeholder">Mínimo 6 caracteres</string>
-    <string name="login_password_error">La contraseña debe tener al menos 6 caracteres</string>
-    <string name="login_login_button">Iniciar Sesión</string>
-    <string name="login_forgot_password_button">Olvidé mi contraseña</string>
+    <string name="login_password_placeholder">Mín. 6 caracteres</string>
+    <string name="login_login_button">Iniciar sesión</string>
+    <string name="login_forgot_password_button">¿Olvidaste tu contraseña?</string>
     <string name="login_register_link">¿No tienes cuenta? Regístrate</string>
-    <string name="login_invalid_credentials_error">Correo o contraseña incorrectos</string>
+    <string name="login_invalid_credentials_error">Correo o contraseña incorrectos. Intenta de nuevo.</string>
 
-    <!-- Register -->
-    <string name="register_back_button">← Volver</string>
+    <!-- Registro -->
+    <string name="register_back_button">Volver</string>
     <string name="register_title">Crea tu cuenta</string>
     <string name="register_role_label">Selecciona tu rol</string>
-    <string name="register_role_client">Soy cliente</string>
+    <string name="register_role_client">Necesito enviar una carga</string>
     <string name="register_role_driver">Soy conductor</string>
-    <string name="register_name_label">Nombre Completo</string>
-    <string name="register_email_label">Correo Electrónico</string>
+    <string name="register_name_label">Nombre completo</string>
+    <string name="register_email_label">Correo electrónico</string>
     <string name="register_phone_label">Teléfono (formato E.164, ej. +573001234567)</string>
     <string name="register_password_label">Contraseña</string>
-    <string name="register_confirm_password_label">Confirmar Contraseña</string>
-    <string name="register_button">Registrarse</string>
+    <string name="register_button">Crear cuenta</string>
     <string name="register_name_placeholder">Juan Pérez</string>
     <string name="register_email_placeholder">tú@ejemplo.com</string>
     <string name="register_phone_placeholder">+57 300 123 4567</string>
     <string name="register_password_placeholder">Mín. 6 caracteres</string>
+    <string name="register_user_already_exists">Este correo electrónico ya está registrado.</string>
+    <string name="register_weak_password_error">El servidor rechazó la contraseña. Usa mínimo 6 caracteres, una letra y un número.</string>
 
-    <!-- Reset Password -->
-    <string name="reset_password_title">Recuperar Contraseña</string>
-    <string name="reset_password_subtitle">Ingresa tu correo y te enviaremos un enlace</string>
-    <string name="reset_password_email_label">Correo Electrónico</string>
-    <string name="reset_password_submit_button">Enviar Enlace</string>
-    <string name="reset_password_success_message">Te enviamos un enlace a tu correo. Revisa tu bandeja de entrada.</string>
-    <string name="reset_password_back_to_login_button">Volver al inicio de sesión</string>
-    <string name="reset_password_email_required_error">Por favor ingresa tu correo electrónico</string>
+    <!-- Restablecer contraseña -->
+    <string name="reset_password_title">Restablecer contraseña</string>
+    <string name="reset_password_email_label">Correo electrónico</string>
     <string name="reset_password_email_placeholder">tu@correo.com</string>
+    <string name="reset_password_submit_button">Enviar enlace</string>
+    <string name="reset_password_success_message">Te enviamos un enlace a tu correo. Revisa tu bandeja de entrada y sigue las instrucciones.</string>
+    <string name="reset_password_back_to_login_button">Volver al inicio de sesión</string>
 
-    <!-- Documents -->
-    <string name="docs_title">Verificación de Identidad</string>
-    <string name="docs_subtitle">Por favor sube una foto clara de tu documento de identidad (ambos lados).</string>
-    <string name="docs_front_label">ID Parte Frontal</string>
-    <string name="docs_back_label">ID Parte Trasera</string>
+    <!-- Documentos / KYC -->
+    <string name="docs_title">Verificación de identidad</string>
+    <string name="docs_subtitle">Sube una foto clara de ambos lados de tu documento de identidad.</string>
+    <string name="docs_front_label">Lado frontal</string>
+    <string name="docs_back_label">Lado trasero</string>
     <string name="docs_submit_button">Continuar</string>
-    <string name="docs_success_message">Documentos Subidos</string>
     <string name="docs_back_button">Volver</string>
+    <string name="docs_user_not_authenticated">Tu sesión ha expirado. Inicia sesión nuevamente.</string>
+    <string name="docs_upload_error">Error al subir los documentos. Intenta de nuevo.</string>
 
-    <!-- Client Home -->
+    <!-- Inicio del cliente -->
     <string name="client_home_sign_out_desc">Cerrar sesión</string>
-    <string name="client_home_new_trip_button">Nuevo Envío</string>
-    <string name="client_home_recent_trips_title">Últimos Envíos</string>
+    <string name="client_home_new_trip_button">Nuevo envío</string>
+    <string name="client_home_recent_trips_title">Envíos recientes</string>
     <string name="client_home_view_all_button">Ver todos</string>
-    <string name="client_home_your_location_title">Tu Ubicación</string>
-    <string name="client_home_greeting_morning">Buenos días</string>
-    <string name="client_home_greeting_afternoon">Buenas tardes</string>
-    <string name="client_home_greeting_evening">Buenas noches</string>
+    <string name="client_home_your_location_title">Tu ubicación</string>
+    <string name="client_home_greeting_morning">Buenos días,</string>
+    <string name="client_home_greeting_afternoon">Buenas tardes,</string>
+    <string name="client_home_greeting_evening">Buenas noches,</string>
     <string name="client_home_default_user_name">Cliente</string>
     <string name="client_home_stats_trips_label">Envíos recientes</string>
     <string name="client_home_stats_status_label">Estado de cuenta</string>
     <string name="client_home_stats_status_active">Activo</string>
     <string name="client_home_empty_trips_title">Sin envíos recientes</string>
-    <string name="client_home_empty_trips_subtitle">Crea tu primer envío usando el botón de arriba</string>
+    <string name="client_home_empty_trips_subtitle">Crea tu primer envío usando el botón de arriba.</string>
     <string name="client_home_trip_origin_empty">Origen no especificado</string>
     <string name="client_home_trip_destination_empty">Destino no especificado</string>
+    <string name="client_home_load_error">No se pudo cargar tu información. Intenta de nuevo.</string>
+    <string name="client_home_trips_error">No se pudieron cargar los envíos recientes.</string>
 
-    <!-- Driver Home -->
-    <string name="driver_home_title">Panel del Conductor</string>
-    <string name="driver_home_active_desc">Estás activo para recibir viajes</string>
-    <string name="driver_home_offline_desc">Desconectado</string>
-    <string name="driver_home_sign_out_button">Salir</string>
-    <string name="driver_home_active_trips_title">Viajes en curso</string>
+    <!-- Inicio del conductor -->
+    <string name="driver_home_title">Panel del conductor</string>
+    <string name="driver_home_active_desc">Estás en línea y recibiendo viajes</string>
+    <string name="driver_home_offline_desc">Estás desconectado</string>
+    <string name="driver_home_active_trips_title">Viajes activos</string>
     <string name="driver_home_empty_trips_message">No tienes viajes activos en este momento.</string>
-    <string name="driver_home_trip_id_label">Viaje ID: %1$s</string>
-    <string name="driver_home_trip_status_in_progress">Estado: En curso</string>
+    <string name="driver_home_trip_id_label">Viaje #%1$s</string>
     <string name="driver_home_view_trip_button">Ver</string>
     <string name="driver_home_availability_online">ESTÁS EN LÍNEA</string>
-    <string name="driver_home_availability_go_online">PONERSE EN LÍNEA</string>
-    <string name="driver_home_balance_title">Tu Balance</string>
-    <string name="driver_home_completed_trips_msg">Has completado %1$d viajes</string>
+    <string name="driver_home_availability_go_online">CONECTARSE</string>
+    <string name="driver_home_balance_title">Tu balance</string>
+    <string name="driver_home_completed_trips_msg">%1$d viajes completados</string>
+    <string name="driver_home_load_error">No se pudo cargar la información del conductor. Intenta de nuevo.</string>
+    <string name="driver_home_availability_error">Error de conexión. No se pudo actualizar tu disponibilidad.</string>
 
-    <!-- Trip Status -->
+    <!-- Estado del viaje -->
     <string name="trip_status_searching">Buscando conductor</string>
     <string name="trip_status_assigned">Conductor asignado</string>
     <string name="trip_status_on_way">En camino</string>
-    <string name="trip_status_arrived_pickup">Llegó al origen</string>
+    <string name="trip_status_arrived_pickup">Llegó al punto de recogida</string>
     <string name="trip_status_in_progress">En progreso</string>
     <string name="trip_status_completed">Completado</string>
     <string name="trip_status_cancelled">Cancelado</string>
 
-    <!-- Map -->
+    <!-- Mapa -->
     <string name="map_your_location">Tu ubicación</string>
-    <string name="map_not_available_ios">Mapa no disponible en iOS (Simulador/Actual)</string>
+    <string name="map_not_available_ios">Mapa no disponible en el simulador de iOS</string>
 
-    <!-- Errors -->
-    <string name="network_error">Sin conexión. Intenta de nuevo.</string>
-    <string name="unknown_error">Ocurrió un error. Intenta de nuevo.</string>
-    <string name="register_fields_required">Por favor completa todos los campos</string>
-    <string name="register_passwords_mismatch">Las contraseñas no coinciden</string>
-    <string name="register_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
-    <string name="register_weak_password_error">La contraseña debe tener al menos 6 caracteres, una letra y un número</string>
-    <string name="register_invalid_email_error">Ingresa un correo electrónico válido</string>
-    <string name="register_invalid_phone_error">El teléfono debe estar en formato E.164 (ej. +573001234567)</string>
-    <string name="register_user_already_exists">Este correo ya está registrado</string>
-    <string name="docs_both_sides_required">Por favor sube ambas caras del documento</string>
-    <string name="docs_user_not_authenticated">Sesión expirada. Inicia sesión nuevamente.</string>
-    <string name="docs_upload_error">Error al subir documentos. Intenta de nuevo.</string>
-    <string name="driver_home_load_error">No se pudo cargar la información del conductor.</string>
-    <string name="driver_home_availability_error">Error de conexión. No se pudo actualizar disponibilidad.</string>
-    <string name="client_home_load_error">No se pudo cargar tu información. Intenta de nuevo.</string>
-    <string name="client_home_trips_error">No se pudieron cargar los envíos recientes.</string>
+    <!-- Errores globales -->
+    <string name="network_error">Error de red. Verifica tu conexión e intenta de nuevo.</string>
+    <string name="unknown_error">Ocurrió un error inesperado. Intenta de nuevo.</string>
+
+    <!-- Errores de validación de campos -->
+    <string name="validation_email_required">Por favor ingresa tu correo electrónico</string>
+    <string name="validation_email_invalid">Ingresa un correo electrónico válido (ej. tú@ejemplo.com)</string>
+    <string name="validation_password_required">Por favor ingresa tu contraseña</string>
+    <string name="validation_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="validation_password_weak">La contraseña debe incluir al menos una letra y un número</string>
+    <string name="validation_name_required">Por favor ingresa tu nombre completo</string>
+    <string name="validation_phone_required">Por favor ingresa tu número de teléfono</string>
+    <string name="validation_phone_invalid">Ingresa un teléfono válido en formato E.164 (ej. +573001234567)</string>
+    <string name="validation_id_front_required">Selecciona la parte frontal de tu documento</string>
+    <string name="validation_id_back_required">Selecciona la parte trasera de tu documento</string>
 
     <!-- Accesibilidad -->
     <string name="cd_toggle_password_visibility">Mostrar u ocultar contraseña</string>

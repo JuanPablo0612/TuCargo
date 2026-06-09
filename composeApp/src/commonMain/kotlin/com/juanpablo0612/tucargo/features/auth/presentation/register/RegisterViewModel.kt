@@ -6,7 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.core.ui.event.UiEvent
+import com.juanpablo0612.tucargo.core.validation.EmailValidator
+import com.juanpablo0612.tucargo.core.validation.FieldError
+import com.juanpablo0612.tucargo.core.validation.PasswordValidator
+import com.juanpablo0612.tucargo.core.validation.PhoneValidator
 import com.juanpablo0612.tucargo.domain.model.AuthError
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,67 +29,60 @@ class RegisterViewModel(private val registerUseCase: RegisterUseCase) : ViewMode
     val passwordState = TextFieldState()
     var selectedRole by mutableStateOf("CLIENT")
 
+    fun onNavigated() {
+        _uiState.update { it.copy(successRole = null) }
+    }
+
     fun onRegister() {
         val name = nameState.text.toString().trim()
         val email = emailState.text.toString().trim()
         val phone = phoneState.text.toString().trim()
         val password = passwordState.text.toString()
 
-        if (name.isBlank() || email.isBlank() || phone.isBlank() || password.isBlank()) {
-            _uiState.update {
-                it.copy(
-                    error = RegisterError.FieldsRequired,
-                    isNameError = name.isBlank(),
-                    isEmailError = email.isBlank(),
-                    isPhoneError = phone.isBlank(),
-                    isPasswordError = password.isBlank(),
-                )
-            }
-            return
+        val nameError: FieldError? = if (name.isBlank()) FieldError.NameRequired else null
+        val emailError: FieldError? = when {
+            email.isBlank() -> FieldError.EmailRequired
+            !EmailValidator.isValid(email) -> FieldError.EmailInvalid
+            else -> null
+        }
+        val phoneError: FieldError? = when {
+            phone.isBlank() -> FieldError.PhoneRequired
+            !PhoneValidator.isValid(phone) -> FieldError.PhoneInvalid
+            else -> null
+        }
+        val passwordError: FieldError? = when {
+            password.isBlank() -> FieldError.PasswordRequired
+            password.length < 6 -> FieldError.PasswordTooShort
+            !PasswordValidator.isValid(password) -> FieldError.PasswordWeak
+            else -> null
         }
 
+        _uiState.update {
+            it.copy(
+                nameError = nameError,
+                emailError = emailError,
+                phoneError = phoneError,
+                passwordError = passwordError,
+                authError = null
+            )
+        }
+
+        if (listOf(nameError, emailError, phoneError, passwordError).any { it != null }) return
+
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    isLoading = true,
-                    error = null,
-                    isNameError = false,
-                    isEmailError = false,
-                    isPhoneError = false,
-                    isPasswordError = false,
-                )
-            }
+            _uiState.update { it.copy(isLoading = true) }
             registerUseCase(email, password, name, phone, selectedRole).fold(
                 onSuccess = { user ->
-                    _uiState.update {
-                        it.copy(isLoading = false, navigationEvent = UiEvent(user.role))
-                    }
+                    _uiState.update { it.copy(isLoading = false, successRole = user.role) }
                 },
                 onFailure = { e ->
                     val error = when (e) {
                         is AuthError.WeakPassword -> RegisterError.WeakPassword
-                        is AuthError.EmailAlreadyInUse -> RegisterError.UserAlreadyExists
+                        is AuthError.EmailAlreadyInUse -> RegisterError.EmailAlreadyInUse
                         is AuthError.NetworkError -> RegisterError.NetworkError
-                        is AuthError.InvalidCredentials -> RegisterError.InvalidEmailFormat
-                        is AuthError.Unknown -> when {
-                            e.message?.contains("phone", ignoreCase = true) == true ->
-                                RegisterError.InvalidPhoneFormat
-                            e.message?.contains("name", ignoreCase = true) == true ->
-                                RegisterError.FieldsRequired
-                            else -> RegisterError.UnknownError
-                        }
                         else -> RegisterError.UnknownError
                     }
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            error = error,
-                            isNameError = error is RegisterError.FieldsRequired,
-                            isEmailError = error is RegisterError.InvalidEmailFormat,
-                            isPhoneError = error is RegisterError.InvalidPhoneFormat,
-                            isPasswordError = error is RegisterError.WeakPassword || error is RegisterError.PasswordTooShort,
-                        )
-                    }
+                    _uiState.update { it.copy(isLoading = false, authError = error) }
                 }
             )
         }

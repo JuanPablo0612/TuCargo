@@ -1,13 +1,13 @@
 package com.juanpablo0612.tucargo.features.auth.presentation.login
 
 import androidx.compose.runtime.Immutable
-import com.juanpablo0612.tucargo.core.ui.event.UiEvent
+import com.juanpablo0612.tucargo.core.validation.FieldError
 
 @Immutable
 data class LoginState(
     val isLoading: Boolean = false,
-    val isEmailValid: Boolean = true,
-    val isPasswordValid: Boolean = true,
-    val loginError: LoginError? = null,
-    val navigationEvent: UiEvent<String>? = null
+    val emailError: FieldError? = null,
+    val passwordError: FieldError? = null,
+    val authError: LoginError? = null,
+    val successRole: String? = null
 )

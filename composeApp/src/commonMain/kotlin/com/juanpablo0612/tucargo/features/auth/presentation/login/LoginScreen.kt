@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.asString
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
@@ -59,13 +60,11 @@ import tucargo.composeapp.generated.resources.arrow_forward
 import tucargo.composeapp.generated.resources.cd_toggle_password_visibility
 import tucargo.composeapp.generated.resources.local_shipping
 import tucargo.composeapp.generated.resources.lock_24px
-import tucargo.composeapp.generated.resources.login_email_error
 import tucargo.composeapp.generated.resources.login_email_label
 import tucargo.composeapp.generated.resources.login_email_placeholder
 import tucargo.composeapp.generated.resources.login_forgot_password_button
 import tucargo.composeapp.generated.resources.login_invalid_credentials_error
 import tucargo.composeapp.generated.resources.login_login_button
-import tucargo.composeapp.generated.resources.login_password_error
 import tucargo.composeapp.generated.resources.login_password_label
 import tucargo.composeapp.generated.resources.login_password_placeholder
 import tucargo.composeapp.generated.resources.login_register_link
@@ -86,8 +85,11 @@ fun LoginScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState.navigationEvent) {
-        uiState.navigationEvent?.consume()?.let { role -> onLoginSuccess(role) }
+    LaunchedEffect(uiState.successRole) {
+        uiState.successRole?.let { role ->
+            onLoginSuccess(role)
+            viewModel.onNavigated()
+        }
     }
 
     LoginScreenContent(
@@ -152,12 +154,12 @@ internal fun LoginScreenContent(
             Spacer(Modifier.height(24.dp))
 
             AnimatedVisibility(
-                visible = uiState.loginError != null,
+                visible = uiState.authError != null,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
                 Column {
-                    uiState.loginError?.let {
+                    uiState.authError?.let {
                         val errorRes = when (it) {
                             LoginError.InvalidCredentials -> Res.string.login_invalid_credentials_error
                             LoginError.NetworkError -> Res.string.network_error
@@ -181,10 +183,8 @@ internal fun LoginScreenContent(
                     leadingIcon = {
                         Icon(painterResource(Res.drawable.mail), contentDescription = null)
                     },
-                    supportingText = if (!uiState.isEmailValid) {
-                        { Text(stringResource(Res.string.login_email_error)) }
-                    } else null,
-                    isError = !uiState.isEmailValid,
+                    isError = uiState.emailError != null,
+                    supportingText = uiState.emailError?.let { err -> { Text(err.asString()) } },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         autoCorrectEnabled = false,
@@ -219,10 +219,8 @@ internal fun LoginScreenContent(
                             )
                         }
                     },
-                    supportingText = if (!uiState.isPasswordValid) {
-                        { Text(stringResource(Res.string.login_password_error)) }
-                    } else null,
-                    isError = !uiState.isPasswordValid,
+                    isError = uiState.passwordError != null,
+                    supportingText = uiState.passwordError?.let { err -> { Text(err.asString()) } },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,

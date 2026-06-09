@@ -23,13 +23,13 @@ class DocumentRepositoryImpl(
         val frontUrl = frontRef.getDownloadUrl()
         val backUrl = backRef.getDownloadUrl()
 
-        val kycData = listOf(
-            mapOf("id" to "id_front", "type" to "ID_FRONT", "image_url" to frontUrl, "status" to "PENDING"),
-            mapOf("id" to "id_back", "type" to "ID_BACK", "image_url" to backUrl, "status" to "PENDING")
+        val kycDocuments = listOf(
+            KycDocumentDto(id = "id_front", type = "ID_FRONT", imageUrl = frontUrl),
+            KycDocumentDto(id = "id_back", type = "ID_BACK", imageUrl = backUrl)
         )
 
         firestore.collection("users").document(userId).update(
-            mapOf("kyc_documents" to kycData)
+            mapOf("kyc_documents" to kycDocuments)
         )
     }
 }

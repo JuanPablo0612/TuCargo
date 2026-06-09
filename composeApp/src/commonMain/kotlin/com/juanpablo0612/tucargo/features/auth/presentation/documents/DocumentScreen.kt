@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.asString
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -60,7 +61,6 @@ import tucargo.composeapp.generated.resources.docs_back_button
 import tucargo.composeapp.generated.resources.docs_back_label
 import tucargo.composeapp.generated.resources.docs_front_label
 import tucargo.composeapp.generated.resources.docs_submit_button
-import tucargo.composeapp.generated.resources.docs_both_sides_required
 import tucargo.composeapp.generated.resources.docs_subtitle
 import tucargo.composeapp.generated.resources.docs_title
 import tucargo.composeapp.generated.resources.docs_upload_error
@@ -74,8 +74,11 @@ fun DocumentScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState.navigationEvent) {
-        uiState.navigationEvent?.consume()?.let { onSuccessNavigate() }
+    LaunchedEffect(uiState.isUploadComplete) {
+        if (uiState.isUploadComplete) {
+            onSuccessNavigate()
+            viewModel.onNavigated()
+        }
     }
 
     DocumentScreenContent(
@@ -133,13 +136,12 @@ internal fun DocumentScreenContent(
             )
 
             AnimatedVisibility(
-                visible = uiState.error != null,
+                visible = uiState.authError != null,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
-                uiState.error?.let {
+                uiState.authError?.let {
                     val errorRes = when (it) {
-                        DocumentError.BothSidesRequired -> Res.string.docs_both_sides_required
                         DocumentError.UserNotAuthenticated -> Res.string.docs_user_not_authenticated
                         DocumentError.UploadError -> Res.string.docs_upload_error
                     }
@@ -150,19 +152,41 @@ internal fun DocumentScreenContent(
                 }
             }
 
-            DocumentPickerItem(
-                label = stringResource(Res.string.docs_front_label),
-                isLoaded = uiState.idFront != null,
-                onClick = { frontLauncher.launch() },
-                fileName = uiState.idFront?.name,
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                DocumentPickerItem(
+                    label = stringResource(Res.string.docs_front_label),
+                    isLoaded = uiState.idFront != null,
+                    isError = uiState.frontFileError != null,
+                    onClick = { frontLauncher.launch() },
+                    fileName = uiState.idFront?.name,
+                )
+                uiState.frontFileError?.let { err ->
+                    Text(
+                        text = err.asString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
+            }
 
-            DocumentPickerItem(
-                label = stringResource(Res.string.docs_back_label),
-                isLoaded = uiState.idBack != null,
-                onClick = { backLauncher.launch() },
-                fileName = uiState.idBack?.name,
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                DocumentPickerItem(
+                    label = stringResource(Res.string.docs_back_label),
+                    isLoaded = uiState.idBack != null,
+                    isError = uiState.backFileError != null,
+                    onClick = { backLauncher.launch() },
+                    fileName = uiState.idBack?.name,
+                )
+                uiState.backFileError?.let { err ->
+                    Text(
+                        text = err.asString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
+            }
 
             Spacer(Modifier.weight(1f))
 
@@ -207,14 +231,24 @@ internal fun DocumentPickerItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     fileName: String? = null,
+    isError: Boolean = false,
 ) {
-    val containerColor = if (isLoaded) MaterialTheme.colorScheme.primaryContainer
-    else MaterialTheme.colorScheme.surfaceVariant
-    val borderColor = if (isLoaded) MaterialTheme.colorScheme.primary
-    else MaterialTheme.colorScheme.outlineVariant
-    val iconContainerColor = if (isLoaded) MaterialTheme.colorScheme.primary
-    else MaterialTheme.colorScheme.outline
-    val iconTint = if (isLoaded) MaterialTheme.colorScheme.onPrimary
+    val containerColor = when {
+        isError -> MaterialTheme.colorScheme.errorContainer
+        isLoaded -> MaterialTheme.colorScheme.primaryContainer
+        else -> MaterialTheme.colorScheme.surfaceVariant
+    }
+    val borderColor = when {
+        isError -> MaterialTheme.colorScheme.error
+        isLoaded -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.outlineVariant
+    }
+    val iconContainerColor = when {
+        isError -> MaterialTheme.colorScheme.error
+        isLoaded -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.outline
+    }
+    val iconTint = if (isLoaded || isError) MaterialTheme.colorScheme.onPrimary
     else MaterialTheme.colorScheme.surface
 
     Box(

@@ -1,42 +1,19 @@
 package com.juanpablo0612.tucargo.data.auth
 
-import com.juanpablo0612.tucargo.data.user.User
 import dev.gitlive.firebase.auth.FirebaseAuth
-import dev.gitlive.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class AuthRemoteDataSource(
-    private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
-) {
+class AuthRemoteDataSource(private val auth: FirebaseAuth) {
 
-    suspend fun signIn(email: String, password: String): User {
+    suspend fun signIn(email: String, password: String): String {
         val result = auth.signInWithEmailAndPassword(email, password)
-        val uid = result.user?.uid ?: error("UID not found after sign in")
-        return firestore.collection("users").document(uid).get().data<User>()
+        return result.user?.uid ?: error("UID not found after sign in")
     }
 
-    suspend fun createUser(
-        email: String,
-        password: String,
-        fullName: String,
-        phone: String,
-        role: String
-    ): User {
+    suspend fun createAccount(email: String, password: String): String {
         val result = auth.createUserWithEmailAndPassword(email, password)
-        val uid = result.user?.uid ?: error("UID not found after registration")
-
-        val user = User(
-            id = uid,
-            email = email,
-            role = role,
-            fullName = fullName,
-            phone = phone,
-            status = "ACTIVE"
-        )
-        firestore.collection("users").document(uid).set(user)
-        return user
+        return result.user?.uid ?: error("UID not found after registration")
     }
 
     suspend fun signOut() {
@@ -47,18 +24,8 @@ class AuthRemoteDataSource(
         auth.sendPasswordResetEmail(email)
     }
 
-    suspend fun getCurrentUser(): User? {
-        val uid = auth.currentUser?.uid ?: return null
-        return runCatching {
-            firestore.collection("users").document(uid).get().data<User>()
-        }.getOrNull()
-    }
+    fun getCurrentUserId(): String? = auth.currentUser?.uid
 
-    fun observeAuthState(): Flow<User?> =
-        auth.authStateChanged.map { firebaseUser ->
-            if (firebaseUser == null) null
-            else runCatching {
-                firestore.collection("users").document(firebaseUser.uid).get().data<User>()
-            }.getOrNull()
-        }
+    fun observeAuthStateChanges(): Flow<String?> =
+        auth.authStateChanged.map { it?.uid }
 }

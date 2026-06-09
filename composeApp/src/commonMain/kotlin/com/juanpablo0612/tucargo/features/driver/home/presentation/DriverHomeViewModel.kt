@@ -31,24 +31,25 @@ class DriverHomeViewModel(
         observeActiveTrips()
     }
 
+    fun onAction(action: DriverHomeAction) {
+        when (action) {
+            is DriverHomeAction.ToggleAvailability -> toggleAvailability(action.available)
+        }
+    }
+
     private fun observeActiveTrips() {
         uiState.onEach { currentState ->
             val activeTrip = currentState.activeTrips.firstOrNull {
                 it.status == TripStatus.IN_PROGRESS || it.status == TripStatus.ON_WAY
             }
-
-            if (activeTrip != null) {
-                trackingManager.startTracking(activeTrip.id)
-            } else {
-                trackingManager.stopTracking()
-            }
+            if (activeTrip != null) trackingManager.startTracking(activeTrip.id)
+            else trackingManager.stopTracking()
         }.launchIn(viewModelScope)
     }
 
     private fun loadDriverData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-
             getCurrentUserUseCase().onSuccess { user ->
                 _uiState.update {
                     it.copy(
@@ -64,19 +65,13 @@ class DriverHomeViewModel(
         }
     }
 
-    fun toggleAvailability(available: Boolean) {
+    private fun toggleAvailability(available: Boolean) {
         viewModelScope.launch {
             _uiState.update { it.copy(isAvailable = available) }
-
             if (currentUserId.isNotEmpty()) {
-                val result = updateDriverStatusUseCase(currentUserId, available)
-
-                result.onFailure {
+                updateDriverStatusUseCase(currentUserId, available).onFailure {
                     _uiState.update {
-                        it.copy(
-                            isAvailable = !available,
-                            error = DriverHomeError.ToggleAvailabilityError
-                        )
+                        it.copy(isAvailable = !available, error = DriverHomeError.ToggleAvailabilityError)
                     }
                 }
             }

@@ -1,7 +1,7 @@
 package com.juanpablo0612.tucargo.domain.usecase
 
 import com.juanpablo0612.tucargo.data.auth.AuthRepository
-import com.juanpablo0612.tucargo.data.user.User
+import com.juanpablo0612.tucargo.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 class ObserveAuthStateUseCase(private val authRepository: AuthRepository) {

@@ -134,7 +134,7 @@ fun DriverHomeScreen(
                 item(key = "availability_button", contentType = "availability") {
                     AvailabilityButton(
                         isAvailable = state.isAvailable,
-                        onToggle = { viewModel.toggleAvailability(it) },
+                        onToggle = { viewModel.onAction(DriverHomeAction.ToggleAvailability(it)) },
                     )
                 }
 

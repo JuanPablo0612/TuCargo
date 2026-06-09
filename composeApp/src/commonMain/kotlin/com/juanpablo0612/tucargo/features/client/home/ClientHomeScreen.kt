@@ -53,7 +53,6 @@ import com.juanpablo0612.tucargo.core.ui.components.MapComponent
 import com.juanpablo0612.tucargo.core.ui.components.TripStatusBadge
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import com.juanpablo0612.tucargo.data.trip.Trip
-import com.juanpablo0612.tucargo.data.user.User
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -81,6 +80,7 @@ import tucargo.composeapp.generated.resources.client_home_your_location_title
 import tucargo.composeapp.generated.resources.local_shipping
 import tucargo.composeapp.generated.resources.package_2
 import com.juanpablo0612.tucargo.core.time.currentHour
+import com.juanpablo0612.tucargo.domain.model.User
 
 @Composable
 fun ClientHomeScreen(
