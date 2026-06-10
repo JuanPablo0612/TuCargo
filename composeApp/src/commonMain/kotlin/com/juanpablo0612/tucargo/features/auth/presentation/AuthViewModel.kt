@@ -2,11 +2,13 @@ package com.juanpablo0612.tucargo.features.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.data.user.User
+import com.juanpablo0612.tucargo.domain.model.User
 import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -32,9 +34,18 @@ class AuthViewModel(
             initialValue = AuthState.Loading
         )
 
+    private val _logoutError = MutableStateFlow<String?>(null)
+    val logoutError = _logoutError.asStateFlow()
+
     fun logout() {
         viewModelScope.launch {
-            logoutUseCase()
+            logoutUseCase().onFailure { e ->
+                _logoutError.value = e.message
+            }
         }
+    }
+
+    fun clearLogoutError() {
+        _logoutError.value = null
     }
 }

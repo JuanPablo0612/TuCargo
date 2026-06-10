@@ -2,11 +2,14 @@ package com.juanpablo0612.tucargo.features.driver.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.data.trip.TripStatus
-import com.juanpablo0612.tucargo.data.trip.TripTrackingManager
+import com.juanpablo0612.tucargo.domain.model.TripStatus
+import com.juanpablo0612.tucargo.domain.trip.TrackingState
+import com.juanpablo0612.tucargo.domain.trip.TripTracker
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -18,44 +21,60 @@ class DriverHomeViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val updateDriverStatusUseCase: UpdateDriverStatusUseCase,
-    private val trackingManager: TripTrackingManager
+    private val observeDriverActiveTripsUseCase: ObserveDriverActiveTripsUseCase,
+    private val tripTracker: TripTracker
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DriverHomeState())
     val uiState = _uiState.asStateFlow()
 
-    private val currentUserId: String = getCurrentUserIdUseCase() ?: ""
-
     init {
         loadDriverData()
         observeActiveTrips()
+        observeTrackerState()
+    }
+
+    fun onAction(action: DriverHomeAction) {
+        when (action) {
+            is DriverHomeAction.ToggleAvailability -> toggleAvailability(action.available)
+        }
+    }
+
+    private fun observeTrackerState() {
+        tripTracker.state.onEach { state ->
+            if (state is TrackingState.Error) {
+                _uiState.update { it.copy(error = DriverHomeError.TrackingError) }
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun observeActiveTrips() {
-        uiState.onEach { currentState ->
-            val activeTrip = currentState.activeTrips.firstOrNull {
-                it.status == TripStatus.IN_PROGRESS || it.status == TripStatus.ON_WAY
-            }
-
-            if (activeTrip != null) {
-                trackingManager.startTracking(activeTrip.id)
-            } else {
-                trackingManager.stopTracking()
-            }
-        }.launchIn(viewModelScope)
+        val userId = getCurrentUserIdUseCase() ?: return
+        observeDriverActiveTripsUseCase(userId)
+            .onEach { trips ->
+                _uiState.update { it.copy(activeTrips = trips.toImmutableList()) }
+                val activeTrip = trips.firstOrNull {
+                    it.status == TripStatus.IN_PROGRESS || it.status == TripStatus.ON_WAY || it.status == TripStatus.ARRIVED_PICKUP
+                }
+                if (activeTrip != null) {
+                    tripTracker.startTracking(activeTrip.id)
+                } else {
+                    tripTracker.stopTracking()
+                }
+            }.launchIn(viewModelScope)
     }
 
     private fun loadDriverData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-
             getCurrentUserUseCase().onSuccess { user ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         driverName = user.fullName,
                         balance = user.walletBalance,
-                        isAvailable = user.isOnline
+                        isAvailable = user.isOnline,
+                        totalTrips = user.ratingCount // Fallback since totalTrips isn't in User yet
                     )
                 }
             }.onFailure {
@@ -64,20 +83,13 @@ class DriverHomeViewModel(
         }
     }
 
-    fun toggleAvailability(available: Boolean) {
+    private fun toggleAvailability(available: Boolean) {
         viewModelScope.launch {
+            val userId = getCurrentUserIdUseCase() ?: return@launch
             _uiState.update { it.copy(isAvailable = available) }
-
-            if (currentUserId.isNotEmpty()) {
-                val result = updateDriverStatusUseCase(currentUserId, available)
-
-                result.onFailure {
-                    _uiState.update {
-                        it.copy(
-                            isAvailable = !available,
-                            error = DriverHomeError.ToggleAvailabilityError
-                        )
-                    }
+            updateDriverStatusUseCase(userId, available).onFailure {
+                _uiState.update {
+                    it.copy(isAvailable = !available, error = DriverHomeError.ToggleAvailabilityError)
                 }
             }
         }

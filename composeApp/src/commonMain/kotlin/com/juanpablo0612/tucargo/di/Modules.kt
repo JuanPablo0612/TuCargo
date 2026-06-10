@@ -1,16 +1,19 @@
 package com.juanpablo0612.tucargo.di
 
+import com.juanpablo0612.tucargo.core.coroutines.AppDispatchers
 import com.juanpablo0612.tucargo.core.location.LocationProvider
-import com.juanpablo0612.tucargo.core.location.MockLocationProvider
 import com.juanpablo0612.tucargo.data.auth.AuthRemoteDataSource
 import com.juanpablo0612.tucargo.data.auth.AuthRepository
 import com.juanpablo0612.tucargo.data.auth.AuthRepositoryImpl
+import com.juanpablo0612.tucargo.data.user.UserRemoteDataSource
 import com.juanpablo0612.tucargo.data.document.DocumentRepository
 import com.juanpablo0612.tucargo.data.document.DocumentRepositoryImpl
+import com.juanpablo0612.tucargo.data.config.ConfigRepository
+import com.juanpablo0612.tucargo.data.config.ConfigRepositoryImpl
 import com.juanpablo0612.tucargo.data.config.SystemConfig
 import com.juanpablo0612.tucargo.data.trip.TripRepository
 import com.juanpablo0612.tucargo.data.trip.TripRepositoryImpl
-import com.juanpablo0612.tucargo.data.trip.TripTrackingManager
+import com.juanpablo0612.tucargo.domain.trip.TripTracker
 import com.juanpablo0612.tucargo.data.user.UserRepository
 import com.juanpablo0612.tucargo.data.user.UserRepositoryImpl
 import com.juanpablo0612.tucargo.domain.usecase.CreateTripUseCase
@@ -24,8 +27,8 @@ import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
-import com.juanpablo0612.tucargo.domain.usecase.SignOutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginViewModel
@@ -38,11 +41,11 @@ import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
 import dev.gitlive.firebase.storage.storage
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
@@ -51,16 +54,20 @@ val dataModule = module {
     single { Firebase.firestore }
     single { Firebase.storage }
 
-    single { AuthRemoteDataSource(get(), get()) }
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single { AppDispatchers() }
+    single(named("ApplicationScope")) {
+        CoroutineScope(SupervisorJob() + get<AppDispatchers>().default)
+    }
 
-    single<DocumentRepository> { DocumentRepositoryImpl(get(), get()) }
-    single<LocationProvider> { MockLocationProvider() }
-    single { SystemConfig() }
-    single<UserRepository> { UserRepositoryImpl(get(), get()) }
-    single<TripRepository> { TripRepositoryImpl(get()) }
-    single { CoroutineScope(Dispatchers.Default + SupervisorJob()) }
-    single { TripTrackingManager(get(), get(), get()) }
+    singleOf(::AuthRemoteDataSource)
+    singleOf(::UserRemoteDataSource)
+    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
+
+    single<DocumentRepository> { DocumentRepositoryImpl(get(), get(), get()) }
+    single<ConfigRepository> { ConfigRepositoryImpl(get(), get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
+    single<TripRepository> { TripRepositoryImpl(get(), get()) }
+    single { TripTracker(get(), get(), get(named("ApplicationScope"))) }
 }
 
 val domainModule = module {
@@ -69,8 +76,8 @@ val domainModule = module {
     singleOf(::GetCurrentUserUseCase)
     singleOf(::GetCurrentUserIdUseCase)
     singleOf(::IsUserLoggedInUseCase)
-    singleOf(::SignOutUseCase)
     singleOf(::UpdateDriverStatusUseCase)
+    singleOf(::ObserveDriverActiveTripsUseCase)
     singleOf(::GetClientTripsUseCase)
     singleOf(::CreateTripUseCase)
     singleOf(::UploadDocumentsUseCase)
@@ -97,6 +104,6 @@ val appModule = module {
 fun initKoin(configuration: KoinAppDeclaration? = null) {
     startKoin {
         configuration?.invoke(this)
-        modules(appModule)
+        modules(appModule, platformModule)
     }
 }

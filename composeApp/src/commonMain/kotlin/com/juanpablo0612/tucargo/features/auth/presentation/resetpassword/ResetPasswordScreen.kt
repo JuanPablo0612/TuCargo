@@ -1,11 +1,8 @@
 package com.juanpablo0612.tucargo.features.auth.presentation.resetpassword
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,13 +33,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
+import com.juanpablo0612.tucargo.core.ui.asString
+import com.juanpablo0612.tucargo.core.ui.components.ErrorBanner
+import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import org.jetbrains.compose.resources.painterResource
@@ -55,7 +53,6 @@ import tucargo.composeapp.generated.resources.network_error
 import tucargo.composeapp.generated.resources.reset_password_back_to_login_button
 import tucargo.composeapp.generated.resources.reset_password_email_label
 import tucargo.composeapp.generated.resources.reset_password_email_placeholder
-import tucargo.composeapp.generated.resources.reset_password_email_required_error
 import tucargo.composeapp.generated.resources.reset_password_submit_button
 import tucargo.composeapp.generated.resources.reset_password_success_message
 import tucargo.composeapp.generated.resources.reset_password_title
@@ -157,26 +154,15 @@ internal fun ResetPasswordScreenContent(
                 ) {
                     Spacer(Modifier.height(16.dp))
 
-                    AnimatedVisibility(
-                        visible = uiState.error != null,
-                        enter = expandVertically() + fadeIn(),
-                        exit = shrinkVertically() + fadeOut(),
-                    ) {
-                        Column {
-                            uiState.error?.let {
-                                val errorRes = when (it) {
-                                    ResetPasswordError.EmailRequired -> Res.string.reset_password_email_required_error
-                                    ResetPasswordError.NetworkError -> Res.string.network_error
-                                    ResetPasswordError.UnknownError -> Res.string.unknown_error
-                                }
-                                ErrorCard(
-                                    message = stringResource(errorRes),
-                                    modifier = Modifier.fillMaxWidth(),
-                                )
+                    ErrorBanner(
+                        message = uiState.authError?.let {
+                            val errorRes = when (it) {
+                                ResetPasswordError.NetworkError -> Res.string.network_error
+                                ResetPasswordError.UnknownError -> Res.string.unknown_error
                             }
-                            Spacer(Modifier.height(16.dp))
+                            stringResource(errorRes)
                         }
-                    }
+                    )
 
                     RoundedTextField(
                         state = emailState,
@@ -189,6 +175,8 @@ internal fun ResetPasswordScreenContent(
                                 contentDescription = null,
                             )
                         },
+                        isError = uiState.emailError != null,
+                        supportingText = uiState.emailError?.let { err -> { Text(err.asString()) } },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
                             autoCorrectEnabled = false,
@@ -202,32 +190,15 @@ internal fun ResetPasswordScreenContent(
 
                     Spacer(Modifier.weight(1f))
 
-                    Button(
+                    LoadingButton(
                         onClick = onSubmit,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        shape = MaterialTheme.shapes.large,
-                        enabled = !uiState.isLoading,
+                        isLoading = uiState.isLoading,
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        AnimatedContent(
-                            targetState = uiState.isLoading,
-                            transitionSpec = { fadeIn() togetherWith fadeOut() },
-                            label = "ResetButtonContent",
-                        ) { loading ->
-                            if (loading) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(22.dp),
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    strokeWidth = 2.dp,
-                                )
-                            } else {
-                                Text(
-                                    text = stringResource(Res.string.reset_password_submit_button),
-                                    style = MaterialTheme.typography.titleSmall,
-                                )
-                            }
-                        }
+                        Text(
+                            text = stringResource(Res.string.reset_password_submit_button),
+                            style = MaterialTheme.typography.titleSmall,
+                        )
                     }
 
                     Spacer(Modifier.height(24.dp))

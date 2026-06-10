@@ -2,7 +2,7 @@ package com.juanpablo0612.tucargo.features.auth.presentation.documents
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.core.ui.event.UiEvent
+import com.juanpablo0612.tucargo.core.validation.FieldError
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UploadDocumentsUseCase
 import io.github.vinceglb.filekit.readBytes
@@ -22,42 +22,43 @@ class DocumentViewModel(
     fun onAction(action: DocumentAction) {
         when (action) {
             is DocumentAction.OnFrontPhotoSelected ->
-                _uiState.update { it.copy(idFront = action.file, error = null) }
+                _uiState.update { it.copy(idFront = action.file, frontFileError = null) }
             is DocumentAction.OnBackPhotoSelected ->
-                _uiState.update { it.copy(idBack = action.file, error = null) }
+                _uiState.update { it.copy(idBack = action.file, backFileError = null) }
             DocumentAction.OnSubmit -> performUpload()
             DocumentAction.OnBackClick -> {}
         }
     }
 
+    fun onNavigated() {
+        _uiState.update { it.copy(isUploadComplete = false) }
+    }
+
     private fun performUpload() {
         val state = _uiState.value
-        val frontFile = state.idFront
-        val backFile = state.idBack
+        val frontError: FieldError? = if (state.idFront == null) FieldError.IdFrontRequired else null
+        val backError: FieldError? = if (state.idBack == null) FieldError.IdBackRequired else null
 
-        if (frontFile == null || backFile == null) {
-            _uiState.update { it.copy(error = DocumentError.BothSidesRequired) }
+        if (frontError != null || backError != null) {
+            _uiState.update { it.copy(frontFileError = frontError, backFileError = backError) }
             return
         }
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update { it.copy(isLoading = true, authError = null) }
 
             val userId = getCurrentUserIdUseCase()
             if (userId == null) {
-                _uiState.update { it.copy(isLoading = false, error = DocumentError.UserNotAuthenticated) }
+                _uiState.update { it.copy(isLoading = false, authError = DocumentError.UserNotAuthenticated) }
                 return@launch
             }
 
-            val frontBytes = frontFile.readBytes()
-            val backBytes = backFile.readBytes()
-
-            uploadDocumentsUseCase(userId, frontBytes, backBytes).fold(
+            uploadDocumentsUseCase(userId, state.idFront!!, state.idBack!!).fold(
                 onSuccess = {
-                    _uiState.update { it.copy(isLoading = false, navigationEvent = UiEvent(Unit)) }
+                    _uiState.update { it.copy(isLoading = false, isUploadComplete = true) }
                 },
                 onFailure = {
-                    _uiState.update { it.copy(isLoading = false, error = DocumentError.UploadError) }
+                    _uiState.update { it.copy(isLoading = false, authError = DocumentError.UploadError) }
                 }
             )
         }

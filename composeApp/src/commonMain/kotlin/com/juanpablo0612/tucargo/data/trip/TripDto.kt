@@ -1,15 +1,12 @@
-// RUTA: composeApp/src/commonMain/kotlin/com/juanpablo0612/tucargo/data/trip/Trip.kt
-// NOTA: Renombra la carpeta "shipment" a "trip" en el explorador de archivos
-
 package com.juanpablo0612.tucargo.data.trip
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Trip(
+data class TripDto(
     val id: String = "",
-    val status: TripStatus = TripStatus.SEARCHING,
+    val status: String = "SEARCHING",
     @SerialName("created_at")
     val createdAt: Long = 0L,
     @SerialName("completed_at")
@@ -38,8 +35,8 @@ data class Trip(
     val paymentMethod: String = "CASH",
 
     // Logística
-    val origin: TripLocation = TripLocation(),
-    val destination: TripLocation = TripLocation(),
+    val origin: TripLocationDto = TripLocationDto(),
+    val destination: TripLocationDto = TripLocationDto(),
     @SerialName("distance_km")
     val distanceKm: Double = 0.0,
     @SerialName("cargo_description")
@@ -49,37 +46,8 @@ data class Trip(
 )
 
 @Serializable
-data class TripLocation(
+data class TripLocationDto(
     val address: String = "",
     val lat: Double = 0.0,
     val lng: Double = 0.0
 )
-
-@Serializable
-enum class TripStatus {
-    SEARCHING,
-    ASSIGNED,
-    ON_WAY,
-    ARRIVED_PICKUP,
-    IN_PROGRESS,
-    COMPLETED,
-    CANCELLED;
-
-    fun displayName(): String = when (this) {
-        SEARCHING -> "Buscando conductor"
-        ASSIGNED -> "Conductor asignado"
-        ON_WAY -> "En camino"
-        ARRIVED_PICKUP -> "Llegó al origen"
-        IN_PROGRESS -> "En progreso"
-        COMPLETED -> "Completado"
-        CANCELLED -> "Cancelado"
-    }
-
-    fun displayColor(): String = when (this) {
-        SEARCHING -> "secondary"
-        ASSIGNED, ON_WAY, ARRIVED_PICKUP -> "primary"
-        IN_PROGRESS -> "tertiary"
-        COMPLETED -> "success"
-        CANCELLED -> "error"
-    }
-}

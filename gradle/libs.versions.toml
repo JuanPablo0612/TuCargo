@@ -3,6 +3,8 @@ agp = "9.2.0"
 android-compileSdk = "37"
 android-minSdk = "24"
 android-targetSdk = "37"
+android-versionCode = "1"
+android-versionName = "1.0.0"
 runtime = "1.10.3"
 ui = "1.10.3"
 uiTooling = "1.10.3"
@@ -19,7 +21,8 @@ compose-icons = "1.7.1"
 foundation = "1.10.3"
 junit = "4.13.2"
 kotlin = "2.3.21"
-koin = "4.2.0-RC1"
+koin = "4.2.1"
+kotlinx-coroutines = "1.11.0"
 google-services = "4.4.4"
 firebase-bom = "34.12.0"
 firebase = "2.4.0"
@@ -30,6 +33,7 @@ kotlinx-datetime = "0.6.1"
 kotlinxCollectionsImmutable = "0.3.7"
 maps-compose = "6.4.1"
 google-maps = "19.0.0"
+play-services-location = "21.3.0"
 buildKonfig = "0.21.0"
 filekit = "0.14.1"
 
@@ -55,6 +59,9 @@ koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase" }
 firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebase" }
@@ -68,6 +75,8 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "maps-compose" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "google-maps" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
+filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
 
 [plugins]

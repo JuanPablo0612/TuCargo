@@ -1,12 +1,7 @@
 package com.juanpablo0612.tucargo.features.auth.presentation.login
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,8 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,10 +40,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
+import com.juanpablo0612.tucargo.core.ui.asString
+import com.juanpablo0612.tucargo.core.ui.components.ErrorBanner
+import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
+import com.juanpablo0612.tucargo.domain.model.UserRole
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -59,13 +55,11 @@ import tucargo.composeapp.generated.resources.arrow_forward
 import tucargo.composeapp.generated.resources.cd_toggle_password_visibility
 import tucargo.composeapp.generated.resources.local_shipping
 import tucargo.composeapp.generated.resources.lock_24px
-import tucargo.composeapp.generated.resources.login_email_error
 import tucargo.composeapp.generated.resources.login_email_label
 import tucargo.composeapp.generated.resources.login_email_placeholder
 import tucargo.composeapp.generated.resources.login_forgot_password_button
 import tucargo.composeapp.generated.resources.login_invalid_credentials_error
 import tucargo.composeapp.generated.resources.login_login_button
-import tucargo.composeapp.generated.resources.login_password_error
 import tucargo.composeapp.generated.resources.login_password_label
 import tucargo.composeapp.generated.resources.login_password_placeholder
 import tucargo.composeapp.generated.resources.login_register_link
@@ -82,12 +76,15 @@ fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     onForgotPasswordClick: () -> Unit,
     onRegisterClick: () -> Unit,
-    onLoginSuccess: (String) -> Unit,
+    onLoginSuccess: (UserRole) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState.navigationEvent) {
-        uiState.navigationEvent?.consume()?.let { role -> onLoginSuccess(role) }
+    LaunchedEffect(uiState.successRole) {
+        uiState.successRole?.let { role ->
+            onLoginSuccess(role)
+            viewModel.onNavigated()
+        }
     }
 
     LoginScreenContent(
@@ -151,26 +148,16 @@ internal fun LoginScreenContent(
 
             Spacer(Modifier.height(24.dp))
 
-            AnimatedVisibility(
-                visible = uiState.loginError != null,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                Column {
-                    uiState.loginError?.let {
-                        val errorRes = when (it) {
-                            LoginError.InvalidCredentials -> Res.string.login_invalid_credentials_error
-                            LoginError.NetworkError -> Res.string.network_error
-                            LoginError.UnknownError -> Res.string.unknown_error
-                        }
-                        ErrorCard(
-                            message = stringResource(errorRes),
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+            ErrorBanner(
+                message = uiState.authError?.let {
+                    val errorRes = when (it) {
+                        LoginError.InvalidCredentials -> Res.string.login_invalid_credentials_error
+                        LoginError.NetworkError -> Res.string.network_error
+                        LoginError.UnknownError -> Res.string.unknown_error
                     }
-                    Spacer(Modifier.height(16.dp))
+                    stringResource(errorRes)
                 }
-            }
+            )
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 RoundedTextField(
@@ -181,10 +168,8 @@ internal fun LoginScreenContent(
                     leadingIcon = {
                         Icon(painterResource(Res.drawable.mail), contentDescription = null)
                     },
-                    supportingText = if (!uiState.isEmailValid) {
-                        { Text(stringResource(Res.string.login_email_error)) }
-                    } else null,
-                    isError = !uiState.isEmailValid,
+                    isError = uiState.emailError != null,
+                    supportingText = uiState.emailError?.let { err -> { Text(err.asString()) } },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         autoCorrectEnabled = false,
@@ -219,10 +204,8 @@ internal fun LoginScreenContent(
                             )
                         }
                     },
-                    supportingText = if (!uiState.isPasswordValid) {
-                        { Text(stringResource(Res.string.login_password_error)) }
-                    } else null,
-                    isError = !uiState.isPasswordValid,
+                    isError = uiState.passwordError != null,
+                    supportingText = uiState.passwordError?.let { err -> { Text(err.asString()) } },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,
@@ -243,41 +226,24 @@ internal fun LoginScreenContent(
 
             Spacer(Modifier.weight(1f))
 
-            Button(
+            LoadingButton(
                 onClick = { onAction(LoginAction.Login) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = MaterialTheme.shapes.large,
-                enabled = !uiState.isLoading,
+                isLoading = uiState.isLoading,
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                AnimatedContent(
-                    targetState = uiState.isLoading,
-                    transitionSpec = { fadeIn() togetherWith fadeOut() },
-                    label = "LoginButtonContent",
-                ) { loading ->
-                    if (loading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(22.dp),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            strokeWidth = 2.dp,
-                        )
-                    } else {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.login_login_button),
-                                style = MaterialTheme.typography.titleSmall,
-                            )
-                            Icon(
-                                painterResource(Res.drawable.arrow_forward),
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp),
-                            )
-                        }
-                    }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(Res.string.login_login_button),
+                        style = MaterialTheme.typography.titleSmall,
+                    )
+                    Icon(
+                        painterResource(Res.drawable.arrow_forward),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
                 }
             }
 

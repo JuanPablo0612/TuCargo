@@ -1,12 +1,7 @@
 package com.juanpablo0612.tucargo.features.auth.presentation.register
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +18,6 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -50,10 +44,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
+import com.juanpablo0612.tucargo.core.ui.asString
+import com.juanpablo0612.tucargo.core.ui.components.ErrorBanner
+import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
 import com.juanpablo0612.tucargo.core.ui.components.SecureRoundedTextField
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
+import com.juanpablo0612.tucargo.domain.model.UserRole
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -68,14 +65,10 @@ import tucargo.composeapp.generated.resources.register_back_button
 import tucargo.composeapp.generated.resources.register_button
 import tucargo.composeapp.generated.resources.register_email_label
 import tucargo.composeapp.generated.resources.register_email_placeholder
-import tucargo.composeapp.generated.resources.register_fields_required
-import tucargo.composeapp.generated.resources.register_invalid_email_error
-import tucargo.composeapp.generated.resources.register_invalid_phone_error
 import tucargo.composeapp.generated.resources.register_name_label
 import tucargo.composeapp.generated.resources.register_name_placeholder
 import tucargo.composeapp.generated.resources.register_password_label
 import tucargo.composeapp.generated.resources.register_password_placeholder
-import tucargo.composeapp.generated.resources.register_password_too_short
 import tucargo.composeapp.generated.resources.register_phone_label
 import tucargo.composeapp.generated.resources.register_phone_placeholder
 import tucargo.composeapp.generated.resources.register_role_client
@@ -92,12 +85,15 @@ import tucargo.composeapp.generated.resources.visibility_off
 fun RegisterScreen(
     viewModel: RegisterViewModel = koinViewModel(),
     onBackClick: () -> Unit,
-    onRegisterSuccess: (role: String) -> Unit = {},
+    onRegisterSuccess: (role: UserRole) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState.navigationEvent) {
-        uiState.navigationEvent?.consume()?.let { role -> onRegisterSuccess(role) }
+    LaunchedEffect(uiState.successRole) {
+        uiState.successRole?.let { role ->
+            onRegisterSuccess(role)
+            viewModel.onNavigated()
+        }
     }
 
     RegisterScreenContent(
@@ -106,9 +102,7 @@ fun RegisterScreen(
         emailState = viewModel.emailState,
         phoneState = viewModel.phoneState,
         passwordState = viewModel.passwordState,
-        selectedRole = viewModel.selectedRole,
-        onRoleSelected = { viewModel.selectedRole = it },
-        onRegisterClick = viewModel::onRegister,
+        onAction = viewModel::onAction,
         onBackClick = onBackClick,
     )
 }
@@ -121,9 +115,7 @@ internal fun RegisterScreenContent(
     emailState: TextFieldState,
     phoneState: TextFieldState,
     passwordState: TextFieldState,
-    selectedRole: String,
-    onRoleSelected: (String) -> Unit,
-    onRegisterClick: () -> Unit,
+    onAction: (RegisterAction) -> Unit,
     onBackClick: () -> Unit,
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -166,39 +158,31 @@ internal fun RegisterScreenContent(
                 )
                 SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                     SegmentedButton(
-                        selected = selectedRole == "CLIENT",
-                        onClick = { onRoleSelected("CLIENT") },
+                        selected = uiState.selectedRole == UserRole.CLIENT,
+                        onClick = { onAction(RegisterAction.SelectRole(UserRole.CLIENT)) },
                         shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
                         label = { Text(stringResource(Res.string.register_role_client)) },
                     )
                     SegmentedButton(
-                        selected = selectedRole == "DRIVER",
-                        onClick = { onRoleSelected("DRIVER") },
+                        selected = uiState.selectedRole == UserRole.DRIVER,
+                        onClick = { onAction(RegisterAction.SelectRole(UserRole.DRIVER)) },
                         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
                         label = { Text(stringResource(Res.string.register_role_driver)) },
                     )
                 }
             }
 
-            AnimatedVisibility(
-                visible = uiState.error is RegisterError.UserAlreadyExists
-                        || uiState.error is RegisterError.NetworkError
-                        || uiState.error is RegisterError.UnknownError,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                uiState.error?.let {
+            ErrorBanner(
+                message = uiState.authError?.let {
                     val errorRes = when (it) {
-                        RegisterError.UserAlreadyExists -> Res.string.register_user_already_exists
+                        RegisterError.EmailAlreadyInUse -> Res.string.register_user_already_exists
+                        RegisterError.WeakPassword -> Res.string.register_weak_password_error
                         RegisterError.NetworkError -> Res.string.network_error
-                        else -> Res.string.unknown_error
+                        RegisterError.UnknownError -> Res.string.unknown_error
                     }
-                    ErrorCard(
-                        message = stringResource(errorRes),
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    stringResource(errorRes)
                 }
-            }
+            )
 
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 RoundedTextField(
@@ -211,10 +195,8 @@ internal fun RegisterScreenContent(
                             contentDescription = null,
                         )
                     },
-                    isError = uiState.isNameError,
-                    supportingText = if (uiState.isNameError) {
-                        { Text(stringResource(Res.string.register_fields_required)) }
-                    } else null,
+                    isError = uiState.nameError != null,
+                    supportingText = uiState.nameError?.let { err -> { Text(err.asString()) } },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
@@ -233,10 +215,8 @@ internal fun RegisterScreenContent(
                             contentDescription = null,
                         )
                     },
-                    isError = uiState.isEmailError,
-                    supportingText = if (uiState.isEmailError) {
-                        { Text(stringResource(Res.string.register_invalid_email_error)) }
-                    } else null,
+                    isError = uiState.emailError != null,
+                    supportingText = uiState.emailError?.let { err -> { Text(err.asString()) } },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
@@ -254,10 +234,8 @@ internal fun RegisterScreenContent(
                             contentDescription = null,
                         )
                     },
-                    isError = uiState.isPhoneError,
-                    supportingText = if (uiState.isPhoneError) {
-                        { Text(stringResource(Res.string.register_invalid_phone_error)) }
-                    } else null,
+                    isError = uiState.phoneError != null,
+                    supportingText = uiState.phoneError?.let { err -> { Text(err.asString()) } },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
@@ -287,57 +265,29 @@ internal fun RegisterScreenContent(
                             )
                         }
                     },
-                    isError = uiState.isPasswordError,
-                    supportingText = if (uiState.isPasswordError) {
-                        {
-                            Text(
-                                stringResource(
-                                    when (uiState.error) {
-                                        RegisterError.PasswordTooShort -> Res.string.register_password_too_short
-                                        else -> Res.string.register_weak_password_error
-                                    }
-                                )
-                            )
-                        }
-                    } else null,
+                    isError = uiState.passwordError != null,
+                    supportingText = uiState.passwordError?.let { err -> { Text(err.asString()) } },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,
                     ),
                     onKeyboardAction = { performDefaultAction ->
-                        onRegisterClick()
+                        onAction(RegisterAction.Register)
                         performDefaultAction()
                     },
                 )
             }
 
-            Button(
-                onClick = onRegisterClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = MaterialTheme.shapes.large,
-                enabled = !uiState.isLoading,
+            LoadingButton(
+                onClick = { onAction(RegisterAction.Register) },
+                isLoading = uiState.isLoading,
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                AnimatedContent(
-                    targetState = uiState.isLoading,
-                    transitionSpec = { fadeIn() togetherWith fadeOut() },
-                    label = "RegisterButtonContent",
-                ) { loading ->
-                    if (loading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(22.dp),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            strokeWidth = 2.dp,
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(Res.string.register_button),
-                            style = MaterialTheme.typography.titleSmall,
-                        )
-                    }
-                }
+                Text(
+                    text = stringResource(Res.string.register_button),
+                    style = MaterialTheme.typography.titleSmall,
+                )
             }
 
             Spacer(Modifier.height(8.dp))
@@ -355,9 +305,7 @@ internal fun RegisterScreenContentPreview() {
             emailState = rememberTextFieldState(),
             phoneState = rememberTextFieldState(),
             passwordState = rememberTextFieldState(),
-            selectedRole = "CLIENT",
-            onRoleSelected = {},
-            onRegisterClick = {},
+            onAction = {},
             onBackClick = {},
         )
     }

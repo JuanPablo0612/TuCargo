@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -39,7 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.TripStatusBadge
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
-import com.juanpablo0612.tucargo.data.trip.Trip
+import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.features.driver.home.presentation.components.AvailabilityButton
 import com.juanpablo0612.tucargo.features.driver.home.presentation.components.BalanceCard
 import org.jetbrains.compose.resources.stringResource
@@ -48,11 +46,12 @@ import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.client_home_sign_out_desc
 import tucargo.composeapp.generated.resources.driver_home_active_desc
 import tucargo.composeapp.generated.resources.driver_home_active_trips_title
-import tucargo.composeapp.generated.resources.driver_home_empty_trips_message
-import tucargo.composeapp.generated.resources.driver_home_offline_desc
 import tucargo.composeapp.generated.resources.driver_home_availability_error
+import tucargo.composeapp.generated.resources.driver_home_empty_trips_message
 import tucargo.composeapp.generated.resources.driver_home_load_error
+import tucargo.composeapp.generated.resources.driver_home_offline_desc
 import tucargo.composeapp.generated.resources.driver_home_title
+import tucargo.composeapp.generated.resources.driver_home_tracking_error
 import tucargo.composeapp.generated.resources.driver_home_trip_id_label
 import tucargo.composeapp.generated.resources.driver_home_view_trip_button
 
@@ -121,6 +120,7 @@ fun DriverHomeScreen(
                         val errorRes = when (driverError) {
                             DriverHomeError.LoadDriverError -> Res.string.driver_home_load_error
                             DriverHomeError.ToggleAvailabilityError -> Res.string.driver_home_availability_error
+                            DriverHomeError.TrackingError -> Res.string.driver_home_tracking_error
                         }
                         ErrorCard(
                             message = stringResource(errorRes),
@@ -134,7 +134,7 @@ fun DriverHomeScreen(
                 item(key = "availability_button", contentType = "availability") {
                     AvailabilityButton(
                         isAvailable = state.isAvailable,
-                        onToggle = { viewModel.toggleAvailability(it) },
+                        onToggle = { viewModel.onAction(DriverHomeAction.ToggleAvailability(it)) },
                     )
                 }
 

@@ -20,19 +20,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.juanpablo0612.tucargo.core.ui.theme.LocalExtendedColors
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
-import com.juanpablo0612.tucargo.data.trip.TripStatus
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
-import tucargo.composeapp.generated.resources.Res
-import tucargo.composeapp.generated.resources.trip_status_arrived_pickup
-import tucargo.composeapp.generated.resources.trip_status_assigned
-import tucargo.composeapp.generated.resources.trip_status_cancelled
-import tucargo.composeapp.generated.resources.trip_status_completed
-import tucargo.composeapp.generated.resources.trip_status_in_progress
-import tucargo.composeapp.generated.resources.trip_status_on_way
-import tucargo.composeapp.generated.resources.trip_status_searching
+import com.juanpablo0612.tucargo.domain.model.TripStatus
+import com.juanpablo0612.tucargo.features.trip.presentation.displayContainerColor
+import com.juanpablo0612.tucargo.features.trip.presentation.displayName
+import com.juanpablo0612.tucargo.features.trip.presentation.onDisplayContainerColor
 
 @Composable
 fun ErrorCard(
@@ -78,50 +70,17 @@ fun ErrorCardPreview() {
 
 @Composable
 internal fun TripStatusBadge(status: TripStatus, modifier: Modifier = Modifier) {
-    val extendedColors = LocalExtendedColors.current
-    val (bg, fg) = when (status) {
-        TripStatus.SEARCHING -> Pair(
-            MaterialTheme.colorScheme.secondaryContainer,
-            MaterialTheme.colorScheme.onSecondaryContainer,
-        )
-        TripStatus.ASSIGNED, TripStatus.ON_WAY, TripStatus.ARRIVED_PICKUP -> Pair(
-            MaterialTheme.colorScheme.primaryContainer,
-            MaterialTheme.colorScheme.onPrimaryContainer,
-        )
-        TripStatus.IN_PROGRESS -> Pair(
-            MaterialTheme.colorScheme.tertiaryContainer,
-            MaterialTheme.colorScheme.onTertiaryContainer,
-        )
-        TripStatus.COMPLETED -> Pair(
-            extendedColors.successContainer,
-            extendedColors.onSuccessContainer,
-        )
-        TripStatus.CANCELLED -> Pair(
-            MaterialTheme.colorScheme.errorContainer,
-            MaterialTheme.colorScheme.onErrorContainer,
-        )
-    }
     Box(
         modifier = modifier
             .clip(MaterialTheme.shapes.extraSmall)
-            .background(bg)
+            .background(status.displayContainerColor())
             .padding(horizontal = 8.dp, vertical = 4.dp),
     ) {
         Text(
-            text = stringResource(status.toDisplayNameRes()),
+            text = status.displayName(),
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Bold,
-            color = fg,
+            color = status.onDisplayContainerColor(),
         )
     }
-}
-
-internal fun TripStatus.toDisplayNameRes(): StringResource = when (this) {
-    TripStatus.SEARCHING -> Res.string.trip_status_searching
-    TripStatus.ASSIGNED -> Res.string.trip_status_assigned
-    TripStatus.ON_WAY -> Res.string.trip_status_on_way
-    TripStatus.ARRIVED_PICKUP -> Res.string.trip_status_arrived_pickup
-    TripStatus.IN_PROGRESS -> Res.string.trip_status_in_progress
-    TripStatus.COMPLETED -> Res.string.trip_status_completed
-    TripStatus.CANCELLED -> Res.string.trip_status_cancelled
 }

@@ -1,5 +1,3 @@
-// RUTA: composeApp/src/commonMain/kotlin/com/juanpablo0612/tucargo/features/client/home/ClientHomeViewModel.kt
-
 package com.juanpablo0612.tucargo.features.client.home
 
 import androidx.lifecycle.ViewModel
@@ -7,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
-import com.juanpablo0612.tucargo.domain.usecase.SignOutUseCase
+import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +17,7 @@ class ClientHomeViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val getClientTripsUseCase: GetClientTripsUseCase,
-    private val signOutUseCase: SignOutUseCase
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ClientHomeState())
@@ -33,8 +31,8 @@ class ClientHomeViewModel(
         when (action) {
             ClientHomeAction.LoadData -> loadData()
             ClientHomeAction.RefreshTrips -> loadRecentTrips()
-            ClientHomeAction.NewTrip -> { }
-            ClientHomeAction.SignOut -> viewModelScope.launch { signOutUseCase() }
+            ClientHomeAction.NewTrip -> {}
+            ClientHomeAction.SignOut -> viewModelScope.launch { logoutUseCase() }
             is ClientHomeAction.OnLocationUpdated -> _uiState.update {
                 it.copy(userLatitude = action.latitude, userLongitude = action.longitude)
             }

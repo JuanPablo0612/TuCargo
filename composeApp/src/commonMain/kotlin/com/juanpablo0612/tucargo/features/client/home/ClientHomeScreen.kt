@@ -31,11 +31,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -48,12 +43,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
+import com.juanpablo0612.tucargo.core.ui.components.ErrorBanner
 import com.juanpablo0612.tucargo.core.ui.components.MapComponent
 import com.juanpablo0612.tucargo.core.ui.components.TripStatusBadge
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
-import com.juanpablo0612.tucargo.data.trip.Trip
-import com.juanpablo0612.tucargo.data.user.User
+import com.juanpablo0612.tucargo.domain.model.Trip
+import com.juanpablo0612.tucargo.domain.model.User
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -130,36 +125,28 @@ internal fun ClientHomeScreenContent(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            if (uiState.isLoading) {
+            if (uiState.isLoading && uiState.user == null) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
             } else {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     item(key = "error_banner", contentType = "error") {
-                        AnimatedVisibility(
-                            visible = uiState.error != null,
-                            enter = expandVertically() + fadeIn(),
-                            exit = shrinkVertically() + fadeOut(),
-                        ) {
-                            uiState.error?.let { clientError ->
+                        ErrorBanner(
+                            message = uiState.error?.let { clientError ->
                                 val errorRes = when (clientError) {
                                     ClientHomeError.LoadUserError -> Res.string.client_home_load_error
                                     ClientHomeError.LoadTripsError -> Res.string.client_home_trips_error
                                 }
-                                ErrorCard(
-                                    message = stringResource(errorRes),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                                )
-                            }
-                        }
+                                stringResource(errorRes)
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
                     }
 
                     item(key = "greeting", contentType = "greeting") {
                         GreetingSection(
-                            userName = uiState.user.fullName,
+                            userName = uiState.user?.fullName ?: "",
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                         )
                     }
@@ -223,7 +210,7 @@ internal fun ClientHomeScreenContent(
                         }
                     }
 
-                    if (uiState.isLoadingTrips) {
+                    if (uiState.isLoadingTrips && uiState.recentTrips.isEmpty()) {
                         item(key = "loading", contentType = "loading") {
                             Box(
                                 modifier = Modifier
@@ -266,48 +253,52 @@ internal fun ClientHomeScreenContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ClientTopAppBar(user: User, onSignOut: () -> Unit) {
+private fun ClientTopAppBar(user: User?, onSignOut: () -> Unit) {
     TopAppBar(
         title = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val initials = remember(user.fullName) {
-                        user.fullName
-                            .split(" ")
-                            .asSequence()
-                            .take(2)
-                            .mapNotNull { it.firstOrNull()?.uppercaseChar() }
-                            .joinToString("")
-                            .ifEmpty { "U" }
+            if (user != null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val initials = remember(user.fullName) {
+                            user.fullName
+                                .split(" ")
+                                .asSequence()
+                                .take(2)
+                                .mapNotNull { it.firstOrNull()?.uppercaseChar() }
+                                .joinToString("")
+                                .ifEmpty { "U" }
+                        }
+                        Text(
+                            text = initials,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     }
-                    Text(
-                        text = initials,
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Column {
+                        Text(
+                            text = stringResource(Res.string.app_name),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = user.fullName.ifEmpty { user.email },
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.width(10.dp))
-                Column {
-                    Text(
-                        text = stringResource(Res.string.app_name),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = user.fullName.ifEmpty { user.email },
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+            } else {
+                 Text(stringResource(Res.string.app_name))
             }
         },
         actions = {
@@ -391,7 +382,10 @@ private fun StatItem(value: String, label: String) {
 }
 
 @Composable
-private fun MapSection(latitude: Double, longitude: Double, modifier: Modifier = Modifier) {
+private fun MapSection(latitude: Double?, longitude: Double?, modifier: Modifier = Modifier) {
+    val displayLat = latitude ?: 4.6097
+    val displayLng = longitude ?: -74.0817
+
     Column(modifier = modifier) {
         Text(
             text = stringResource(Res.string.client_home_your_location_title),
@@ -404,8 +398,8 @@ private fun MapSection(latitude: Double, longitude: Double, modifier: Modifier =
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(220.dp),
-                latitude = latitude,
-                longitude = longitude
+                latitude = displayLat,
+                longitude = displayLng
             )
         }
     }

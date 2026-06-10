@@ -1,127 +1,128 @@
 <resources>
     <string name="app_name" translatable="false">TuCargo</string>
+
+    <!-- Welcome -->
     <string name="welcome_title">TuCargo</string>
     <string name="welcome_subtitle">Motorcycle Logistics</string>
     <string name="welcome_send_cargo_button">I need to send cargo</string>
-    <string name="welcome_send_cargo_description">Send your packages quickly</string>
+    <string name="welcome_send_cargo_description">Send your packages quickly and safely</string>
     <string name="welcome_driver_button">I am a driver</string>
-    <string name="welcome_driver_description">Earn money delivering</string>
+    <string name="welcome_driver_description">Earn money making deliveries</string>
     <string name="welcome_version">v%1$s</string>
 
     <!-- Login -->
-    <string name="login_title">Welcome Back</string>
-    <string name="login_subtitle">Log in to access your courier dashboard and start delivering.</string>
-    <string name="login_email_label">Email Address</string>
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Log in to access your account and start delivering.</string>
+    <string name="login_email_label">Email address</string>
     <string name="login_email_placeholder">courier@tucargo.com</string>
-    <string name="login_email_error">Please enter a valid email address</string>
     <string name="login_password_label">Password</string>
     <string name="login_password_placeholder">Min. 6 characters</string>
-    <string name="login_password_error">Password must be at least 6 characters long</string>
     <string name="login_login_button">Log In</string>
-    <string name="login_forgot_password_button">Forgot Password?</string>
+    <string name="login_forgot_password_button">Forgot password?</string>
     <string name="login_register_link">Don\'t have an account? Register</string>
-    <string name="login_invalid_credentials_error">Invalid email or password</string>
+    <string name="login_invalid_credentials_error">Invalid email or password. Please try again.</string>
 
     <!-- Register -->
-    <string name="register_back_button">← Back</string>
+    <string name="register_back_button">Go back</string>
     <string name="register_title">Create your account</string>
     <string name="register_role_label">Select your role</string>
     <string name="register_role_client">I need to send cargo</string>
     <string name="register_role_driver">I am a driver</string>
-    <string name="register_name_label">Full Name</string>
-    <string name="register_email_label">Email Address</string>
-    <string name="register_phone_label">Phone (E.164, e.g. +573001234567)</string>
+    <string name="register_name_label">Full name</string>
+    <string name="register_email_label">Email address</string>
+    <string name="register_phone_label">Phone number (E.164, e.g. +13001234567)</string>
     <string name="register_password_label">Password</string>
-    <string name="register_confirm_password_label">Confirm Password</string>
-    <string name="register_button">Register</string>
+    <string name="register_button">Create account</string>
     <string name="register_name_placeholder">John Doe</string>
     <string name="register_email_placeholder">you@example.com</string>
     <string name="register_phone_placeholder">+1 555 000 0000</string>
     <string name="register_password_placeholder">Min. 6 characters</string>
+    <string name="register_user_already_exists">This email address is already registered.</string>
+    <string name="register_weak_password_error">Server rejected the password. Use at least 6 characters, one letter and one digit.</string>
 
     <!-- Reset Password -->
-    <string name="reset_password_title">Reset Password</string>
-    <string name="reset_password_subtitle">Enter your email and we\'ll send you a reset link</string>
-    <string name="reset_password_email_label">Email Address</string>
-    <string name="reset_password_submit_button">Send Reset Link</string>
-    <string name="reset_password_success_message">We sent a link to your email. Check your inbox.</string>
-    <string name="reset_password_back_to_login_button">Back to Login</string>
-    <string name="reset_password_email_required_error">Please enter your email address</string>
+    <string name="reset_password_title">Reset password</string>
+    <string name="reset_password_email_label">Email address</string>
     <string name="reset_password_email_placeholder">your@email.com</string>
+    <string name="reset_password_submit_button">Send reset link</string>
+    <string name="reset_password_success_message">We sent a link to your email. Check your inbox and follow the instructions.</string>
+    <string name="reset_password_back_to_login_button">Back to login</string>
 
-    <!-- Documents -->
-    <string name="docs_title">Identity Verification</string>
-    <string name="docs_subtitle">Please upload a clear photo of your identity card (both sides).</string>
-    <string name="docs_front_label">Front Side ID</string>
-    <string name="docs_back_label">Back Side ID</string>
+    <!-- Documents / KYC -->
+    <string name="docs_title">Identity verification</string>
+    <string name="docs_subtitle">Please upload a clear photo of both sides of your identity card.</string>
+    <string name="docs_front_label">Front side</string>
+    <string name="docs_back_label">Back side</string>
     <string name="docs_submit_button">Continue</string>
-    <string name="docs_success_message">Documents Uploaded</string>
-    <string name="docs_back_button">Go Back</string>
+    <string name="docs_back_button">Go back</string>
+    <string name="docs_user_not_authenticated">Your session has expired. Please log in again.</string>
+    <string name="docs_upload_error">Failed to upload documents. Please try again.</string>
 
     <!-- Client Home -->
     <string name="client_home_sign_out_desc">Sign out</string>
-    <string name="client_home_new_trip_button">New Shipment</string>
-    <string name="client_home_recent_trips_title">Recent Shipments</string>
+    <string name="client_home_new_trip_button">New shipment</string>
+    <string name="client_home_recent_trips_title">Recent shipments</string>
     <string name="client_home_view_all_button">View all</string>
-    <string name="client_home_your_location_title">Your Location</string>
-    <string name="client_home_greeting_morning">Good morning</string>
-    <string name="client_home_greeting_afternoon">Good afternoon</string>
-    <string name="client_home_greeting_evening">Good evening</string>
+    <string name="client_home_your_location_title">Your location</string>
+    <string name="client_home_greeting_morning">Good morning,</string>
+    <string name="client_home_greeting_afternoon">Good afternoon,</string>
+    <string name="client_home_greeting_evening">Good evening,</string>
     <string name="client_home_default_user_name">Client</string>
     <string name="client_home_stats_trips_label">Recent shipments</string>
     <string name="client_home_stats_status_label">Account status</string>
     <string name="client_home_stats_status_active">Active</string>
     <string name="client_home_empty_trips_title">No recent shipments</string>
-    <string name="client_home_empty_trips_subtitle">Create your first shipment using the button above</string>
+    <string name="client_home_empty_trips_subtitle">Create your first shipment using the button above.</string>
     <string name="client_home_trip_origin_empty">Origin not specified</string>
     <string name="client_home_trip_destination_empty">Destination not specified</string>
+    <string name="client_home_load_error">Could not load your data. Please try again.</string>
+    <string name="client_home_trips_error">Could not load recent shipments.</string>
 
     <!-- Driver Home -->
-    <string name="driver_home_title">Driver Dashboard</string>
-    <string name="driver_home_active_desc">You are active to receive trips</string>
-    <string name="driver_home_offline_desc">Disconnected</string>
-    <string name="driver_home_sign_out_button">Exit</string>
-    <string name="driver_home_active_trips_title">Trips in progress</string>
-    <string name="driver_home_empty_trips_message">You don\'t have any active trips at this time.</string>
-    <string name="driver_home_trip_id_label">Trip ID: %1$s</string>
-    <string name="driver_home_trip_status_in_progress">Status: In progress</string>
+    <string name="driver_home_title">Driver dashboard</string>
+    <string name="driver_home_active_desc">You are online and receiving trips</string>
+    <string name="driver_home_offline_desc">You are offline</string>
+    <string name="driver_home_active_trips_title">Active trips</string>
+    <string name="driver_home_empty_trips_message">You have no active trips right now.</string>
+    <string name="driver_home_trip_id_label">Trip #%1$s</string>
     <string name="driver_home_view_trip_button">View</string>
     <string name="driver_home_availability_online">YOU ARE ONLINE</string>
     <string name="driver_home_availability_go_online">GO ONLINE</string>
-    <string name="driver_home_balance_title">Your Balance</string>
-    <string name="driver_home_completed_trips_msg">You have completed %1$d trips</string>
+    <string name="driver_home_balance_title">Your balance</string>
+    <string name="driver_home_completed_trips_msg">%1$d trips completed</string>
+    <string name="driver_home_load_error">Could not load driver data. Please try again.</string>
+    <string name="driver_home_availability_error">Connection error. Could not update your availability.</string>
+    <string name="driver_home_tracking_error">Error updating your location. Please check your GPS.</string>
 
-    <!-- Trip Status -->
-    <string name="trip_status_searching">Searching driver</string>
+    <!-- Trip status -->
+    <string name="trip_status_searching">Searching for driver</string>
     <string name="trip_status_assigned">Driver assigned</string>
     <string name="trip_status_on_way">On the way</string>
-    <string name="trip_status_arrived_pickup">Arrived at origin</string>
+    <string name="trip_status_arrived_pickup">Arrived at pickup</string>
     <string name="trip_status_in_progress">In progress</string>
     <string name="trip_status_completed">Completed</string>
     <string name="trip_status_cancelled">Cancelled</string>
 
     <!-- Map -->
     <string name="map_your_location">Your location</string>
-    <string name="map_not_available_ios">Map not available on iOS (Simulator/Current)</string>
+    <string name="map_not_available_ios">Map not available on iOS simulator</string>
 
-    <!-- Errors -->
-    <string name="network_error">A network error occurred. Please try again later.</string>
-    <string name="unknown_error">An unknown error occurred</string>
-    <string name="register_fields_required">Please fill in all fields</string>
-    <string name="register_passwords_mismatch">Passwords don\'t match</string>
-    <string name="register_password_too_short">Password must be at least 6 characters</string>
-    <string name="register_weak_password_error">Password must have at least 6 characters, one letter and one digit</string>
-    <string name="register_invalid_email_error">Please enter a valid email address</string>
-    <string name="register_invalid_phone_error">Phone must be in E.164 format (e.g. +573001234567)</string>
-    <string name="register_user_already_exists">This email is already registered</string>
-    <string name="docs_both_sides_required">Please upload both sides of the document</string>
-    <string name="docs_user_not_authenticated">User session expired. Please log in again.</string>
-    <string name="docs_upload_error">Error uploading documents. Please try again.</string>
-    <string name="driver_home_load_error">Could not load driver data. Please try again.</string>
-    <string name="driver_home_availability_error">Connection error. Could not update availability.</string>
-    <string name="client_home_load_error">Could not load your data. Please try again.</string>
-    <string name="client_home_trips_error">Could not load recent trips.</string>
+    <!-- Global errors -->
+    <string name="network_error">Network error. Check your connection and try again.</string>
+    <string name="unknown_error">An unexpected error occurred. Please try again.</string>
 
-    <!-- Accessibility content descriptions -->
-    <string name="cd_toggle_password_visibility">Toggle password visibility</string>
+    <!-- Field validation errors -->
+    <string name="validation_email_required">Please enter your email address</string>
+    <string name="validation_email_invalid">Enter a valid email address (e.g. you@example.com)</string>
+    <string name="validation_password_required">Please enter your password</string>
+    <string name="validation_password_too_short">Password must be at least 6 characters</string>
+    <string name="validation_password_weak">Password must include at least one letter and one digit</string>
+    <string name="validation_name_required">Please enter your full name</string>
+    <string name="validation_phone_required">Please enter your phone number</string>
+    <string name="validation_phone_invalid">Enter a valid phone number in E.164 format (e.g. +13001234567)</string>
+    <string name="validation_id_front_required">Please select the front side of your ID</string>
+    <string name="validation_id_back_required">Please select the back side of your ID</string>
+
+    <!-- Accessibility -->
+    <string name="cd_toggle_password_visibility">Show or hide password</string>
 </resources>

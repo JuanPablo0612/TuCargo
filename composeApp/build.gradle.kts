@@ -47,8 +47,11 @@ kotlin {
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.maps.compose)
             implementation(libs.play.services.maps)
+            implementation(libs.play.services.location)
+            implementation(libs.kotlinx.coroutines.play.services)
         }
         commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.runtime)
             implementation(libs.foundation)
             implementation(libs.material3)
@@ -69,10 +72,12 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.materialIconsExtended)
+            implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

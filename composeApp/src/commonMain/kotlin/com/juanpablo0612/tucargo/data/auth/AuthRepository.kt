@@ -1,6 +1,7 @@
 package com.juanpablo0612.tucargo.data.auth
 
-import com.juanpablo0612.tucargo.data.user.User
+import com.juanpablo0612.tucargo.domain.model.User
+import com.juanpablo0612.tucargo.domain.model.UserRole
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
@@ -10,7 +11,7 @@ interface AuthRepository {
         password: String,
         fullName: String,
         phone: String,
-        role: String
+        role: UserRole
     ): Result<User>
     suspend fun logout(): Result<Unit>
     suspend fun sendPasswordResetEmail(email: String): Result<Unit>

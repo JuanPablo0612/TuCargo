@@ -1,7 +1,7 @@
 package com.juanpablo0612.tucargo.features.driver.home.presentation
 
 import androidx.compose.runtime.Immutable
-import com.juanpablo0612.tucargo.data.trip.Trip
+import com.juanpablo0612.tucargo.domain.model.Trip
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
