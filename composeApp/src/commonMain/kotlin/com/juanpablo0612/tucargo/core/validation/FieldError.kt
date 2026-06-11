@@ -11,4 +11,11 @@ sealed interface FieldError {
     data object PhoneInvalid : FieldError
     data object IdFrontRequired : FieldError
     data object IdBackRequired : FieldError
+    data object PlateRequired : FieldError
+    data object PlateInvalid : FieldError
+    data object VehicleModelRequired : FieldError
+    data object VehicleColorRequired : FieldError
+    data object VehicleYearRequired : FieldError
+    data object VehicleYearInvalid : FieldError
+    data class DocumentRequired(val typeName: String) : FieldError
 }

@@ -7,11 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,11 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,19 +29,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.asString
+import com.juanpablo0612.tucargo.core.ui.components.DocumentPickerItem
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -220,81 +209,6 @@ internal fun DocumentScreenContent(
             }
 
             Spacer(Modifier.height(16.dp))
-        }
-    }
-}
-
-@Composable
-internal fun DocumentPickerItem(
-    label: String,
-    isLoaded: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    fileName: String? = null,
-    isError: Boolean = false,
-) {
-    val containerColor = when {
-        isError -> MaterialTheme.colorScheme.errorContainer
-        isLoaded -> MaterialTheme.colorScheme.primaryContainer
-        else -> MaterialTheme.colorScheme.surfaceVariant
-    }
-    val borderColor = when {
-        isError -> MaterialTheme.colorScheme.error
-        isLoaded -> MaterialTheme.colorScheme.primary
-        else -> MaterialTheme.colorScheme.outlineVariant
-    }
-    val iconContainerColor = when {
-        isError -> MaterialTheme.colorScheme.error
-        isLoaded -> MaterialTheme.colorScheme.primary
-        else -> MaterialTheme.colorScheme.outline
-    }
-    val iconTint = if (isLoaded || isError) MaterialTheme.colorScheme.onPrimary
-    else MaterialTheme.colorScheme.surface
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(120.dp)
-            .clip(MaterialTheme.shapes.medium)
-            .background(containerColor)
-            .border(2.dp, borderColor, MaterialTheme.shapes.medium)
-            .semantics(mergeDescendants = true) { role = Role.Button }
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(iconContainerColor),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = if (isLoaded) Icons.Default.Check else Icons.Default.Add,
-                    contentDescription = null,
-                    tint = iconTint,
-                    modifier = Modifier.size(22.dp),
-                )
-            }
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelLarge,
-                color = if (isLoaded) MaterialTheme.colorScheme.onPrimaryContainer
-                else MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            if (fileName != null) {
-                Text(
-                    text = fileName,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
         }
     }
 }

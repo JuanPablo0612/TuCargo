@@ -2,7 +2,10 @@ package com.juanpablo0612.tucargo.features.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juanpablo0612.tucargo.domain.model.DriverOnboardingStatus
 import com.juanpablo0612.tucargo.domain.model.User
+import com.juanpablo0612.tucargo.domain.model.UserRole
+import com.juanpablo0612.tucargo.domain.usecase.GetDriverOnboardingStatusUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,18 +18,29 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val observeAuthStateUseCase: ObserveAuthStateUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val getDriverOnboardingStatusUseCase: GetDriverOnboardingStatusUseCase
 ) : ViewModel() {
 
     sealed interface AuthState {
         data object Loading : AuthState
-        data class Authenticated(val user: User) : AuthState
+        data class Authenticated(
+            val user: User,
+            val driverOnboardingStatus: DriverOnboardingStatus? = null
+        ) : AuthState
         data object Unauthenticated : AuthState
     }
 
     val authState: StateFlow<AuthState> = observeAuthStateUseCase()
         .map { user ->
-            if (user != null) AuthState.Authenticated(user) else AuthState.Unauthenticated
+            if (user == null) return@map AuthState.Unauthenticated
+            if (user.role == UserRole.DRIVER && !user.isVerified) {
+                val status = getDriverOnboardingStatusUseCase()
+                    .getOrElse { DriverOnboardingStatus.IncompleteVehicle }
+                AuthState.Authenticated(user, driverOnboardingStatus = status)
+            } else {
+                AuthState.Authenticated(user)
+            }
         }
         .stateIn(
             scope = viewModelScope,

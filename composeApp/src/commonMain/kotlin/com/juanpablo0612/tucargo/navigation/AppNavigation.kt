@@ -3,7 +3,6 @@ package com.juanpablo0612.tucargo.navigation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,13 +18,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.juanpablo0612.tucargo.domain.model.DriverOnboardingStatus
 import com.juanpablo0612.tucargo.domain.model.UserRole
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.KycPendingScreen
+import com.juanpablo0612.tucargo.features.auth.presentation.driverdocs.DriverDocsUploadScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.register.RegisterScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.resetpassword.ResetPasswordScreen
+import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegistrationScreen
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeScreen
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.TripActiveScreen
@@ -40,6 +42,8 @@ import org.koin.compose.viewmodel.koinViewModel
     @Serializable data object ResetPassword : Route()
     @Serializable data object KycUpload : Route()
     @Serializable data object KycPending : Route()
+    @Serializable data object DriverOnboardingVehicle : Route()
+    @Serializable data object DriverOnboardingDocuments : Route()
     @Serializable data object ClientHome : Route()
     @Serializable data object DriverHome : Route()
     @Serializable data object TripHistory : Route()
@@ -77,8 +81,11 @@ fun AppNavigation() {
     }
 
     val startDestination: Route = when (val s = authState) {
-        is AuthViewModel.AuthState.Authenticated ->
-            if (s.user.role == UserRole.DRIVER) Route.DriverHome else Route.ClientHome
+        is AuthViewModel.AuthState.Authenticated -> when {
+            s.user.role == UserRole.CLIENT -> Route.ClientHome
+            s.user.isVerified -> Route.DriverHome
+            else -> driverOnboardingRoute(s.driverOnboardingStatus)
+        }
         else -> Route.Login
     }
 
@@ -117,8 +124,36 @@ fun AppNavigation() {
             TripDetailScreen(tripId = route.tripId)
         }
 
+        composable<Route.DriverOnboardingVehicle> {
+            VehicleRegistrationScreen(
+                onSuccessNavigate = {
+                    navController.navigate(Route.DriverOnboardingDocuments) {
+                        popUpTo<Route.DriverOnboardingVehicle> { inclusive = true }
+                    }
+                },
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable<Route.DriverOnboardingDocuments> {
+            DriverDocsUploadScreen(
+                onSuccessNavigate = {
+                    navController.navigate(Route.KycPending) {
+                        popUpTo<Route.DriverOnboardingDocuments> { inclusive = true }
+                    }
+                },
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
         composable<Route.KycPending> {
-            KycPendingScreen()
+            KycPendingScreen(
+                onVerified = {
+                    navController.navigate(Route.DriverHome) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
         }
 
         composable<Route.KycUpload> {
@@ -134,12 +169,19 @@ fun AppNavigation() {
     }
 }
 
+private fun driverOnboardingRoute(status: DriverOnboardingStatus?): Route = when (status) {
+    is DriverOnboardingStatus.Verified -> Route.DriverHome
+    is DriverOnboardingStatus.PendingReview -> Route.KycPending
+    is DriverOnboardingStatus.IncompleteDocs -> Route.DriverOnboardingDocuments
+    is DriverOnboardingStatus.IncompleteVehicle, null -> Route.DriverOnboardingVehicle
+}
+
 private fun NavGraphBuilder.authNavGraph(navController: NavController) {
     composable<Route.Login> {
         LoginScreen(
             onForgotPasswordClick = { navController.navigate(Route.ResetPassword) },
             onLoginSuccess = { role ->
-                val home = if (role == UserRole.DRIVER) Route.DriverHome else Route.ClientHome
+                val home = if (role == UserRole.DRIVER) Route.DriverOnboardingVehicle else Route.ClientHome
                 navController.navigate(home) {
                     popUpTo(0) { inclusive = true }
                 }
@@ -152,7 +194,7 @@ private fun NavGraphBuilder.authNavGraph(navController: NavController) {
         RegisterScreen(
             onRegisterSuccess = { role ->
                 when (role) {
-                    UserRole.DRIVER -> navController.navigate(Route.KycUpload) {
+                    UserRole.DRIVER -> navController.navigate(Route.DriverOnboardingVehicle) {
                         popUpTo<Route.Register> { inclusive = true }
                     }
                     UserRole.CLIENT -> navController.navigate(Route.ClientHome) {

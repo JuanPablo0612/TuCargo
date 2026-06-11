@@ -1,6 +1,8 @@
 package com.juanpablo0612.tucargo.data.user
 
 import dev.gitlive.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class UserRemoteDataSource(private val firestore: FirebaseFirestore) {
 
@@ -20,4 +22,9 @@ class UserRemoteDataSource(private val firestore: FirebaseFirestore) {
     suspend fun updateFields(uid: String, fields: Map<String, Any?>) {
         usersCollection.document(uid).update(fields)
     }
+
+    fun observeUser(uid: String): Flow<UserDto?> =
+        usersCollection.document(uid).snapshots.map { snap ->
+            runCatching { snap.data<UserDto>() }.getOrNull()
+        }
 }

@@ -122,6 +122,65 @@
     <string name="validation_phone_invalid">Ingresa un teléfono válido en formato E.164 (ej. +573001234567)</string>
     <string name="validation_id_front_required">Selecciona la parte frontal de tu documento</string>
     <string name="validation_id_back_required">Selecciona la parte trasera de tu documento</string>
+    <string name="validation_plate_required">Por favor ingresa tu placa</string>
+    <string name="validation_plate_invalid">Ingresa una placa válida (mín. 5 caracteres)</string>
+    <string name="validation_vehicle_model_required">Por favor ingresa el modelo del vehículo</string>
+    <string name="validation_vehicle_color_required">Por favor ingresa el color del vehículo</string>
+    <string name="validation_vehicle_year_required">Por favor ingresa el año del vehículo</string>
+    <string name="validation_vehicle_year_invalid">Ingresa un año válido (1990–2030)</string>
+    <string name="validation_document_required">Por favor sube este documento</string>
+
+    <!-- Registro de vehículo -->
+    <string name="vehicle_reg_title">Registro de vehículo</string>
+    <string name="vehicle_reg_subtitle">Cuéntanos sobre tu vehículo para verificarte</string>
+    <string name="vehicle_reg_plate_label">Placa</string>
+    <string name="vehicle_reg_plate_placeholder">ABC123</string>
+    <string name="vehicle_reg_model_label">Marca y modelo</string>
+    <string name="vehicle_reg_model_placeholder">Honda CB 160</string>
+    <string name="vehicle_reg_color_label">Color</string>
+    <string name="vehicle_reg_color_placeholder">Rojo</string>
+    <string name="vehicle_reg_year_label">Año</string>
+    <string name="vehicle_reg_year_placeholder">2020</string>
+    <string name="vehicle_reg_type_label">Tipo de vehículo</string>
+    <string name="vehicle_reg_submit_button">Continuar</string>
+    <string name="vehicle_reg_back_button">Volver</string>
+    <string name="vehicle_reg_save_error">Error al guardar los datos del vehículo. Intenta de nuevo.</string>
+    <string name="vehicle_type_car">Automóvil</string>
+    <string name="vehicle_type_motorcycle">Motocicleta</string>
+    <string name="vehicle_type_van">Camioneta</string>
+    <string name="vehicle_type_truck">Camión</string>
+
+    <!-- Carga de documentos del conductor -->
+    <string name="driver_docs_title">Subir documentos</string>
+    <string name="driver_docs_subtitle">Sube todos los documentos requeridos para completar tu verificación</string>
+    <string name="driver_docs_personal_section">Documentos personales</string>
+    <string name="driver_docs_vehicle_section">Documentos del vehículo</string>
+    <string name="driver_docs_id_front">Cédula – Parte frontal</string>
+    <string name="driver_docs_id_back">Cédula – Parte trasera</string>
+    <string name="driver_docs_license">Licencia de conducción</string>
+    <string name="driver_docs_soat">SOAT</string>
+    <string name="driver_docs_tech_review">Revisión técnico-mecánica</string>
+    <string name="driver_docs_registration_card">Tarjeta de propiedad</string>
+    <string name="driver_docs_submit_button">Continuar</string>
+    <string name="driver_docs_back_button">Volver</string>
+    <string name="driver_docs_upload_error">Algunos documentos no se pudieron subir. Intenta de nuevo.</string>
+    <string name="driver_docs_user_not_authenticated">Tu sesión ha expirado. Inicia sesión nuevamente.</string>
+
+    <!-- KYC Pendiente (mejorado) -->
+    <string name="kyc_pending_title">En revisión</string>
+    <string name="kyc_pending_subtitle">Estamos verificando tu información. Te notificaremos cuando tu cuenta esté activa.</string>
+    <string name="kyc_status_pending">Pendiente</string>
+    <string name="kyc_status_approved">Aprobado</string>
+    <string name="kyc_status_rejected">Rechazado</string>
+    <string name="kyc_pending_personal_section">Documentos personales</string>
+    <string name="kyc_pending_vehicle_section">Documentos del vehículo</string>
+    <string name="kyc_pending_rejection_reason">Motivo: %1$s</string>
+
+    <!-- Indicador de pasos de incorporación -->
+    <string name="onboarding_step_personal">Datos personales</string>
+    <string name="onboarding_step_vehicle">Vehículo</string>
+    <string name="onboarding_step_documents">Documentos</string>
+    <string name="onboarding_step_review">Revisión</string>
 
     <!-- Accesibilidad -->
     <string name="cd_toggle_password_visibility">Mostrar u ocultar contraseña</string>

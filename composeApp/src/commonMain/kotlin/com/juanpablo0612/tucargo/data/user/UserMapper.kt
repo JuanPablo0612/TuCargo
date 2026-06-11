@@ -4,6 +4,7 @@ import com.juanpablo0612.tucargo.domain.model.User
 import com.juanpablo0612.tucargo.domain.model.UserRole
 import com.juanpablo0612.tucargo.domain.model.UserStatus
 import com.juanpablo0612.tucargo.domain.model.UserVehicle
+import com.juanpablo0612.tucargo.domain.model.VehicleType
 
 fun UserDto.toDomain(): User = User(
     id = id,
@@ -19,7 +20,15 @@ fun UserDto.toDomain(): User = User(
     ratingCount = ratingCount,
     status = try { UserStatus.valueOf(status) } catch (e: Exception) { UserStatus.ACTIVE },
     fcmToken = fcmToken,
-    vehicle = vehicle?.let { UserVehicle(plate = it.plate, model = it.model, color = it.color) }
+    vehicle = vehicle?.let {
+        UserVehicle(
+            plate = it.plate,
+            model = it.model,
+            color = it.color,
+            year = it.year,
+            type = try { VehicleType.valueOf(it.type) } catch (e: Exception) { VehicleType.MOTORCYCLE }
+        )
+    }
 )
 
 fun User.toDto(): UserDto = UserDto(
@@ -36,5 +45,13 @@ fun User.toDto(): UserDto = UserDto(
     ratingCount = ratingCount,
     status = status.name,
     fcmToken = fcmToken,
-    vehicle = vehicle?.let { Vehicle(plate = it.plate, model = it.model, color = it.color) }
+    vehicle = vehicle?.let {
+        Vehicle(
+            plate = it.plate,
+            model = it.model,
+            color = it.color,
+            year = it.year,
+            type = it.type.name
+        )
+    }
 )

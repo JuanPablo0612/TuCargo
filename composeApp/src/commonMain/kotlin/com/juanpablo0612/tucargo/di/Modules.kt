@@ -17,23 +17,29 @@ import com.juanpablo0612.tucargo.domain.trip.TripTracker
 import com.juanpablo0612.tucargo.data.user.UserRepository
 import com.juanpablo0612.tucargo.data.user.UserRepositoryImpl
 import com.juanpablo0612.tucargo.domain.usecase.CreateTripUseCase
-import com.juanpablo0612.tucargo.domain.usecase.UploadDocumentsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetDriverOnboardingStatusUseCase
 import com.juanpablo0612.tucargo.domain.usecase.IsUserLoggedInUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
+import com.juanpablo0612.tucargo.domain.usecase.RegisterVehicleUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.UploadDocumentsUseCase
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentViewModel
+import com.juanpablo0612.tucargo.features.auth.presentation.documents.KycPendingViewModel
+import com.juanpablo0612.tucargo.features.auth.presentation.driverdocs.DriverDocsUploadViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.register.RegisterViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.resetpassword.ResetPasswordViewModel
+import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegistrationViewModel
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeViewModel
 import dev.gitlive.firebase.Firebase
@@ -85,6 +91,9 @@ val domainModule = module {
     singleOf(::LogoutUseCase)
     singleOf(::SendPasswordResetEmailUseCase)
     singleOf(::ObserveAuthStateUseCase)
+    singleOf(::RegisterVehicleUseCase)
+    singleOf(::GetDriverOnboardingStatusUseCase)
+    singleOf(::ObserveCurrentUserUseCase)
 }
 
 val viewModelModule = module {
@@ -95,6 +104,9 @@ val viewModelModule = module {
     viewModelOf(::DriverHomeViewModel)
     viewModelOf(::ResetPasswordViewModel)
     viewModelOf(::AuthViewModel)
+    viewModelOf(::VehicleRegistrationViewModel)
+    viewModelOf(::DriverDocsUploadViewModel)
+    viewModelOf(::KycPendingViewModel)
 }
 
 val appModule = module {

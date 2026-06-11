@@ -22,4 +22,16 @@ object FormValidators {
 
     fun required(value: String, error: FieldError): FieldError? =
         if (value.isBlank()) error else null
+
+    fun vehiclePlate(value: String): FieldError? = when {
+        value.isBlank() -> FieldError.PlateRequired
+        value.length < 5 -> FieldError.PlateInvalid
+        else -> null
+    }
+
+    fun vehicleYear(value: String): FieldError? {
+        if (value.isBlank()) return FieldError.VehicleYearRequired
+        val year = value.toIntOrNull() ?: return FieldError.VehicleYearInvalid
+        return if (year < 1990 || year > 2030) FieldError.VehicleYearInvalid else null
+    }
 }

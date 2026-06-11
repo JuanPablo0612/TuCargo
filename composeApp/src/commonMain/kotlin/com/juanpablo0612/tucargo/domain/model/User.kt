@@ -28,8 +28,17 @@ enum class UserStatus {
     SUSPENDED
 }
 
+enum class VehicleType {
+    CAR,
+    MOTORCYCLE,
+    VAN,
+    TRUCK
+}
+
 data class UserVehicle(
     val plate: String = "",
     val model: String = "",
-    val color: String = ""
+    val color: String = "",
+    val year: Int = 0,
+    val type: VehicleType = VehicleType.MOTORCYCLE
 )

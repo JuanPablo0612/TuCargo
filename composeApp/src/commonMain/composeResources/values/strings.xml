@@ -122,6 +122,65 @@
     <string name="validation_phone_invalid">Enter a valid phone number in E.164 format (e.g. +13001234567)</string>
     <string name="validation_id_front_required">Please select the front side of your ID</string>
     <string name="validation_id_back_required">Please select the back side of your ID</string>
+    <string name="validation_plate_required">Please enter your license plate</string>
+    <string name="validation_plate_invalid">Enter a valid license plate (min. 5 characters)</string>
+    <string name="validation_vehicle_model_required">Please enter the vehicle model</string>
+    <string name="validation_vehicle_color_required">Please enter the vehicle color</string>
+    <string name="validation_vehicle_year_required">Please enter the vehicle year</string>
+    <string name="validation_vehicle_year_invalid">Enter a valid year (1990–2030)</string>
+    <string name="validation_document_required">Please upload this document</string>
+
+    <!-- Vehicle Registration -->
+    <string name="vehicle_reg_title">Vehicle registration</string>
+    <string name="vehicle_reg_subtitle">Tell us about your vehicle so we can verify you</string>
+    <string name="vehicle_reg_plate_label">License plate</string>
+    <string name="vehicle_reg_plate_placeholder">ABC123</string>
+    <string name="vehicle_reg_model_label">Brand and model</string>
+    <string name="vehicle_reg_model_placeholder">Honda CB 160</string>
+    <string name="vehicle_reg_color_label">Color</string>
+    <string name="vehicle_reg_color_placeholder">Red</string>
+    <string name="vehicle_reg_year_label">Year</string>
+    <string name="vehicle_reg_year_placeholder">2020</string>
+    <string name="vehicle_reg_type_label">Vehicle type</string>
+    <string name="vehicle_reg_submit_button">Continue</string>
+    <string name="vehicle_reg_back_button">Go back</string>
+    <string name="vehicle_reg_save_error">Failed to save vehicle data. Please try again.</string>
+    <string name="vehicle_type_car">Car</string>
+    <string name="vehicle_type_motorcycle">Motorcycle</string>
+    <string name="vehicle_type_van">Van</string>
+    <string name="vehicle_type_truck">Truck</string>
+
+    <!-- Driver Documents Upload -->
+    <string name="driver_docs_title">Upload documents</string>
+    <string name="driver_docs_subtitle">Upload all required documents to complete your verification</string>
+    <string name="driver_docs_personal_section">Personal documents</string>
+    <string name="driver_docs_vehicle_section">Vehicle documents</string>
+    <string name="driver_docs_id_front">ID – Front side</string>
+    <string name="driver_docs_id_back">ID – Back side</string>
+    <string name="driver_docs_license">Driver\'s license</string>
+    <string name="driver_docs_soat">SOAT (Insurance)</string>
+    <string name="driver_docs_tech_review">Vehicle technical review</string>
+    <string name="driver_docs_registration_card">Vehicle registration card</string>
+    <string name="driver_docs_submit_button">Continue</string>
+    <string name="driver_docs_back_button">Go back</string>
+    <string name="driver_docs_upload_error">Some documents failed to upload. Please try again.</string>
+    <string name="driver_docs_user_not_authenticated">Your session has expired. Please log in again.</string>
+
+    <!-- KYC Pending (enhanced) -->
+    <string name="kyc_pending_title">Under review</string>
+    <string name="kyc_pending_subtitle">We are verifying your information. We will notify you when your account is active.</string>
+    <string name="kyc_status_pending">Pending</string>
+    <string name="kyc_status_approved">Approved</string>
+    <string name="kyc_status_rejected">Rejected</string>
+    <string name="kyc_pending_personal_section">Personal documents</string>
+    <string name="kyc_pending_vehicle_section">Vehicle documents</string>
+    <string name="kyc_pending_rejection_reason">Reason: %1$s</string>
+
+    <!-- Onboarding step indicator -->
+    <string name="onboarding_step_personal">Personal info</string>
+    <string name="onboarding_step_vehicle">Vehicle</string>
+    <string name="onboarding_step_documents">Documents</string>
+    <string name="onboarding_step_review">Review</string>
 
     <!-- Accessibility -->
     <string name="cd_toggle_password_visibility">Show or hide password</string>

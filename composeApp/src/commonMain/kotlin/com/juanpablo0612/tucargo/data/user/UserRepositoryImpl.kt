@@ -5,6 +5,9 @@ import com.juanpablo0612.tucargo.data.common.safeCall
 import com.juanpablo0612.tucargo.domain.model.AppError
 import com.juanpablo0612.tucargo.domain.model.User
 import dev.gitlive.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.time.Clock
 
@@ -49,5 +52,10 @@ class UserRepositoryImpl(
             val uid = auth.currentUser?.uid ?: throw AppError.Auth.NotAuthenticated
             userRemoteDataSource.updateUser(uid, user.toDto())
         }
+    }
+
+    override fun observeCurrentUser(): Flow<User?> {
+        val uid = auth.currentUser?.uid ?: return flowOf(null)
+        return userRemoteDataSource.observeUser(uid).map { it?.toDomain() }
     }
 }
