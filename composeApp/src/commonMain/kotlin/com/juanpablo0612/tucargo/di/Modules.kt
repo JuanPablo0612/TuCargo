@@ -26,6 +26,7 @@ import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetDriverTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetDriverOnboardingStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetPendingDriversUseCase
 import com.juanpablo0612.tucargo.domain.usecase.IsUserLoggedInUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
@@ -36,9 +37,13 @@ import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterVehicleUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ReviewKycDocumentUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
+import com.juanpablo0612.tucargo.domain.usecase.SetDriverVerifiedUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UploadKycDocumentUseCase
+import com.juanpablo0612.tucargo.features.admin.home.AdminHomeViewModel
+import com.juanpablo0612.tucargo.features.admin.review.AdminDriverReviewViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.KycPendingViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.driverdocs.DriverDocsUploadViewModel
@@ -113,6 +118,10 @@ val domainModule = module {
     singleOf(::ObserveCurrentUserUseCase)
     singleOf(::UploadKycDocumentUseCase)
     singleOf(::ObserveKycDocumentsUseCase)
+
+    singleOf(::GetPendingDriversUseCase)
+    singleOf(::ReviewKycDocumentUseCase)
+    singleOf(::SetDriverVerifiedUseCase)
 }
 
 val viewModelModule = module {
@@ -129,6 +138,8 @@ val viewModelModule = module {
     viewModelOf(::TripHistoryViewModel)
     viewModel { (tripId: String) -> TripDetailViewModel(tripId, get(), get(), get()) }
     viewModel { (tripId: String) -> TripActiveViewModel(tripId, get(), get()) }
+    viewModelOf(::AdminHomeViewModel)
+    viewModel { (driverId: String) -> AdminDriverReviewViewModel(driverId, get(), get(), get()) }
 }
 
 val appModule = module {

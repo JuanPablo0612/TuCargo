@@ -10,6 +10,7 @@ sealed class AppError(message: String? = null, cause: Throwable? = null) : Excep
     sealed class Validation : AppError() {
         data object FileTooLarge : Validation()
         data object InvalidTrip : Validation()
+        data object KycIncomplete : Validation()
     }
     sealed class Trip : AppError() {
         data object AlreadyTaken : Trip()

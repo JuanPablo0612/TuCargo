@@ -5,6 +5,7 @@ import com.juanpablo0612.tucargo.data.common.safeCall
 import com.juanpablo0612.tucargo.domain.model.AppError
 import com.juanpablo0612.tucargo.domain.model.KycDocument
 import com.juanpablo0612.tucargo.domain.model.KycDocumentType
+import com.juanpablo0612.tucargo.domain.model.KycStatus
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.storage.FirebaseStorage
 import dev.gitlive.firebase.storage.storageMetadata
@@ -75,4 +76,20 @@ class DocumentRepositoryImpl(
     override fun observeDocumentsForUser(userId: String): Flow<List<KycDocument>> =
         kycDocumentsCollection(userId).snapshots
             .map { snapshot -> snapshot.documents.map { it.data<KycDocumentDto>().toDomain() } }
+
+    override suspend fun updateDocumentStatus(
+        userId: String,
+        type: KycDocumentType,
+        status: KycStatus,
+        rejectionReason: String?
+    ): Result<Unit> = safeCall {
+        withContext(dispatchers.io) {
+            kycDocumentsCollection(userId).document(type.name.lowercase()).update(
+                mapOf(
+                    "status" to status.name,
+                    "rejection_reason" to rejectionReason
+                )
+            )
+        }
+    }
 }

@@ -11,4 +11,8 @@ interface UserRepository {
     suspend fun createUser(user: User): Result<Unit>
     suspend fun updateUser(user: User): Result<Unit>
     fun observeCurrentUser(): Flow<User?>
+
+    // Admin-only (enforced by the Firestore rules, not by this layer).
+    suspend fun getPendingDrivers(): Result<List<User>>
+    suspend fun setDriverVerified(userId: String, verified: Boolean): Result<Unit>
 }

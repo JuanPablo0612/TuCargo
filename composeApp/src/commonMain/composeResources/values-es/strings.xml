@@ -260,6 +260,27 @@
     <string name="onboarding_step_documents">Documentos</string>
     <string name="onboarding_step_review">Revisión</string>
 
+    <!-- Administración -->
+    <string name="admin_home_title">Verificación de conductores</string>
+    <string name="admin_home_subtitle">Conductores en espera de revisión</string>
+    <string name="admin_home_empty">No hay conductores pendientes de revisión.</string>
+    <string name="admin_home_load_error">No se pudieron cargar los conductores pendientes. Intenta de nuevo.</string>
+    <string name="admin_home_plate">Vehículo: %1$s · %2$s</string>
+    <string name="admin_review_back_button">Volver</string>
+    <string name="admin_review_view_document">Ver documento</string>
+    <string name="admin_review_approve">Aprobar</string>
+    <string name="admin_review_reject">Rechazar</string>
+    <string name="admin_review_reject_dialog_title">Rechazar documento</string>
+    <string name="admin_review_reject_dialog_hint">Motivo (visible para el conductor)</string>
+    <string name="admin_review_reject_dialog_confirm">Rechazar</string>
+    <string name="admin_review_reject_dialog_cancel">Cancelar</string>
+    <string name="admin_review_verify_button">Verificar conductor</string>
+    <string name="admin_review_verify_hint">El conductor podrá ser verificado cuando todos los documentos estén aprobados. Los documentos rechazados deben volver a subirse.</string>
+    <string name="admin_review_no_documents">Este conductor aún no ha subido documentos.</string>
+    <string name="admin_review_load_error">No se pudieron cargar los documentos. Intenta de nuevo.</string>
+    <string name="admin_review_action_error">No se pudo actualizar el documento. Intenta de nuevo.</string>
+    <string name="admin_review_verify_error">No se pudo verificar al conductor. Asegúrate de que todos los documentos estén aprobados e intenta de nuevo.</string>
+
     <!-- Accesibilidad -->
     <string name="cd_toggle_password_visibility">Mostrar u ocultar contraseña</string>
 </resources>

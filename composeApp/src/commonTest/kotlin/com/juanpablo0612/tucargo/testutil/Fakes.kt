@@ -10,6 +10,7 @@ import com.juanpablo0612.tucargo.data.trip.TripRepository
 import com.juanpablo0612.tucargo.data.user.UserRepository
 import com.juanpablo0612.tucargo.domain.model.KycDocument
 import com.juanpablo0612.tucargo.domain.model.KycDocumentType
+import com.juanpablo0612.tucargo.domain.model.KycStatus
 import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.domain.model.TripStatus
 import com.juanpablo0612.tucargo.domain.model.User
@@ -74,6 +75,9 @@ class FakeUserRepository : UserRepository {
     var currentUser: Result<User> = Result.success(User(id = "user-1"))
     var currentUserId: String? = "user-1"
     var updateDriverStatusResult: Result<Unit> = Result.success(Unit)
+    var pendingDriversResult: Result<List<User>> = Result.success(emptyList())
+    var setDriverVerifiedResult: Result<Unit> = Result.success(Unit)
+    var lastVerifiedDriver: Pair<String, Boolean>? = null
     val userFlow = MutableStateFlow<User?>(null)
 
     override suspend fun updateDriverStatus(userId: String, isOnline: Boolean): Result<Unit> = updateDriverStatusResult
@@ -83,6 +87,11 @@ class FakeUserRepository : UserRepository {
     override suspend fun createUser(user: User): Result<Unit> = Result.success(Unit)
     override suspend fun updateUser(user: User): Result<Unit> = Result.success(Unit)
     override fun observeCurrentUser(): Flow<User?> = userFlow
+    override suspend fun getPendingDrivers(): Result<List<User>> = pendingDriversResult
+    override suspend fun setDriverVerified(userId: String, verified: Boolean): Result<Unit> {
+        lastVerifiedDriver = userId to verified
+        return setDriverVerifiedResult
+    }
 }
 
 class FakeConfigRepository : ConfigRepository {
@@ -93,9 +102,20 @@ class FakeConfigRepository : ConfigRepository {
 class FakeDocumentRepository : DocumentRepository {
     var uploadResult: Result<Unit> = Result.success(Unit)
     var documentsResult: Result<List<KycDocument>> = Result.success(emptyList())
+    var updateStatusResult: Result<Unit> = Result.success(Unit)
+    var lastStatusUpdate: Triple<KycDocumentType, KycStatus, String?>? = null
     val documentsFlow = MutableStateFlow<List<KycDocument>>(emptyList())
 
     override suspend fun uploadDocument(userId: String, type: KycDocumentType, imageBytes: ByteArray): Result<Unit> = uploadResult
     override suspend fun getDocumentsForUser(userId: String): Result<List<KycDocument>> = documentsResult
     override fun observeDocumentsForUser(userId: String): Flow<List<KycDocument>> = documentsFlow
+    override suspend fun updateDocumentStatus(
+        userId: String,
+        type: KycDocumentType,
+        status: KycStatus,
+        rejectionReason: String?
+    ): Result<Unit> {
+        lastStatusUpdate = Triple(type, status, rejectionReason)
+        return updateStatusResult
+    }
 }

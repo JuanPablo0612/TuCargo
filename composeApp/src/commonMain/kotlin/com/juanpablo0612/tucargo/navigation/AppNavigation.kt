@@ -20,6 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.juanpablo0612.tucargo.domain.model.DriverOnboardingStatus
 import com.juanpablo0612.tucargo.domain.model.UserRole
+import com.juanpablo0612.tucargo.features.admin.home.AdminHomeScreen
+import com.juanpablo0612.tucargo.features.admin.review.AdminDriverReviewScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.KycPendingScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.driverdocs.DriverDocsUploadScreen
@@ -49,6 +51,8 @@ import org.koin.compose.viewmodel.koinViewModel
     @Serializable data object TripHistory : Route()
     @Serializable data class TripActive(val tripId: String) : Route()
     @Serializable data class TripDetail(val tripId: String) : Route()
+    @Serializable data object AdminHome : Route()
+    @Serializable data class AdminDriverReview(val driverId: String, val driverName: String) : Route()
 }
 
 @Composable
@@ -82,6 +86,7 @@ fun AppNavigation() {
 
     val startDestination: Route = when (val s = authState) {
         is AuthViewModel.AuthState.Authenticated -> when {
+            s.user.role == UserRole.ADMIN -> Route.AdminHome
             s.user.role == UserRole.CLIENT -> Route.ClientHome
             s.user.isVerified -> Route.DriverHome
             else -> driverOnboardingRoute(s.driverOnboardingStatus)
@@ -177,6 +182,25 @@ fun AppNavigation() {
                 }
             )
         }
+
+        composable<Route.AdminHome> {
+            AdminHomeScreen(
+                onDriverClick = { driverId, driverName ->
+                    navController.navigate(Route.AdminDriverReview(driverId, driverName))
+                },
+                onSignOut = { authViewModel.logout() },
+            )
+        }
+
+        composable<Route.AdminDriverReview> { backStackEntry ->
+            val route: Route.AdminDriverReview = backStackEntry.toRoute()
+            AdminDriverReviewScreen(
+                driverId = route.driverId,
+                driverName = route.driverName,
+                onVerified = { navController.popBackStack() },
+                onBackClick = { navController.popBackStack() },
+            )
+        }
     }
 }
 
@@ -192,7 +216,11 @@ private fun NavGraphBuilder.authNavGraph(navController: NavController) {
         LoginScreen(
             onForgotPasswordClick = { navController.navigate(Route.ResetPassword) },
             onLoginSuccess = { role ->
-                val home = if (role == UserRole.DRIVER) Route.DriverOnboardingVehicle else Route.ClientHome
+                val home = when (role) {
+                    UserRole.ADMIN -> Route.AdminHome
+                    UserRole.DRIVER -> Route.DriverOnboardingVehicle
+                    UserRole.CLIENT -> Route.ClientHome
+                }
                 navController.navigate(home) {
                     popUpTo(0) { inclusive = true }
                 }

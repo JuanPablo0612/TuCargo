@@ -260,6 +260,27 @@
     <string name="onboarding_step_documents">Documents</string>
     <string name="onboarding_step_review">Review</string>
 
+    <!-- Admin -->
+    <string name="admin_home_title">Driver verification</string>
+    <string name="admin_home_subtitle">Drivers waiting for review</string>
+    <string name="admin_home_empty">No drivers pending review.</string>
+    <string name="admin_home_load_error">Could not load pending drivers. Please try again.</string>
+    <string name="admin_home_plate">Vehicle: %1$s · %2$s</string>
+    <string name="admin_review_back_button">Go back</string>
+    <string name="admin_review_view_document">View document</string>
+    <string name="admin_review_approve">Approve</string>
+    <string name="admin_review_reject">Reject</string>
+    <string name="admin_review_reject_dialog_title">Reject document</string>
+    <string name="admin_review_reject_dialog_hint">Reason (visible to the driver)</string>
+    <string name="admin_review_reject_dialog_confirm">Reject</string>
+    <string name="admin_review_reject_dialog_cancel">Cancel</string>
+    <string name="admin_review_verify_button">Verify driver</string>
+    <string name="admin_review_verify_hint">The driver can be verified once all documents are approved. Rejected documents must be re-uploaded by the driver.</string>
+    <string name="admin_review_no_documents">This driver has not uploaded documents yet.</string>
+    <string name="admin_review_load_error">Could not load the documents. Please try again.</string>
+    <string name="admin_review_action_error">Could not update the document. Please try again.</string>
+    <string name="admin_review_verify_error">Could not verify the driver. Make sure all documents are approved and try again.</string>
+
     <!-- Accessibility -->
     <string name="cd_toggle_password_visibility">Show or hide password</string>
 </resources>
