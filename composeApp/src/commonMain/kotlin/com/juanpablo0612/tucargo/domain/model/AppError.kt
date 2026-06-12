@@ -10,6 +10,7 @@ sealed class AppError(message: String? = null, cause: Throwable? = null) : Excep
     sealed class Validation : AppError() {
         data object FileTooLarge : Validation()
     }
+    data class DataCorruption(override val message: String) : AppError(message)
     data object Network : AppError()
     data class Unknown(override val cause: Throwable?) : AppError(cause?.message, cause)
 }

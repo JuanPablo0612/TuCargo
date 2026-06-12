@@ -184,7 +184,8 @@ private fun NavGraphBuilder.authNavGraph(navController: NavController) {
                     UserRole.DRIVER -> navController.navigate(Route.DriverOnboardingVehicle) {
                         popUpTo<Route.Register> { inclusive = true }
                     }
-                    UserRole.CLIENT -> navController.navigate(Route.ClientHome) {
+                    // Registration only offers CLIENT and DRIVER.
+                    else -> navController.navigate(Route.ClientHome) {
                         popUpTo(0) { inclusive = true }
                     }
                 }

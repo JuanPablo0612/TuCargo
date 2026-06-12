@@ -155,6 +155,7 @@
     <string name="driver_docs_submit_button">Continue</string>
     <string name="driver_docs_back_button">Go back</string>
     <string name="driver_docs_upload_error">Some documents failed to upload. Please try again.</string>
+    <string name="driver_docs_file_too_large">One of the images is larger than 5 MB. Choose a smaller photo and try again.</string>
     <string name="driver_docs_user_not_authenticated">Your session has expired. Please log in again.</string>
 
     <!-- KYC Pending (enhanced) -->

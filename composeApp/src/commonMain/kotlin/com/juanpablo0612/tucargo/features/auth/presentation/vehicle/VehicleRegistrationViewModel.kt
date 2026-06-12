@@ -1,41 +1,16 @@
 package com.juanpablo0612.tucargo.features.auth.presentation.vehicle
 
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.core.validation.FieldError
 import com.juanpablo0612.tucargo.core.validation.FormValidators
 import com.juanpablo0612.tucargo.domain.model.UserVehicle
-import com.juanpablo0612.tucargo.domain.model.VehicleType
 import com.juanpablo0612.tucargo.domain.usecase.RegisterVehicleUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
-@Immutable
-data class VehicleRegistrationState(
-    val isLoading: Boolean = false,
-    val selectedVehicleType: VehicleType = VehicleType.MOTORCYCLE,
-    val plateError: FieldError? = null,
-    val modelError: FieldError? = null,
-    val colorError: FieldError? = null,
-    val yearError: FieldError? = null,
-    val saveError: VehicleRegistrationError? = null,
-    val isSaveComplete: Boolean = false
-)
-
-sealed interface VehicleRegistrationAction {
-    data class SelectVehicleType(val type: VehicleType) : VehicleRegistrationAction
-    data object Submit : VehicleRegistrationAction
-    data object OnBackClick : VehicleRegistrationAction
-}
-
-sealed interface VehicleRegistrationError {
-    data object SaveError : VehicleRegistrationError
-    data object UserNotAuthenticated : VehicleRegistrationError
-}
 
 class VehicleRegistrationViewModel(
     private val registerVehicleUseCase: RegisterVehicleUseCase

@@ -1,13 +1,11 @@
 package com.juanpablo0612.tucargo.features.auth.presentation.documents
 
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.core.logging.logError
-import com.juanpablo0612.tucargo.data.document.DocumentRepository
-import com.juanpablo0612.tucargo.domain.model.KycDocument
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -16,17 +14,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
-@Immutable
-data class KycPendingState(
-    val isLoading: Boolean = true,
-    val documents: List<KycDocument> = emptyList(),
-    val isVerified: Boolean = false
-)
-
 class KycPendingViewModel(
     private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
-    private val documentRepository: DocumentRepository
+    private val observeKycDocumentsUseCase: ObserveKycDocumentsUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(KycPendingState())
@@ -48,7 +39,7 @@ class KycPendingViewModel(
 
     private fun observeDocuments() {
         val userId = getCurrentUserIdUseCase() ?: return
-        documentRepository.observeDocumentsForUser(userId)
+        observeKycDocumentsUseCase(userId)
             .onEach { docs ->
                 _uiState.update { it.copy(isLoading = false, documents = docs) }
             }
