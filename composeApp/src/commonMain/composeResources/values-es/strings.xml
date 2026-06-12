@@ -49,14 +49,6 @@
     <string name="reset_password_back_to_login_button">Volver al inicio de sesión</string>
 
     <!-- Documentos / KYC -->
-    <string name="docs_title">Verificación de identidad</string>
-    <string name="docs_subtitle">Sube una foto clara de ambos lados de tu documento de identidad.</string>
-    <string name="docs_front_label">Lado frontal</string>
-    <string name="docs_back_label">Lado trasero</string>
-    <string name="docs_submit_button">Continuar</string>
-    <string name="docs_back_button">Volver</string>
-    <string name="docs_user_not_authenticated">Tu sesión ha expirado. Inicia sesión nuevamente.</string>
-    <string name="docs_upload_error">Error al subir los documentos. Intenta de nuevo.</string>
 
     <!-- Inicio del cliente -->
     <string name="client_home_sign_out_desc">Cerrar sesión</string>
@@ -93,6 +85,7 @@
     <string name="driver_home_load_error">No se pudo cargar la información del conductor. Intenta de nuevo.</string>
     <string name="driver_home_availability_error">Error de conexión. No se pudo actualizar tu disponibilidad.</string>
     <string name="driver_home_tracking_error">Error al actualizar tu ubicación. Por favor verifica tu GPS.</string>
+    <string name="driver_home_location_permission_denied">Se requiere el permiso de ubicación para compartir tu posición durante los viajes. Actívalo en los ajustes del sistema.</string>
 
     <!-- Estado del viaje -->
     <string name="trip_status_searching">Buscando conductor</string>
@@ -120,8 +113,6 @@
     <string name="validation_name_required">Por favor ingresa tu nombre completo</string>
     <string name="validation_phone_required">Por favor ingresa tu número de teléfono</string>
     <string name="validation_phone_invalid">Ingresa un teléfono válido en formato E.164 (ej. +573001234567)</string>
-    <string name="validation_id_front_required">Selecciona la parte frontal de tu documento</string>
-    <string name="validation_id_back_required">Selecciona la parte trasera de tu documento</string>
     <string name="validation_plate_required">Por favor ingresa tu placa</string>
     <string name="validation_plate_invalid">Ingresa una placa válida (mín. 5 caracteres)</string>
     <string name="validation_vehicle_model_required">Por favor ingresa el modelo del vehículo</string>

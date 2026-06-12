@@ -3,12 +3,14 @@ package com.juanpablo0612.tucargo.features.auth.presentation.documents
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juanpablo0612.tucargo.core.logging.logError
 import com.juanpablo0612.tucargo.data.document.DocumentRepository
 import com.juanpablo0612.tucargo.domain.model.KycDocument
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveCurrentUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -49,6 +51,10 @@ class KycPendingViewModel(
         documentRepository.observeDocumentsForUser(userId)
             .onEach { docs ->
                 _uiState.update { it.copy(isLoading = false, documents = docs) }
+            }
+            .catch { e ->
+                logError("KycPendingViewModel", "Failed to observe documents: ${e.message}")
+                _uiState.update { it.copy(isLoading = false) }
             }
             .launchIn(viewModelScope)
     }

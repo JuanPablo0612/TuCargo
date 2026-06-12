@@ -31,9 +31,7 @@ import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterVehicleUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
-import com.juanpablo0612.tucargo.domain.usecase.UploadDocumentsUseCase
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
-import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.KycPendingViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.driverdocs.DriverDocsUploadViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginViewModel
@@ -86,7 +84,6 @@ val domainModule = module {
     singleOf(::ObserveDriverActiveTripsUseCase)
     singleOf(::GetClientTripsUseCase)
     singleOf(::CreateTripUseCase)
-    singleOf(::UploadDocumentsUseCase)
 
     singleOf(::LogoutUseCase)
     singleOf(::SendPasswordResetEmailUseCase)
@@ -99,7 +96,6 @@ val domainModule = module {
 val viewModelModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
-    viewModelOf(::DocumentViewModel)
     viewModelOf(::ClientHomeViewModel)
     viewModelOf(::DriverHomeViewModel)
     viewModelOf(::ResetPasswordViewModel)

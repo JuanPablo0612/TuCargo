@@ -9,8 +9,6 @@ sealed interface FieldError {
     data object NameRequired : FieldError
     data object PhoneRequired : FieldError
     data object PhoneInvalid : FieldError
-    data object IdFrontRequired : FieldError
-    data object IdBackRequired : FieldError
     data object PlateRequired : FieldError
     data object PlateInvalid : FieldError
     data object VehicleModelRequired : FieldError

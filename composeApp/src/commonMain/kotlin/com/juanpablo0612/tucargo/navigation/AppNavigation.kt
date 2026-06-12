@@ -21,7 +21,6 @@ import androidx.navigation.toRoute
 import com.juanpablo0612.tucargo.domain.model.DriverOnboardingStatus
 import com.juanpablo0612.tucargo.domain.model.UserRole
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
-import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.KycPendingScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.driverdocs.DriverDocsUploadScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginScreen
@@ -40,7 +39,6 @@ import org.koin.compose.viewmodel.koinViewModel
     @Serializable data object Login : Route()
     @Serializable data object Register : Route()
     @Serializable data object ResetPassword : Route()
-    @Serializable data object KycUpload : Route()
     @Serializable data object KycPending : Route()
     @Serializable data object DriverOnboardingVehicle : Route()
     @Serializable data object DriverOnboardingDocuments : Route()
@@ -153,17 +151,6 @@ fun AppNavigation() {
                         popUpTo(0) { inclusive = true }
                     }
                 }
-            )
-        }
-
-        composable<Route.KycUpload> {
-            DocumentScreen(
-                onSuccessNavigate = {
-                    navController.navigate(Route.KycPending) {
-                        popUpTo<Route.KycUpload> { inclusive = true }
-                    }
-                },
-                onBackClick = { navController.popBackStack() }
             )
         }
     }
