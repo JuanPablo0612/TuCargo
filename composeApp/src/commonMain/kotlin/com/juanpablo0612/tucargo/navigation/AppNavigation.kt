@@ -27,6 +27,7 @@ import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.register.RegisterScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.resetpassword.ResetPasswordScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegistrationScreen
+import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripScreen
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeScreen
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.TripActiveScreen
@@ -44,6 +45,7 @@ import org.koin.compose.viewmodel.koinViewModel
     @Serializable data object DriverOnboardingDocuments : Route()
     @Serializable data object ClientHome : Route()
     @Serializable data object DriverHome : Route()
+    @Serializable data object CreateTrip : Route()
     @Serializable data object TripHistory : Route()
     @Serializable data class TripActive(val tripId: String) : Route()
     @Serializable data class TripDetail(val tripId: String) : Route()
@@ -95,9 +97,21 @@ fun AppNavigation() {
 
         composable<Route.ClientHome> {
             ClientHomeScreen(
+                onNewTrip = { navController.navigate(Route.CreateTrip) },
                 onSignOut = { authViewModel.logout() },
                 onTripClick = { tripId -> navController.navigate(Route.TripDetail(tripId)) },
                 onViewAllClick = { navController.navigate(Route.TripHistory) },
+            )
+        }
+
+        composable<Route.CreateTrip> {
+            CreateTripScreen(
+                onTripCreated = { tripId ->
+                    navController.navigate(Route.TripDetail(tripId)) {
+                        popUpTo<Route.CreateTrip> { inclusive = true }
+                    }
+                },
+                onBackClick = { navController.popBackStack() },
             )
         }
 

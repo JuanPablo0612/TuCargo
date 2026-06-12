@@ -46,6 +46,7 @@ import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.register.RegisterViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.resetpassword.ResetPasswordViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegistrationViewModel
+import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripViewModel
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeViewModel
 import dev.gitlive.firebase.Firebase
@@ -114,6 +115,7 @@ val viewModelModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
     viewModelOf(::ClientHomeViewModel)
+    viewModelOf(::CreateTripViewModel)
     viewModelOf(::DriverHomeViewModel)
     viewModelOf(::ResetPasswordViewModel)
     viewModelOf(::AuthViewModel)

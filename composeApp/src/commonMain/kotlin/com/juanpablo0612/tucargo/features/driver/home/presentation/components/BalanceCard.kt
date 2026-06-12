@@ -17,17 +17,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
+import com.juanpablo0612.tucargo.core.ui.toCurrencyString
 import org.jetbrains.compose.resources.stringResource
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.driver_home_balance_title
 import tucargo.composeapp.generated.resources.driver_home_completed_trips_msg
-
-internal fun Double.toCurrencyString(): String {
-    val cents = kotlin.math.round(this * 100).toLong()
-    val intPart = cents / 100
-    val decPart = kotlin.math.abs(cents % 100)
-    return "$$intPart.${decPart.toString().padStart(2, '0')}"
-}
 
 @Composable
 fun BalanceCard(

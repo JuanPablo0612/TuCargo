@@ -87,6 +87,35 @@
     <string name="driver_home_tracking_error">Error updating your location. Please check your GPS.</string>
     <string name="driver_home_location_permission_denied">Location permission is required to share your position during trips. Enable it in system settings.</string>
 
+    <!-- Create trip -->
+    <string name="create_trip_title">New shipment</string>
+    <string name="create_trip_back_button">Go back</string>
+    <string name="create_trip_step_origin">Origin</string>
+    <string name="create_trip_step_destination">Destination</string>
+    <string name="create_trip_step_details">Details</string>
+    <string name="create_trip_origin_label">Pickup address</string>
+    <string name="create_trip_origin_placeholder">e.g. Cra 7 # 12-34</string>
+    <string name="create_trip_destination_label">Delivery address</string>
+    <string name="create_trip_destination_placeholder">e.g. Cl 100 # 8-20</string>
+    <string name="create_trip_map_hint">Tap the map to drop the pin at the exact spot</string>
+    <string name="create_trip_pin_required">Select the location on the map</string>
+    <string name="create_trip_cargo_label">What are you sending?</string>
+    <string name="create_trip_cargo_placeholder">e.g. Box of spare parts, 5 kg</string>
+    <string name="create_trip_quote_title">Estimated price</string>
+    <string name="create_trip_quote_distance">Distance: %1$s km</string>
+    <string name="create_trip_quote_base">Base fare</string>
+    <string name="create_trip_quote_per_distance">Distance charge</string>
+    <string name="create_trip_quote_total">Total</string>
+    <string name="create_trip_payment_title">Payment method</string>
+    <string name="create_trip_payment_cash">Cash</string>
+    <string name="create_trip_payment_wallet">Wallet (coming soon)</string>
+    <string name="create_trip_next_button">Continue</string>
+    <string name="create_trip_submit_button">Request shipment</string>
+    <string name="create_trip_quote_error">Could not calculate the price. Check your connection and try again.</string>
+    <string name="create_trip_submit_error">Could not create the shipment. Please try again.</string>
+    <string name="create_trip_invalid_error">Check the shipment details and try again.</string>
+    <string name="create_trip_user_not_authenticated">Your session has expired. Please log in again.</string>
+
     <!-- Trip status -->
     <string name="trip_status_searching">Searching for driver</string>
     <string name="trip_status_assigned">Driver assigned</string>
@@ -98,7 +127,7 @@
 
     <!-- Map -->
     <string name="map_your_location">Your location</string>
-    <string name="map_not_available_ios">Map not available on iOS simulator</string>
+    <string name="map_not_available_ios">Map not available on this device yet</string>
 
     <!-- Global errors -->
     <string name="network_error">Network error. Check your connection and try again.</string>
@@ -120,6 +149,8 @@
     <string name="validation_vehicle_year_required">Please enter the vehicle year</string>
     <string name="validation_vehicle_year_invalid">Enter a valid year (1990–2030)</string>
     <string name="validation_document_required">Please upload this document</string>
+    <string name="validation_address_required">Please enter the address</string>
+    <string name="validation_cargo_description_required">Please describe what you are sending</string>
 
     <!-- Vehicle Registration -->
     <string name="vehicle_reg_title">Vehicle registration</string>

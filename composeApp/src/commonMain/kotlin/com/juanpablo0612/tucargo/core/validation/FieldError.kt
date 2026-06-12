@@ -15,5 +15,7 @@ sealed interface FieldError {
     data object VehicleColorRequired : FieldError
     data object VehicleYearRequired : FieldError
     data object VehicleYearInvalid : FieldError
+    data object AddressRequired : FieldError
+    data object CargoDescriptionRequired : FieldError
     data class DocumentRequired(val typeName: String) : FieldError
 }

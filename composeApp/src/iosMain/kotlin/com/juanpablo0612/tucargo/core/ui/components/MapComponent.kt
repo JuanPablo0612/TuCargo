@@ -17,7 +17,8 @@ actual fun MapComponent(
     modifier: Modifier,
     latitude: Double,
     longitude: Double,
-    zoom: Float
+    zoom: Float,
+    onMapClick: ((latitude: Double, longitude: Double) -> Unit)?
 ) {
     // Placeholder para iOS para satisfacer la declaración 'expect'
     // En una fase posterior, se integrará con Google Maps SDK para iOS o MapKit vía interop

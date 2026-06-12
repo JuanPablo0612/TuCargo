@@ -87,6 +87,35 @@
     <string name="driver_home_tracking_error">Error al actualizar tu ubicación. Por favor verifica tu GPS.</string>
     <string name="driver_home_location_permission_denied">Se requiere el permiso de ubicación para compartir tu posición durante los viajes. Actívalo en los ajustes del sistema.</string>
 
+    <!-- Crear envío -->
+    <string name="create_trip_title">Nuevo envío</string>
+    <string name="create_trip_back_button">Volver</string>
+    <string name="create_trip_step_origin">Origen</string>
+    <string name="create_trip_step_destination">Destino</string>
+    <string name="create_trip_step_details">Detalles</string>
+    <string name="create_trip_origin_label">Dirección de recogida</string>
+    <string name="create_trip_origin_placeholder">ej. Cra 7 # 12-34</string>
+    <string name="create_trip_destination_label">Dirección de entrega</string>
+    <string name="create_trip_destination_placeholder">ej. Cl 100 # 8-20</string>
+    <string name="create_trip_map_hint">Toca el mapa para ubicar el pin en el punto exacto</string>
+    <string name="create_trip_pin_required">Selecciona la ubicación en el mapa</string>
+    <string name="create_trip_cargo_label">¿Qué vas a enviar?</string>
+    <string name="create_trip_cargo_placeholder">ej. Caja de repuestos, 5 kg</string>
+    <string name="create_trip_quote_title">Precio estimado</string>
+    <string name="create_trip_quote_distance">Distancia: %1$s km</string>
+    <string name="create_trip_quote_base">Tarifa base</string>
+    <string name="create_trip_quote_per_distance">Cargo por distancia</string>
+    <string name="create_trip_quote_total">Total</string>
+    <string name="create_trip_payment_title">Método de pago</string>
+    <string name="create_trip_payment_cash">Efectivo</string>
+    <string name="create_trip_payment_wallet">Billetera (próximamente)</string>
+    <string name="create_trip_next_button">Continuar</string>
+    <string name="create_trip_submit_button">Solicitar envío</string>
+    <string name="create_trip_quote_error">No se pudo calcular el precio. Verifica tu conexión e intenta de nuevo.</string>
+    <string name="create_trip_submit_error">No se pudo crear el envío. Intenta de nuevo.</string>
+    <string name="create_trip_invalid_error">Verifica los datos del envío e intenta de nuevo.</string>
+    <string name="create_trip_user_not_authenticated">Tu sesión ha expirado. Inicia sesión nuevamente.</string>
+
     <!-- Estado del viaje -->
     <string name="trip_status_searching">Buscando conductor</string>
     <string name="trip_status_assigned">Conductor asignado</string>
@@ -98,7 +127,7 @@
 
     <!-- Mapa -->
     <string name="map_your_location">Tu ubicación</string>
-    <string name="map_not_available_ios">Mapa no disponible en el simulador de iOS</string>
+    <string name="map_not_available_ios">El mapa aún no está disponible en este dispositivo</string>
 
     <!-- Errores globales -->
     <string name="network_error">Error de red. Verifica tu conexión e intenta de nuevo.</string>
@@ -120,6 +149,8 @@
     <string name="validation_vehicle_year_required">Por favor ingresa el año del vehículo</string>
     <string name="validation_vehicle_year_invalid">Ingresa un año válido (1990–2030)</string>
     <string name="validation_document_required">Por favor sube este documento</string>
+    <string name="validation_address_required">Por favor ingresa la dirección</string>
+    <string name="validation_cargo_description_required">Por favor describe lo que vas a enviar</string>
 
     <!-- Registro de vehículo -->
     <string name="vehicle_reg_title">Registro de vehículo</string>

@@ -21,7 +21,8 @@ actual fun MapComponent(
     modifier: Modifier,
     latitude: Double,
     longitude: Double,
-    zoom: Float
+    zoom: Float,
+    onMapClick: ((latitude: Double, longitude: Double) -> Unit)?
 ) {
     val userLocation = remember(latitude, longitude) {
         LatLng(latitude, longitude)
@@ -45,6 +46,9 @@ actual fun MapComponent(
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
+        onMapClick = onMapClick?.let { callback ->
+            { latLng -> callback(latLng.latitude, latLng.longitude) }
+        },
         uiSettings = remember {
             MapUiSettings(
                 zoomControlsEnabled = false,

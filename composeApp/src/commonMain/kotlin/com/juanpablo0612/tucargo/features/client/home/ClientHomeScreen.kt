@@ -45,9 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorBanner
 import com.juanpablo0612.tucargo.core.ui.components.MapComponent
-import com.juanpablo0612.tucargo.core.ui.components.TripStatusBadge
+import com.juanpablo0612.tucargo.core.ui.components.TripCard
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
-import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.domain.model.User
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -69,11 +68,8 @@ import tucargo.composeapp.generated.resources.client_home_sign_out_desc
 import tucargo.composeapp.generated.resources.client_home_stats_status_active
 import tucargo.composeapp.generated.resources.client_home_stats_status_label
 import tucargo.composeapp.generated.resources.client_home_stats_trips_label
-import tucargo.composeapp.generated.resources.client_home_trip_destination_empty
-import tucargo.composeapp.generated.resources.client_home_trip_origin_empty
 import tucargo.composeapp.generated.resources.client_home_view_all_button
 import tucargo.composeapp.generated.resources.client_home_your_location_title
-import tucargo.composeapp.generated.resources.local_shipping
 import tucargo.composeapp.generated.resources.package_2
 import com.juanpablo0612.tucargo.core.time.currentHour
 
@@ -401,71 +397,6 @@ private fun MapSection(latitude: Double?, longitude: Double?, modifier: Modifier
                 latitude = displayLat,
                 longitude = displayLng
             )
-        }
-    }
-}
-
-@Composable
-private fun TripCard(trip: Trip, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Card(
-        onClick = onClick,
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .clip(MaterialTheme.shapes.small)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.local_shipping),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            Spacer(modifier = Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = trip.origin.address.ifEmpty {
-                        stringResource(Res.string.client_home_trip_origin_empty)
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.arrow_forward),
-                        contentDescription = null,
-                        modifier = Modifier.size(12.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Text(
-                        text = trip.destination.address.ifEmpty {
-                            stringResource(Res.string.client_home_trip_destination_empty)
-                        },
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-            }
-            TripStatusBadge(status = trip.status)
         }
     }
 }
