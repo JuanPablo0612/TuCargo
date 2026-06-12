@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Build & common tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Run common tests
+        run: ./gradlew :composeApp:allTests --stacktrace
+
+  assemble-android:
+    name: Assemble Android (debug)
+    runs-on: ubuntu-latest
+    # google-services.json is gitignored; provide it as a repository secret
+    # (Settings > Secrets > Actions > GOOGLE_SERVICES_JSON) to enable this job.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check google-services secret
+        id: gs
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            echo "$GOOGLE_SERVICES_JSON" > androidApp/google-services.json
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "GOOGLE_SERVICES_JSON secret not set; skipping assemble." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/setup-java@v4
+        if: steps.gs.outputs.available == 'true'
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+        if: steps.gs.outputs.available == 'true'
+
+      - name: Assemble debug APK
+        if: steps.gs.outputs.available == 'true'
+        run: ./gradlew :androidApp:assembleDebug --stacktrace
