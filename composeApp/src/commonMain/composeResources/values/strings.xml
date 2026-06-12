@@ -49,6 +49,14 @@
     <string name="reset_password_back_to_login_button">Back to login</string>
 
     <!-- Documents / KYC -->
+    <string name="docs_title">Identity verification</string>
+    <string name="docs_subtitle">Please upload a clear photo of both sides of your identity card.</string>
+    <string name="docs_front_label">Front side</string>
+    <string name="docs_back_label">Back side</string>
+    <string name="docs_submit_button">Continue</string>
+    <string name="docs_back_button">Go back</string>
+    <string name="docs_user_not_authenticated">Your session has expired. Please log in again.</string>
+    <string name="docs_upload_error">Failed to upload documents. Please try again.</string>
 
     <!-- Client Home -->
     <string name="client_home_sign_out_desc">Sign out</string>
@@ -85,7 +93,6 @@
     <string name="driver_home_load_error">Could not load driver data. Please try again.</string>
     <string name="driver_home_availability_error">Connection error. Could not update your availability.</string>
     <string name="driver_home_tracking_error">Error updating your location. Please check your GPS.</string>
-    <string name="driver_home_location_permission_denied">Location permission is required to share your position during trips. Enable it in system settings.</string>
 
     <!-- Trip status -->
     <string name="trip_status_searching">Searching for driver</string>
@@ -113,6 +120,8 @@
     <string name="validation_name_required">Please enter your full name</string>
     <string name="validation_phone_required">Please enter your phone number</string>
     <string name="validation_phone_invalid">Enter a valid phone number in E.164 format (e.g. +13001234567)</string>
+    <string name="validation_id_front_required">Please select the front side of your ID</string>
+    <string name="validation_id_back_required">Please select the back side of your ID</string>
     <string name="validation_plate_required">Please enter your license plate</string>
     <string name="validation_plate_invalid">Enter a valid license plate (min. 5 characters)</string>
     <string name="validation_vehicle_model_required">Please enter the vehicle model</string>
@@ -155,7 +164,6 @@
     <string name="driver_docs_submit_button">Continue</string>
     <string name="driver_docs_back_button">Go back</string>
     <string name="driver_docs_upload_error">Some documents failed to upload. Please try again.</string>
-    <string name="driver_docs_file_too_large">One of the images is larger than 5 MB. Choose a smaller photo and try again.</string>
     <string name="driver_docs_user_not_authenticated">Your session has expired. Please log in again.</string>
 
     <!-- KYC Pending (enhanced) -->
