@@ -49,6 +49,9 @@ import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegis
 import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripViewModel
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeViewModel
+import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveViewModel
+import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailViewModel
+import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
@@ -57,6 +60,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.KoinAppDeclaration
@@ -122,6 +126,9 @@ val viewModelModule = module {
     viewModelOf(::VehicleRegistrationViewModel)
     viewModelOf(::DriverDocsUploadViewModel)
     viewModelOf(::KycPendingViewModel)
+    viewModelOf(::TripHistoryViewModel)
+    viewModel { (tripId: String) -> TripDetailViewModel(tripId, get(), get(), get()) }
+    viewModel { (tripId: String) -> TripActiveViewModel(tripId, get(), get()) }
 }
 
 val appModule = module {

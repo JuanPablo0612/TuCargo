@@ -30,9 +30,9 @@ import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegis
 import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripScreen
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeScreen
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.TripActiveScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.TripDetailScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.TripHistoryScreen
+import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveScreen
+import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailScreen
+import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryScreen
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -119,21 +119,31 @@ fun AppNavigation() {
             DriverHomeScreen(
                 onSignOut = { authViewModel.logout() },
                 onTripClick = { tripId -> navController.navigate(Route.TripActive(tripId)) },
+                onHistoryClick = { navController.navigate(Route.TripHistory) },
             )
         }
 
         composable<Route.TripHistory> {
-            TripHistoryScreen()
+            TripHistoryScreen(
+                onTripClick = { tripId -> navController.navigate(Route.TripDetail(tripId)) },
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Route.TripActive> { backStackEntry ->
             val route: Route.TripActive = backStackEntry.toRoute()
-            TripActiveScreen(tripId = route.tripId)
+            TripActiveScreen(
+                tripId = route.tripId,
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Route.TripDetail> { backStackEntry ->
             val route: Route.TripDetail = backStackEntry.toRoute()
-            TripDetailScreen(tripId = route.tripId)
+            TripDetailScreen(
+                tripId = route.tripId,
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Route.DriverOnboardingVehicle> {

@@ -93,6 +93,54 @@
     <string name="driver_home_trip_taken_error">Another driver took this trip.</string>
     <string name="driver_home_available_trips_error">Could not load available trips.</string>
     <string name="driver_home_trip_distance">%1$s km</string>
+    <string name="driver_home_history_desc">Trip history</string>
+
+    <!-- Trip detail (client view) -->
+    <string name="trip_detail_title">Shipment detail</string>
+    <string name="trip_detail_back_button">Go back</string>
+    <string name="trip_detail_driver_section">Driver</string>
+    <string name="trip_detail_driver_pending">We are looking for a driver for your shipment…</string>
+    <string name="trip_detail_plate_label">Plate</string>
+    <string name="trip_detail_origin_label">Pickup</string>
+    <string name="trip_detail_destination_label">Delivery</string>
+    <string name="trip_detail_cargo_label">Cargo</string>
+    <string name="trip_detail_price_label">Price</string>
+    <string name="trip_detail_delivery_code_title">Delivery code</string>
+    <string name="trip_detail_delivery_code_hint">Share this code only with the recipient. The driver needs it to complete the delivery.</string>
+    <string name="trip_detail_cancel_button">Cancel shipment</string>
+    <string name="trip_detail_cancel_confirm_title">Cancel shipment?</string>
+    <string name="trip_detail_cancel_confirm_message">This cannot be undone. The driver will be notified.</string>
+    <string name="trip_detail_cancel_confirm_yes">Yes, cancel</string>
+    <string name="trip_detail_cancel_confirm_no">Keep shipment</string>
+    <string name="trip_detail_load_error">Could not load the shipment. Please try again.</string>
+    <string name="trip_detail_cancel_error">Could not cancel the shipment. Please try again.</string>
+
+    <!-- Trip active (driver view) -->
+    <string name="trip_active_title">Active trip</string>
+    <string name="trip_active_back_button">Go back</string>
+    <string name="trip_active_client_section">Client</string>
+    <string name="trip_active_phone_label">Phone: %1$s</string>
+    <string name="trip_active_origin_label">Pickup</string>
+    <string name="trip_active_destination_label">Delivery</string>
+    <string name="trip_active_cargo_section">Cargo</string>
+    <string name="trip_active_action_start">Start trip</string>
+    <string name="trip_active_action_arrived">I arrived at pickup</string>
+    <string name="trip_active_action_pickup">Cargo picked up — start delivery</string>
+    <string name="trip_active_action_complete">Complete delivery</string>
+    <string name="trip_active_complete_dialog_title">Complete delivery</string>
+    <string name="trip_active_complete_dialog_message">Ask the recipient for the delivery code to confirm the handover.</string>
+    <string name="trip_active_complete_dialog_hint">Delivery code</string>
+    <string name="trip_active_complete_dialog_confirm">Confirm</string>
+    <string name="trip_active_complete_dialog_cancel">Cancel</string>
+    <string name="trip_active_invalid_code_error">The delivery code is not correct. Ask the recipient and try again.</string>
+    <string name="trip_active_update_error">Could not update the trip. Please try again.</string>
+    <string name="trip_active_load_error">Could not load the trip. Please try again.</string>
+
+    <!-- Trip history -->
+    <string name="trip_history_title">Trip history</string>
+    <string name="trip_history_back_button">Go back</string>
+    <string name="trip_history_empty">No trips yet. They will show up here.</string>
+    <string name="trip_history_load_error">Could not load your trips. Please try again.</string>
 
     <!-- Create trip -->
     <string name="create_trip_title">New shipment</string>

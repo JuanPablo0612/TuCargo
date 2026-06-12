@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -61,6 +62,7 @@ import tucargo.composeapp.generated.resources.driver_home_availability_error
 import tucargo.composeapp.generated.resources.driver_home_available_trips_error
 import tucargo.composeapp.generated.resources.driver_home_available_trips_title
 import tucargo.composeapp.generated.resources.driver_home_empty_trips_message
+import tucargo.composeapp.generated.resources.driver_home_history_desc
 import tucargo.composeapp.generated.resources.driver_home_load_error
 import tucargo.composeapp.generated.resources.driver_home_location_permission_denied
 import tucargo.composeapp.generated.resources.driver_home_no_available_trips
@@ -78,6 +80,7 @@ fun DriverHomeScreen(
     viewModel: DriverHomeViewModel = koinViewModel(),
     onSignOut: () -> Unit,
     onTripClick: (tripId: String) -> Unit = {},
+    onHistoryClick: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -113,6 +116,12 @@ fun DriverHomeScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onHistoryClick) {
+                        Icon(
+                            imageVector = Icons.Filled.History,
+                            contentDescription = stringResource(Res.string.driver_home_history_desc),
+                        )
+                    }
                     IconButton(onClick = onSignOut) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ExitToApp,

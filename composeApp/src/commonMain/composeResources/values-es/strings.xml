@@ -93,6 +93,54 @@
     <string name="driver_home_trip_taken_error">Otro conductor tomó este viaje.</string>
     <string name="driver_home_available_trips_error">No se pudieron cargar los viajes disponibles.</string>
     <string name="driver_home_trip_distance">%1$s km</string>
+    <string name="driver_home_history_desc">Historial de viajes</string>
+
+    <!-- Detalle del envío (vista del cliente) -->
+    <string name="trip_detail_title">Detalle del envío</string>
+    <string name="trip_detail_back_button">Volver</string>
+    <string name="trip_detail_driver_section">Conductor</string>
+    <string name="trip_detail_driver_pending">Estamos buscando un conductor para tu envío…</string>
+    <string name="trip_detail_plate_label">Placa</string>
+    <string name="trip_detail_origin_label">Recogida</string>
+    <string name="trip_detail_destination_label">Entrega</string>
+    <string name="trip_detail_cargo_label">Carga</string>
+    <string name="trip_detail_price_label">Precio</string>
+    <string name="trip_detail_delivery_code_title">Código de entrega</string>
+    <string name="trip_detail_delivery_code_hint">Comparte este código solo con quien recibe. El conductor lo necesita para completar la entrega.</string>
+    <string name="trip_detail_cancel_button">Cancelar envío</string>
+    <string name="trip_detail_cancel_confirm_title">¿Cancelar envío?</string>
+    <string name="trip_detail_cancel_confirm_message">Esta acción no se puede deshacer. El conductor será notificado.</string>
+    <string name="trip_detail_cancel_confirm_yes">Sí, cancelar</string>
+    <string name="trip_detail_cancel_confirm_no">Mantener envío</string>
+    <string name="trip_detail_load_error">No se pudo cargar el envío. Intenta de nuevo.</string>
+    <string name="trip_detail_cancel_error">No se pudo cancelar el envío. Intenta de nuevo.</string>
+
+    <!-- Viaje activo (vista del conductor) -->
+    <string name="trip_active_title">Viaje activo</string>
+    <string name="trip_active_back_button">Volver</string>
+    <string name="trip_active_client_section">Cliente</string>
+    <string name="trip_active_phone_label">Teléfono: %1$s</string>
+    <string name="trip_active_origin_label">Recogida</string>
+    <string name="trip_active_destination_label">Entrega</string>
+    <string name="trip_active_cargo_section">Carga</string>
+    <string name="trip_active_action_start">Iniciar viaje</string>
+    <string name="trip_active_action_arrived">Llegué al punto de recogida</string>
+    <string name="trip_active_action_pickup">Carga recogida — iniciar entrega</string>
+    <string name="trip_active_action_complete">Completar entrega</string>
+    <string name="trip_active_complete_dialog_title">Completar entrega</string>
+    <string name="trip_active_complete_dialog_message">Pide al destinatario el código de entrega para confirmar la recepción.</string>
+    <string name="trip_active_complete_dialog_hint">Código de entrega</string>
+    <string name="trip_active_complete_dialog_confirm">Confirmar</string>
+    <string name="trip_active_complete_dialog_cancel">Cancelar</string>
+    <string name="trip_active_invalid_code_error">El código de entrega no es correcto. Pídelo al destinatario e intenta de nuevo.</string>
+    <string name="trip_active_update_error">No se pudo actualizar el viaje. Intenta de nuevo.</string>
+    <string name="trip_active_load_error">No se pudo cargar el viaje. Intenta de nuevo.</string>
+
+    <!-- Historial de viajes -->
+    <string name="trip_history_title">Historial de viajes</string>
+    <string name="trip_history_back_button">Volver</string>
+    <string name="trip_history_empty">Aún no tienes viajes. Aparecerán aquí.</string>
+    <string name="trip_history_load_error">No se pudieron cargar tus viajes. Intenta de nuevo.</string>
 
     <!-- Crear envío -->
     <string name="create_trip_title">Nuevo envío</string>
