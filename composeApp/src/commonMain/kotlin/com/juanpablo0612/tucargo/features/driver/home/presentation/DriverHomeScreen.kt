@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.permissions.rememberLocationPermissionRequester
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.TripStatusBadge
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
@@ -49,6 +51,7 @@ import tucargo.composeapp.generated.resources.driver_home_active_trips_title
 import tucargo.composeapp.generated.resources.driver_home_availability_error
 import tucargo.composeapp.generated.resources.driver_home_empty_trips_message
 import tucargo.composeapp.generated.resources.driver_home_load_error
+import tucargo.composeapp.generated.resources.driver_home_location_permission_denied
 import tucargo.composeapp.generated.resources.driver_home_offline_desc
 import tucargo.composeapp.generated.resources.driver_home_title
 import tucargo.composeapp.generated.resources.driver_home_tracking_error
@@ -63,6 +66,15 @@ fun DriverHomeScreen(
     onTripClick: (tripId: String) -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val requestLocationPermission = rememberLocationPermissionRequester { granted ->
+        viewModel.onAction(DriverHomeAction.LocationPermissionResult(granted))
+    }
+    LaunchedEffect(state.isAvailable) {
+        if (state.isAvailable && !state.hasLocationPermission) {
+            requestLocationPermission()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -121,6 +133,7 @@ fun DriverHomeScreen(
                             DriverHomeError.LoadDriverError -> Res.string.driver_home_load_error
                             DriverHomeError.ToggleAvailabilityError -> Res.string.driver_home_availability_error
                             DriverHomeError.TrackingError -> Res.string.driver_home_tracking_error
+                            DriverHomeError.LocationPermissionDenied -> Res.string.driver_home_location_permission_denied
                         }
                         ErrorCard(
                             message = stringResource(errorRes),

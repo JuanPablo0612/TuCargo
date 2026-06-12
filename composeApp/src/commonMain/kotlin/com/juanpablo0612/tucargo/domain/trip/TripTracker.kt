@@ -4,10 +4,12 @@ import com.juanpablo0612.tucargo.core.location.GeoUtils
 import com.juanpablo0612.tucargo.core.location.LocationProvider
 import com.juanpablo0612.tucargo.data.common.ExceptionMapper
 import com.juanpablo0612.tucargo.data.trip.TripRepository
+import com.juanpablo0612.tucargo.domain.model.AppError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -40,11 +42,11 @@ class TripTracker(
                     tripId = tripId,
                     lat = location.latitude,
                     lng = location.longitude
-                ).onFailure { e ->
-                    _state.value = TrackingState.Error(ExceptionMapper.map(e))
-                    stopTracking()
-                }
+                ).onFailure { e -> failTracking(ExceptionMapper.map(e)) }
             }
+            // Without this, a provider failure (e.g. missing location
+            // permission) escapes into applicationScope and crashes the app.
+            .catch { e -> _state.value = TrackingState.Error(ExceptionMapper.map(e)) }
             .launchIn(applicationScope)
     }
 
@@ -52,5 +54,13 @@ class TripTracker(
         trackingJob?.cancel()
         trackingJob = null
         _state.value = TrackingState.Idle
+    }
+
+    private fun failTracking(error: AppError) {
+        // Set the error before cancelling: stopTracking() would overwrite it
+        // with Idle and the failure would never surface.
+        _state.value = TrackingState.Error(error)
+        trackingJob?.cancel()
+        trackingJob = null
     }
 }

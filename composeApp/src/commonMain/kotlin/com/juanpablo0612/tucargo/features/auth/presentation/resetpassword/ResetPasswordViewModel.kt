@@ -21,7 +21,13 @@ class ResetPasswordViewModel(
 
     val emailState = TextFieldState()
 
-    fun onSubmit() {
+    fun onAction(action: ResetPasswordAction) {
+        when (action) {
+            ResetPasswordAction.Submit -> onSubmit()
+        }
+    }
+
+    private fun onSubmit() {
         val email = emailState.text.toString().trim()
         val emailError = FormValidators.email(email)
 
