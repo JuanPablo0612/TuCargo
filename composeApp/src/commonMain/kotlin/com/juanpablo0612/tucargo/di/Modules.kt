@@ -16,9 +16,14 @@ import com.juanpablo0612.tucargo.data.trip.TripRepositoryImpl
 import com.juanpablo0612.tucargo.domain.trip.TripTracker
 import com.juanpablo0612.tucargo.data.user.UserRepository
 import com.juanpablo0612.tucargo.data.user.UserRepositoryImpl
+import com.juanpablo0612.tucargo.domain.usecase.AcceptTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.AdvanceTripStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.CalculateTripPriceUseCase
+import com.juanpablo0612.tucargo.domain.usecase.CancelTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.CreateTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetDriverTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetDriverOnboardingStatusUseCase
 import com.juanpablo0612.tucargo.domain.usecase.IsUserLoggedInUseCase
@@ -28,6 +33,7 @@ import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterVehicleUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
@@ -85,7 +91,14 @@ val domainModule = module {
     singleOf(::UpdateDriverStatusUseCase)
     singleOf(::ObserveDriverActiveTripsUseCase)
     singleOf(::GetClientTripsUseCase)
+    singleOf(::GetDriverTripsUseCase)
     singleOf(::CreateTripUseCase)
+    singleOf(::CalculateTripPriceUseCase)
+    singleOf(::ObserveTripUseCase)
+    singleOf(::ObserveAvailableTripsUseCase)
+    singleOf(::AcceptTripUseCase)
+    singleOf(::AdvanceTripStatusUseCase)
+    singleOf(::CancelTripUseCase)
 
     singleOf(::LogoutUseCase)
     singleOf(::SendPasswordResetEmailUseCase)

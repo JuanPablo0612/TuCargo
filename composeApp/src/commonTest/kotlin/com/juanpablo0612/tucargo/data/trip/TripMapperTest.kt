@@ -40,4 +40,21 @@ class TripMapperTest {
         assertEquals("123", dto.id)
         assertEquals("COMPLETED", dto.status)
     }
+
+    @Test
+    fun tripDto_toDomain_mapsClientAndDriverLocationFields() {
+        val dto = TripDto(
+            clientName = "Ana",
+            clientPhone = "+573001234567",
+            driverLastLat = 4.61,
+            driverLastLng = -74.08
+        )
+
+        val domain = dto.toDomain()
+
+        assertEquals("Ana", domain.clientName)
+        assertEquals("+573001234567", domain.clientPhone)
+        assertEquals(4.61, domain.driverLastLat)
+        assertEquals(-74.08, domain.driverLastLng)
+    }
 }
