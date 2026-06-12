@@ -1,8 +1,11 @@
 package com.juanpablo0612.tucargo.core.location
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Looper
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -17,8 +20,19 @@ class AndroidLocationProvider(private val context: Context) : LocationProvider {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
+    private fun hasLocationPermission(): Boolean =
+        ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED
+
     @SuppressLint("MissingPermission")
     override fun getLocations(): Flow<LocationUpdate> = callbackFlow {
+        if (!hasLocationPermission()) {
+            close(SecurityException("Location permission not granted"))
+            return@callbackFlow
+        }
+
         val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
             .setMinUpdateIntervalMillis(2000)
             .build()

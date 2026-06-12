@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.features.driver.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.domain.model.TripStatus
 import com.juanpablo0612.tucargo.domain.trip.TrackingState
 import com.juanpablo0612.tucargo.domain.trip.TripTracker
@@ -37,8 +38,27 @@ class DriverHomeViewModel(
     fun onAction(action: DriverHomeAction) {
         when (action) {
             is DriverHomeAction.ToggleAvailability -> toggleAvailability(action.available)
+            is DriverHomeAction.LocationPermissionResult -> onLocationPermissionResult(action.granted)
         }
     }
+
+    private fun onLocationPermissionResult(granted: Boolean) {
+        _uiState.update {
+            it.copy(
+                hasLocationPermission = granted,
+                error = if (granted) it.error else DriverHomeError.LocationPermissionDenied
+            )
+        }
+        if (granted) {
+            trackableTripId(_uiState.value.activeTrips)?.let { tripId ->
+                tripTracker.startTracking(tripId)
+            }
+        }
+    }
+
+    private fun trackableTripId(trips: List<Trip>): String? = trips.firstOrNull {
+        it.status == TripStatus.IN_PROGRESS || it.status == TripStatus.ON_WAY || it.status == TripStatus.ARRIVED_PICKUP
+    }?.id
 
     private fun observeTrackerState() {
         tripTracker.state.onEach { state ->
@@ -53,11 +73,14 @@ class DriverHomeViewModel(
         observeDriverActiveTripsUseCase(userId)
             .onEach { trips ->
                 _uiState.update { it.copy(activeTrips = trips.toImmutableList()) }
-                val activeTrip = trips.firstOrNull {
-                    it.status == TripStatus.IN_PROGRESS || it.status == TripStatus.ON_WAY || it.status == TripStatus.ARRIVED_PICKUP
-                }
-                if (activeTrip != null) {
-                    tripTracker.startTracking(activeTrip.id)
+                val activeTripId = trackableTripId(trips)
+                if (activeTripId != null) {
+                    // Without the permission the provider flow fails
+                    // immediately; tracking starts later from
+                    // onLocationPermissionResult once it is granted.
+                    if (_uiState.value.hasLocationPermission) {
+                        tripTracker.startTracking(activeTripId)
+                    }
                 } else {
                     tripTracker.stopTracking()
                 }

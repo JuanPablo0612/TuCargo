@@ -15,6 +15,13 @@ val secrets = Properties().apply {
     }
 }
 
+val googleMapsApiKey: String = secrets.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
+if (googleMapsApiKey.isBlank()) {
+    val isReleaseBuild = gradle.startParameter.taskNames.any { it.contains("Release", ignoreCase = true) }
+    val message = "GOOGLE_MAPS_API_KEY is missing. Add it to secrets.properties at the project root (see README)."
+    if (isReleaseBuild) throw GradleException(message) else logger.warn("WARNING: $message Maps will not work.")
+}
+
 kotlin {
     target {
         compilerOptions {
@@ -42,7 +49,7 @@ android {
         versionCode = libs.versions.android.versionCode.get().toInt()
         versionName = libs.versions.android.versionName.get()
 
-        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = secrets.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = googleMapsApiKey
     }
     packaging {
         resources {

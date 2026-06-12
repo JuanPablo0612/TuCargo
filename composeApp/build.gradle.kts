@@ -49,6 +49,8 @@ kotlin {
             implementation(libs.play.services.maps)
             implementation(libs.play.services.location)
             implementation(libs.kotlinx.coroutines.play.services)
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
