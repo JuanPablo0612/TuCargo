@@ -10,7 +10,6 @@ data class DriverHomeState(
     val isLoading: Boolean = false,
     val driverName: String = "",
     val isAvailable: Boolean = false,
-    val hasLocationPermission: Boolean = false,
     val balance: Double = 0.0,
     val totalTrips: Int = 0,
     val activeTrips: ImmutableList<Trip> = persistentListOf(),

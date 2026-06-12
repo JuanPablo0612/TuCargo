@@ -19,10 +19,7 @@ data class User(
 
 enum class UserRole {
     CLIENT,
-    DRIVER,
-    // Created only by editing the user document in the Firebase console; the
-    // app never offers it at registration and the rules reject it there.
-    ADMIN
+    DRIVER
 }
 
 enum class UserStatus {

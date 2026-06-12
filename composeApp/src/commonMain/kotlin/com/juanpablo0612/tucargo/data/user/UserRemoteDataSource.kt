@@ -19,16 +19,8 @@ class UserRemoteDataSource(private val firestore: FirebaseFirestore) {
         usersCollection.document(uid).set(user, merge = true)
     }
 
-    // Intentionally a named, single-purpose setter: arbitrary field maps made
-    // it possible to write privileged fields (role, is_verified,
-    // wallet_balance) from the client.
-    suspend fun updateOnlineStatus(uid: String, isOnline: Boolean, timestampMillis: Long) {
-        usersCollection.document(uid).update(
-            mapOf(
-                "is_online" to isOnline,
-                "last_status_update" to timestampMillis
-            )
-        )
+    suspend fun updateFields(uid: String, fields: Map<String, Any?>) {
+        usersCollection.document(uid).update(fields)
     }
 
     fun observeUser(uid: String): Flow<UserDto?> =

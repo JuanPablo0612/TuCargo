@@ -27,13 +27,13 @@ import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterVehicleUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
-import com.juanpablo0612.tucargo.domain.usecase.UploadKycDocumentUseCase
+import com.juanpablo0612.tucargo.domain.usecase.UploadDocumentsUseCase
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
+import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.KycPendingViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.driverdocs.DriverDocsUploadViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginViewModel
@@ -86,6 +86,7 @@ val domainModule = module {
     singleOf(::ObserveDriverActiveTripsUseCase)
     singleOf(::GetClientTripsUseCase)
     singleOf(::CreateTripUseCase)
+    singleOf(::UploadDocumentsUseCase)
 
     singleOf(::LogoutUseCase)
     singleOf(::SendPasswordResetEmailUseCase)
@@ -93,13 +94,12 @@ val domainModule = module {
     singleOf(::RegisterVehicleUseCase)
     singleOf(::GetDriverOnboardingStatusUseCase)
     singleOf(::ObserveCurrentUserUseCase)
-    singleOf(::UploadKycDocumentUseCase)
-    singleOf(::ObserveKycDocumentsUseCase)
 }
 
 val viewModelModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
+    viewModelOf(::DocumentViewModel)
     viewModelOf(::ClientHomeViewModel)
     viewModelOf(::DriverHomeViewModel)
     viewModelOf(::ResetPasswordViewModel)
