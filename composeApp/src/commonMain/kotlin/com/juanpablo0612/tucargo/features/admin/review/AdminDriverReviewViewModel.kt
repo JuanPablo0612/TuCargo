@@ -7,7 +7,9 @@ import com.juanpablo0612.tucargo.domain.model.KycDocumentType
 import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ReviewKycDocumentUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SetDriverVerifiedUseCase
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -18,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class AdminDriverReviewViewModel(
     private val driverId: String,
-    observeKycDocumentsUseCase: ObserveKycDocumentsUseCase,
+    private val observeKycDocumentsUseCase: ObserveKycDocumentsUseCase,
     private val reviewKycDocumentUseCase: ReviewKycDocumentUseCase,
     private val setDriverVerifiedUseCase: SetDriverVerifiedUseCase
 ) : ViewModel() {
@@ -26,8 +28,27 @@ class AdminDriverReviewViewModel(
     private val _uiState = MutableStateFlow(AdminDriverReviewState())
     val uiState = _uiState.asStateFlow()
 
+    private var documentsJob: Job? = null
+
     init {
-        observeKycDocumentsUseCase(driverId)
+        loadDocuments()
+    }
+
+    fun onAction(action: AdminDriverReviewAction) {
+        when (action) {
+            is AdminDriverReviewAction.Approve -> review(action.type, approve = true, reason = null)
+            is AdminDriverReviewAction.Reject -> review(action.type, approve = false, reason = action.reason)
+            AdminDriverReviewAction.VerifyDriver -> verifyDriver()
+            AdminDriverReviewAction.Refresh -> {
+                _uiState.update { it.copy(isLoading = true, error = null, documents = persistentListOf()) }
+                loadDocuments()
+            }
+        }
+    }
+
+    private fun loadDocuments() {
+        documentsJob?.cancel()
+        documentsJob = observeKycDocumentsUseCase(driverId)
             .onEach { docs ->
                 _uiState.update { it.copy(isLoading = false, documents = docs.toImmutableList()) }
             }
@@ -36,14 +57,6 @@ class AdminDriverReviewViewModel(
                 _uiState.update { it.copy(isLoading = false, error = AdminDriverReviewError.LoadError) }
             }
             .launchIn(viewModelScope)
-    }
-
-    fun onAction(action: AdminDriverReviewAction) {
-        when (action) {
-            is AdminDriverReviewAction.Approve -> review(action.type, approve = true, reason = null)
-            is AdminDriverReviewAction.Reject -> review(action.type, approve = false, reason = action.reason)
-            AdminDriverReviewAction.VerifyDriver -> verifyDriver()
-        }
     }
 
     fun onVerifiedNavigated() {

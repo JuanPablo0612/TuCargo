@@ -19,6 +19,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -100,5 +101,27 @@ class AdminDriverReviewViewModelTest {
             Triple(KycDocumentType.SOAT, KycStatus.REJECTED, "Blurry photo"),
             documentRepository.lastStatusUpdate
         )
+    }
+
+    @Test
+    fun refresh_clearsErrorAndReloadsDocuments() = runTest {
+        // Simulate an initial load failure by throwing from the flow
+        documentRepository.flowError = RuntimeException("Network error")
+        val viewModel = buildViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertNotNull(viewModel.uiState.value.error)
+        assertEquals(AdminDriverReviewError.LoadError, viewModel.uiState.value.error)
+
+        // Fix the repository and refresh
+        documentRepository.flowError = null
+        val pendingDocs = docs { KycStatus.PENDING }
+        documentRepository.documentsFlow.value = pendingDocs
+        viewModel.onAction(AdminDriverReviewAction.Refresh)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertNull(viewModel.uiState.value.error)
+        assertFalse(viewModel.uiState.value.isLoading)
+        assertEquals(KycDocumentType.entries.size, viewModel.uiState.value.documents.size)
     }
 }

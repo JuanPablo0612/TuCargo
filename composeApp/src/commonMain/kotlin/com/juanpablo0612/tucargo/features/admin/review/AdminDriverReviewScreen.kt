@@ -58,6 +58,7 @@ import tucargo.composeapp.generated.resources.admin_review_back_button
 import tucargo.composeapp.generated.resources.admin_review_load_error
 import tucargo.composeapp.generated.resources.admin_review_no_documents
 import tucargo.composeapp.generated.resources.admin_review_reject
+import tucargo.composeapp.generated.resources.admin_review_retry
 import tucargo.composeapp.generated.resources.admin_review_reject_dialog_cancel
 import tucargo.composeapp.generated.resources.admin_review_reject_dialog_confirm
 import tucargo.composeapp.generated.resources.admin_review_reject_dialog_hint
@@ -195,15 +196,23 @@ internal fun AdminDriverReviewScreenContent(
                     AdminDriverReviewError.VerifyError -> Res.string.admin_review_verify_error
                 }
                 ErrorCard(message = stringResource(msgRes), modifier = Modifier.fillMaxWidth())
+                if (error == AdminDriverReviewError.LoadError) {
+                    OutlinedButton(
+                        onClick = { onAction(AdminDriverReviewAction.Refresh) },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text(stringResource(Res.string.admin_review_retry))
+                    }
+                }
             }
 
-            if (uiState.documents.isEmpty()) {
+            if (uiState.documents.isEmpty() && uiState.error == null) {
                 Text(
                     text = stringResource(Res.string.admin_review_no_documents),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-            } else {
+            } else if (uiState.documents.isNotEmpty()) {
                 val personalDocs = uiState.documents.filter { it.type in personalDocTypes }
                 val vehicleDocs = uiState.documents.filter { it.type !in personalDocTypes }
 
