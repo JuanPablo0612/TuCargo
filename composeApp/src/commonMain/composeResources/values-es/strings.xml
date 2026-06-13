@@ -93,6 +93,91 @@
     <string name="driver_home_load_error">No se pudo cargar la información del conductor. Intenta de nuevo.</string>
     <string name="driver_home_availability_error">Error de conexión. No se pudo actualizar tu disponibilidad.</string>
     <string name="driver_home_tracking_error">Error al actualizar tu ubicación. Por favor verifica tu GPS.</string>
+    <string name="driver_home_location_permission_denied">Se requiere el permiso de ubicación para compartir tu posición durante los viajes. Actívalo en los ajustes del sistema.</string>
+    <string name="driver_home_available_trips_title">Viajes disponibles</string>
+    <string name="driver_home_no_available_trips">No hay viajes disponibles por ahora. Seguiremos buscando.</string>
+    <string name="driver_home_accept_button">Aceptar</string>
+    <string name="driver_home_accept_error">No se pudo aceptar el viaje. Intenta de nuevo.</string>
+    <string name="driver_home_trip_taken_error">Otro conductor tomó este viaje.</string>
+    <string name="driver_home_available_trips_error">No se pudieron cargar los viajes disponibles.</string>
+    <string name="driver_home_trip_distance">%1$s km</string>
+    <string name="driver_home_history_desc">Historial de viajes</string>
+
+    <!-- Detalle del envío (vista del cliente) -->
+    <string name="trip_detail_title">Detalle del envío</string>
+    <string name="trip_detail_back_button">Volver</string>
+    <string name="trip_detail_driver_section">Conductor</string>
+    <string name="trip_detail_driver_pending">Estamos buscando un conductor para tu envío…</string>
+    <string name="trip_detail_plate_label">Placa</string>
+    <string name="trip_detail_origin_label">Recogida</string>
+    <string name="trip_detail_destination_label">Entrega</string>
+    <string name="trip_detail_cargo_label">Carga</string>
+    <string name="trip_detail_price_label">Precio</string>
+    <string name="trip_detail_delivery_code_title">Código de entrega</string>
+    <string name="trip_detail_delivery_code_hint">Comparte este código solo con quien recibe. El conductor lo necesita para completar la entrega.</string>
+    <string name="trip_detail_cancel_button">Cancelar envío</string>
+    <string name="trip_detail_cancel_confirm_title">¿Cancelar envío?</string>
+    <string name="trip_detail_cancel_confirm_message">Esta acción no se puede deshacer. El conductor será notificado.</string>
+    <string name="trip_detail_cancel_confirm_yes">Sí, cancelar</string>
+    <string name="trip_detail_cancel_confirm_no">Mantener envío</string>
+    <string name="trip_detail_load_error">No se pudo cargar el envío. Intenta de nuevo.</string>
+    <string name="trip_detail_cancel_error">No se pudo cancelar el envío. Intenta de nuevo.</string>
+
+    <!-- Viaje activo (vista del conductor) -->
+    <string name="trip_active_title">Viaje activo</string>
+    <string name="trip_active_back_button">Volver</string>
+    <string name="trip_active_client_section">Cliente</string>
+    <string name="trip_active_phone_label">Teléfono: %1$s</string>
+    <string name="trip_active_origin_label">Recogida</string>
+    <string name="trip_active_destination_label">Entrega</string>
+    <string name="trip_active_cargo_section">Carga</string>
+    <string name="trip_active_action_start">Iniciar viaje</string>
+    <string name="trip_active_action_arrived">Llegué al punto de recogida</string>
+    <string name="trip_active_action_pickup">Carga recogida — iniciar entrega</string>
+    <string name="trip_active_action_complete">Completar entrega</string>
+    <string name="trip_active_complete_dialog_title">Completar entrega</string>
+    <string name="trip_active_complete_dialog_message">Pide al destinatario el código de entrega para confirmar la recepción.</string>
+    <string name="trip_active_complete_dialog_hint">Código de entrega</string>
+    <string name="trip_active_complete_dialog_confirm">Confirmar</string>
+    <string name="trip_active_complete_dialog_cancel">Cancelar</string>
+    <string name="trip_active_invalid_code_error">El código de entrega no es correcto. Pídelo al destinatario e intenta de nuevo.</string>
+    <string name="trip_active_update_error">No se pudo actualizar el viaje. Intenta de nuevo.</string>
+    <string name="trip_active_load_error">No se pudo cargar el viaje. Intenta de nuevo.</string>
+
+    <!-- Historial de viajes -->
+    <string name="trip_history_title">Historial de viajes</string>
+    <string name="trip_history_back_button">Volver</string>
+    <string name="trip_history_empty">Aún no tienes viajes. Aparecerán aquí.</string>
+    <string name="trip_history_load_error">No se pudieron cargar tus viajes. Intenta de nuevo.</string>
+
+    <!-- Crear envío -->
+    <string name="create_trip_title">Nuevo envío</string>
+    <string name="create_trip_back_button">Volver</string>
+    <string name="create_trip_step_origin">Origen</string>
+    <string name="create_trip_step_destination">Destino</string>
+    <string name="create_trip_step_details">Detalles</string>
+    <string name="create_trip_origin_label">Dirección de recogida</string>
+    <string name="create_trip_origin_placeholder">ej. Cra 7 # 12-34</string>
+    <string name="create_trip_destination_label">Dirección de entrega</string>
+    <string name="create_trip_destination_placeholder">ej. Cl 100 # 8-20</string>
+    <string name="create_trip_map_hint">Toca el mapa para ubicar el pin en el punto exacto</string>
+    <string name="create_trip_pin_required">Selecciona la ubicación en el mapa</string>
+    <string name="create_trip_cargo_label">¿Qué vas a enviar?</string>
+    <string name="create_trip_cargo_placeholder">ej. Caja de repuestos, 5 kg</string>
+    <string name="create_trip_quote_title">Precio estimado</string>
+    <string name="create_trip_quote_distance">Distancia: %1$s km</string>
+    <string name="create_trip_quote_base">Tarifa base</string>
+    <string name="create_trip_quote_per_distance">Cargo por distancia</string>
+    <string name="create_trip_quote_total">Total</string>
+    <string name="create_trip_payment_title">Método de pago</string>
+    <string name="create_trip_payment_cash">Efectivo</string>
+    <string name="create_trip_payment_wallet">Billetera (próximamente)</string>
+    <string name="create_trip_next_button">Continuar</string>
+    <string name="create_trip_submit_button">Solicitar envío</string>
+    <string name="create_trip_quote_error">No se pudo calcular el precio. Verifica tu conexión e intenta de nuevo.</string>
+    <string name="create_trip_submit_error">No se pudo crear el envío. Intenta de nuevo.</string>
+    <string name="create_trip_invalid_error">Verifica los datos del envío e intenta de nuevo.</string>
+    <string name="create_trip_user_not_authenticated">Tu sesión ha expirado. Inicia sesión nuevamente.</string>
 
     <!-- Estado del viaje -->
     <string name="trip_status_searching">Buscando conductor</string>
@@ -105,7 +190,7 @@
 
     <!-- Mapa -->
     <string name="map_your_location">Tu ubicación</string>
-    <string name="map_not_available_ios">Mapa no disponible en el simulador de iOS</string>
+    <string name="map_not_available_ios">El mapa aún no está disponible en este dispositivo</string>
 
     <!-- Errores globales -->
     <string name="network_error">Error de red. Verifica tu conexión e intenta de nuevo.</string>
@@ -129,6 +214,8 @@
     <string name="validation_vehicle_year_required">Por favor ingresa el año del vehículo</string>
     <string name="validation_vehicle_year_invalid">Ingresa un año válido (1990–2030)</string>
     <string name="validation_document_required">Por favor sube este documento</string>
+    <string name="validation_address_required">Por favor ingresa la dirección</string>
+    <string name="validation_cargo_description_required">Por favor describe lo que vas a enviar</string>
 
     <!-- Registro de vehículo -->
     <string name="vehicle_reg_title">Registro de vehículo</string>
@@ -181,6 +268,27 @@
     <string name="onboarding_step_vehicle">Vehículo</string>
     <string name="onboarding_step_documents">Documentos</string>
     <string name="onboarding_step_review">Revisión</string>
+
+    <!-- Administración -->
+    <string name="admin_home_title">Verificación de conductores</string>
+    <string name="admin_home_subtitle">Conductores en espera de revisión</string>
+    <string name="admin_home_empty">No hay conductores pendientes de revisión.</string>
+    <string name="admin_home_load_error">No se pudieron cargar los conductores pendientes. Intenta de nuevo.</string>
+    <string name="admin_home_plate">Vehículo: %1$s · %2$s</string>
+    <string name="admin_review_back_button">Volver</string>
+    <string name="admin_review_view_document">Ver documento</string>
+    <string name="admin_review_approve">Aprobar</string>
+    <string name="admin_review_reject">Rechazar</string>
+    <string name="admin_review_reject_dialog_title">Rechazar documento</string>
+    <string name="admin_review_reject_dialog_hint">Motivo (visible para el conductor)</string>
+    <string name="admin_review_reject_dialog_confirm">Rechazar</string>
+    <string name="admin_review_reject_dialog_cancel">Cancelar</string>
+    <string name="admin_review_verify_button">Verificar conductor</string>
+    <string name="admin_review_verify_hint">El conductor podrá ser verificado cuando todos los documentos estén aprobados. Los documentos rechazados deben volver a subirse.</string>
+    <string name="admin_review_no_documents">Este conductor aún no ha subido documentos.</string>
+    <string name="admin_review_load_error">No se pudieron cargar los documentos. Intenta de nuevo.</string>
+    <string name="admin_review_action_error">No se pudo actualizar el documento. Intenta de nuevo.</string>
+    <string name="admin_review_verify_error">No se pudo verificar al conductor. Asegúrate de que todos los documentos estén aprobados e intenta de nuevo.</string>
 
     <!-- Accesibilidad -->
     <string name="cd_toggle_password_visibility">Mostrar u ocultar contraseña</string>

@@ -16,21 +16,34 @@ import com.juanpablo0612.tucargo.data.trip.TripRepositoryImpl
 import com.juanpablo0612.tucargo.domain.trip.TripTracker
 import com.juanpablo0612.tucargo.data.user.UserRepository
 import com.juanpablo0612.tucargo.data.user.UserRepositoryImpl
+import com.juanpablo0612.tucargo.domain.usecase.AcceptTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.AdvanceTripStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.CalculateTripPriceUseCase
+import com.juanpablo0612.tucargo.domain.usecase.CancelTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.CreateTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetDriverTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetDriverOnboardingStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.GetPendingDriversUseCase
 import com.juanpablo0612.tucargo.domain.usecase.IsUserLoggedInUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterVehicleUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ReviewKycDocumentUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
+import com.juanpablo0612.tucargo.domain.usecase.SetDriverVerifiedUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.UploadKycDocumentUseCase
+import com.juanpablo0612.tucargo.features.admin.home.AdminHomeViewModel
+import com.juanpablo0612.tucargo.features.admin.review.AdminDriverReviewViewModel
 import com.juanpablo0612.tucargo.domain.usecase.UploadDocumentsUseCase
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentViewModel
@@ -40,8 +53,12 @@ import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.register.RegisterViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.resetpassword.ResetPasswordViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegistrationViewModel
+import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripViewModel
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeViewModel
+import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveViewModel
+import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailViewModel
+import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
@@ -50,6 +67,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.KoinAppDeclaration
@@ -85,7 +103,14 @@ val domainModule = module {
     singleOf(::UpdateDriverStatusUseCase)
     singleOf(::ObserveDriverActiveTripsUseCase)
     singleOf(::GetClientTripsUseCase)
+    singleOf(::GetDriverTripsUseCase)
     singleOf(::CreateTripUseCase)
+    singleOf(::CalculateTripPriceUseCase)
+    singleOf(::ObserveTripUseCase)
+    singleOf(::ObserveAvailableTripsUseCase)
+    singleOf(::AcceptTripUseCase)
+    singleOf(::AdvanceTripStatusUseCase)
+    singleOf(::CancelTripUseCase)
     singleOf(::UploadDocumentsUseCase)
 
     singleOf(::LogoutUseCase)
@@ -94,6 +119,12 @@ val domainModule = module {
     singleOf(::RegisterVehicleUseCase)
     singleOf(::GetDriverOnboardingStatusUseCase)
     singleOf(::ObserveCurrentUserUseCase)
+    singleOf(::UploadKycDocumentUseCase)
+    singleOf(::ObserveKycDocumentsUseCase)
+
+    singleOf(::GetPendingDriversUseCase)
+    singleOf(::ReviewKycDocumentUseCase)
+    singleOf(::SetDriverVerifiedUseCase)
 }
 
 val viewModelModule = module {
@@ -101,12 +132,18 @@ val viewModelModule = module {
     viewModelOf(::RegisterViewModel)
     viewModelOf(::DocumentViewModel)
     viewModelOf(::ClientHomeViewModel)
+    viewModelOf(::CreateTripViewModel)
     viewModelOf(::DriverHomeViewModel)
     viewModelOf(::ResetPasswordViewModel)
     viewModelOf(::AuthViewModel)
     viewModelOf(::VehicleRegistrationViewModel)
     viewModelOf(::DriverDocsUploadViewModel)
     viewModelOf(::KycPendingViewModel)
+    viewModelOf(::TripHistoryViewModel)
+    viewModel { (tripId: String) -> TripDetailViewModel(tripId, get(), get(), get()) }
+    viewModel { (tripId: String) -> TripActiveViewModel(tripId, get(), get()) }
+    viewModelOf(::AdminHomeViewModel)
+    viewModel { (driverId: String) -> AdminDriverReviewViewModel(driverId, get(), get(), get()) }
 }
 
 val appModule = module {

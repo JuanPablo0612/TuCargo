@@ -4,4 +4,8 @@ sealed interface DriverHomeError {
     data object LoadDriverError : DriverHomeError
     data object ToggleAvailabilityError : DriverHomeError
     data object TrackingError : DriverHomeError
+    data object LocationPermissionDenied : DriverHomeError
+    data object AvailableTripsError : DriverHomeError
+    data object AcceptTripError : DriverHomeError
+    data object TripAlreadyTaken : DriverHomeError
 }

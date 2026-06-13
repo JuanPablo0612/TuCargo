@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.data.trip
 
 import com.juanpablo0612.tucargo.core.coroutines.AppDispatchers
 import com.juanpablo0612.tucargo.data.common.safeCall
+import com.juanpablo0612.tucargo.domain.model.AppError
 import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.domain.model.TripStatus
 import dev.gitlive.firebase.firestore.Direction
@@ -12,7 +13,7 @@ import kotlinx.coroutines.withContext
 import kotlin.time.Clock
 
 class TripRepositoryImpl(
-    firestore: FirebaseFirestore,
+    private val firestore: FirebaseFirestore,
     private val dispatchers: AppDispatchers
 ) : TripRepository {
 
@@ -30,25 +31,81 @@ class TripRepositoryImpl(
         }
     }
 
+    override suspend fun getDriverTrips(driverId: String, limit: Int): Result<List<Trip>> = safeCall {
+        withContext(dispatchers.io) {
+            tripsCollection
+                .where { "driver_id" equalTo driverId }
+                .orderBy("created_at", Direction.DESCENDING)
+                .limit(limit)
+                .get()
+                .documents
+                .map { it.data<TripDto>().toDomain() }
+        }
+    }
+
     override suspend fun createTrip(trip: Trip): Result<String> = safeCall {
         withContext(dispatchers.io) {
             val doc = tripsCollection.document
             val id = doc.id
-            doc.set(trip.copy(id = id).toDto())
+            doc.set(
+                trip.copy(
+                    id = id,
+                    createdAt = Clock.System.now().toEpochMilliseconds()
+                ).toDto()
+            )
             id
         }
     }
 
-    override suspend fun updateTripStatus(tripId: String, status: TripStatus): Result<Unit> = safeCall {
+    override suspend fun updateTripStatus(
+        tripId: String,
+        from: TripStatus,
+        to: TripStatus
+    ): Result<Unit> = safeCall {
         withContext(dispatchers.io) {
-            tripsCollection.document(tripId).update(
-                mapOf(
-                    "status" to status.name,
-                    "completed_at" to if (status == TripStatus.COMPLETED)
-                        Clock.System.now().toEpochMilliseconds()
-                    else null,
+            val docRef = tripsCollection.document(tripId)
+            firestore.runTransaction {
+                val dto = get(docRef).data<TripDto>()
+                if (dto.status != from.name) throw AppError.Trip.InvalidTransition
+                if (to == TripStatus.COMPLETED) {
+                    update(
+                        docRef,
+                        "status" to to.name,
+                        "completed_at" to Clock.System.now().toEpochMilliseconds()
+                    )
+                } else {
+                    update(docRef, "status" to to.name)
+                }
+            }
+            Unit
+        }
+    }
+
+    override suspend fun acceptTrip(
+        tripId: String,
+        driverId: String,
+        driverName: String,
+        driverPlate: String
+    ): Result<Unit> = safeCall {
+        withContext(dispatchers.io) {
+            val docRef = tripsCollection.document(tripId)
+            // The transaction handles contention cleanly client-side; the
+            // Firestore rules are the actual enforcement (only
+            // SEARCHING -> ASSIGNED with driver_id == auth.uid is allowed).
+            firestore.runTransaction {
+                val dto = get(docRef).data<TripDto>()
+                if (dto.status != TripStatus.SEARCHING.name || dto.driverId != null) {
+                    throw AppError.Trip.AlreadyTaken
+                }
+                update(
+                    docRef,
+                    "status" to TripStatus.ASSIGNED.name,
+                    "driver_id" to driverId,
+                    "driver_name" to driverName,
+                    "driver_plate" to driverPlate
                 )
-            )
+            }
+            Unit
         }
     }
 
@@ -70,6 +127,10 @@ class TripRepositoryImpl(
         }
     }
 
+    override fun observeTrip(tripId: String): Flow<Trip> =
+        tripsCollection.document(tripId).snapshots
+            .map { it.data<TripDto>().toDomain() }
+
     override fun observeDriverActiveTrips(driverId: String): Flow<List<Trip>> =
         tripsCollection
             .where { "driver_id" equalTo driverId }
@@ -83,5 +144,15 @@ class TripRepositoryImpl(
                         TripStatus.ARRIVED_PICKUP,
                         TripStatus.IN_PROGRESS
                     )}
+            }
+
+    override fun observeAvailableTrips(limit: Int): Flow<List<Trip>> =
+        tripsCollection
+            .where { "status" equalTo TripStatus.SEARCHING.name }
+            .orderBy("created_at", Direction.DESCENDING)
+            .limit(limit)
+            .snapshots
+            .map { querySnapshot ->
+                querySnapshot.documents.map { it.data<TripDto>().toDomain() }
             }
 }

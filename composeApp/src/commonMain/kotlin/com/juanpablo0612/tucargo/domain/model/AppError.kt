@@ -7,6 +7,17 @@ sealed class AppError(message: String? = null, cause: Throwable? = null) : Excep
         data object WeakPassword : Auth()
         data object NotAuthenticated : Auth()
     }
+    sealed class Validation : AppError() {
+        data object FileTooLarge : Validation()
+        data object InvalidTrip : Validation()
+        data object KycIncomplete : Validation()
+    }
+    sealed class Trip : AppError() {
+        data object AlreadyTaken : Trip()
+        data object InvalidTransition : Trip()
+        data object DriverNotVerified : Trip()
+    }
+    data class DataCorruption(override val message: String) : AppError(message)
     data object Network : AppError()
     data class Unknown(override val cause: Throwable?) : AppError(cause?.message, cause)
 }

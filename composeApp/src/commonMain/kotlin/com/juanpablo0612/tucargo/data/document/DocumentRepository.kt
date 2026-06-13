@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.data.document
 
 import com.juanpablo0612.tucargo.domain.model.KycDocument
 import com.juanpablo0612.tucargo.domain.model.KycDocumentType
+import com.juanpablo0612.tucargo.domain.model.KycStatus
 import kotlinx.coroutines.flow.Flow
 
 interface DocumentRepository {
@@ -20,4 +21,12 @@ interface DocumentRepository {
     suspend fun getDocumentsForUser(userId: String): Result<List<KycDocument>>
 
     fun observeDocumentsForUser(userId: String): Flow<List<KycDocument>>
+
+    // Admin-only (enforced by the Firestore rules).
+    suspend fun updateDocumentStatus(
+        userId: String,
+        type: KycDocumentType,
+        status: KycStatus,
+        rejectionReason: String?
+    ): Result<Unit>
 }

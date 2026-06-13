@@ -23,6 +23,19 @@ class UserRemoteDataSource(private val firestore: FirebaseFirestore) {
         usersCollection.document(uid).update(fields)
     }
 
+    // Admin-only operations; the Firestore rules reject them for other roles.
+    suspend fun getPendingDrivers(): List<UserDto> =
+        usersCollection
+            .where { "role" equalTo "DRIVER" }
+            .where { "is_verified" equalTo false }
+            .get()
+            .documents
+            .map { it.data<UserDto>() }
+
+    suspend fun setDriverVerified(uid: String, verified: Boolean) {
+        usersCollection.document(uid).update(mapOf("is_verified" to verified))
+    }
+
     fun observeUser(uid: String): Flow<UserDto?> =
         usersCollection.document(uid).snapshots.map { snap ->
             runCatching { snap.data<UserDto>() }.getOrNull()

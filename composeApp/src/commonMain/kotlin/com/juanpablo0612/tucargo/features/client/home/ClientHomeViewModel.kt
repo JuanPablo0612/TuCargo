@@ -31,7 +31,6 @@ class ClientHomeViewModel(
         when (action) {
             ClientHomeAction.LoadData -> loadData()
             ClientHomeAction.RefreshTrips -> loadRecentTrips()
-            ClientHomeAction.NewTrip -> {}
             ClientHomeAction.SignOut -> viewModelScope.launch { logoutUseCase() }
             is ClientHomeAction.OnLocationUpdated -> _uiState.update {
                 it.copy(userLatitude = action.latitude, userLongitude = action.longitude)

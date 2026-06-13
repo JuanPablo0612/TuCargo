@@ -15,12 +15,20 @@ data class TripDto(
     // Actores
     @SerialName("client_id")
     val clientId: String = "",
+    @SerialName("client_name")
+    val clientName: String = "",
+    @SerialName("client_phone")
+    val clientPhone: String = "",
     @SerialName("driver_id")
     val driverId: String? = null,
     @SerialName("driver_name")
     val driverName: String = "",
     @SerialName("driver_plate")
     val driverPlate: String = "",
+    @SerialName("driver_last_lat")
+    val driverLastLat: Double? = null,
+    @SerialName("driver_last_lng")
+    val driverLastLng: Double? = null,
 
     // Economía
     @SerialName("price_total")

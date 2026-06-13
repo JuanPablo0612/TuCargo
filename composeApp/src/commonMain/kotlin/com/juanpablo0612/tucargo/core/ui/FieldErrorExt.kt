@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import com.juanpablo0612.tucargo.core.validation.FieldError
 import org.jetbrains.compose.resources.stringResource
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.validation_address_required
+import tucargo.composeapp.generated.resources.validation_cargo_description_required
 import tucargo.composeapp.generated.resources.validation_document_required
 import tucargo.composeapp.generated.resources.validation_email_invalid
 import tucargo.composeapp.generated.resources.validation_email_required
@@ -40,5 +42,7 @@ fun FieldError.asString(): String = when (this) {
     FieldError.VehicleColorRequired -> stringResource(Res.string.validation_vehicle_color_required)
     FieldError.VehicleYearRequired -> stringResource(Res.string.validation_vehicle_year_required)
     FieldError.VehicleYearInvalid -> stringResource(Res.string.validation_vehicle_year_invalid)
+    FieldError.AddressRequired -> stringResource(Res.string.validation_address_required)
+    FieldError.CargoDescriptionRequired -> stringResource(Res.string.validation_cargo_description_required)
     is FieldError.DocumentRequired -> stringResource(Res.string.validation_document_required)
 }

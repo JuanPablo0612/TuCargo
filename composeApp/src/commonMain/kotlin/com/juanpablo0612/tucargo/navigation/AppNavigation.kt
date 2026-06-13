@@ -20,6 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.juanpablo0612.tucargo.domain.model.DriverOnboardingStatus
 import com.juanpablo0612.tucargo.domain.model.UserRole
+import com.juanpablo0612.tucargo.features.admin.home.AdminHomeScreen
+import com.juanpablo0612.tucargo.features.admin.review.AdminDriverReviewScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.KycPendingScreen
@@ -28,11 +30,12 @@ import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.register.RegisterScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.resetpassword.ResetPasswordScreen
 import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegistrationScreen
+import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripScreen
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeScreen
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.TripActiveScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.TripDetailScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.TripHistoryScreen
+import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveScreen
+import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailScreen
+import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryScreen
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -46,9 +49,12 @@ import org.koin.compose.viewmodel.koinViewModel
     @Serializable data object DriverOnboardingDocuments : Route()
     @Serializable data object ClientHome : Route()
     @Serializable data object DriverHome : Route()
+    @Serializable data object CreateTrip : Route()
     @Serializable data object TripHistory : Route()
     @Serializable data class TripActive(val tripId: String) : Route()
     @Serializable data class TripDetail(val tripId: String) : Route()
+    @Serializable data object AdminHome : Route()
+    @Serializable data class AdminDriverReview(val driverId: String, val driverName: String) : Route()
 }
 
 @Composable
@@ -82,6 +88,7 @@ fun AppNavigation() {
 
     val startDestination: Route = when (val s = authState) {
         is AuthViewModel.AuthState.Authenticated -> when {
+            s.user.role == UserRole.ADMIN -> Route.AdminHome
             s.user.role == UserRole.CLIENT -> Route.ClientHome
             s.user.isVerified -> Route.DriverHome
             else -> driverOnboardingRoute(s.driverOnboardingStatus)
@@ -97,9 +104,21 @@ fun AppNavigation() {
 
         composable<Route.ClientHome> {
             ClientHomeScreen(
+                onNewTrip = { navController.navigate(Route.CreateTrip) },
                 onSignOut = { authViewModel.logout() },
                 onTripClick = { tripId -> navController.navigate(Route.TripDetail(tripId)) },
                 onViewAllClick = { navController.navigate(Route.TripHistory) },
+            )
+        }
+
+        composable<Route.CreateTrip> {
+            CreateTripScreen(
+                onTripCreated = { tripId ->
+                    navController.navigate(Route.TripDetail(tripId)) {
+                        popUpTo<Route.CreateTrip> { inclusive = true }
+                    }
+                },
+                onBackClick = { navController.popBackStack() },
             )
         }
 
@@ -107,21 +126,31 @@ fun AppNavigation() {
             DriverHomeScreen(
                 onSignOut = { authViewModel.logout() },
                 onTripClick = { tripId -> navController.navigate(Route.TripActive(tripId)) },
+                onHistoryClick = { navController.navigate(Route.TripHistory) },
             )
         }
 
         composable<Route.TripHistory> {
-            TripHistoryScreen()
+            TripHistoryScreen(
+                onTripClick = { tripId -> navController.navigate(Route.TripDetail(tripId)) },
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Route.TripActive> { backStackEntry ->
             val route: Route.TripActive = backStackEntry.toRoute()
-            TripActiveScreen(tripId = route.tripId)
+            TripActiveScreen(
+                tripId = route.tripId,
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Route.TripDetail> { backStackEntry ->
             val route: Route.TripDetail = backStackEntry.toRoute()
-            TripDetailScreen(tripId = route.tripId)
+            TripDetailScreen(
+                tripId = route.tripId,
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Route.DriverOnboardingVehicle> {
@@ -156,6 +185,22 @@ fun AppNavigation() {
             )
         }
 
+        composable<Route.AdminHome> {
+            AdminHomeScreen(
+                onDriverClick = { driverId, driverName ->
+                    navController.navigate(Route.AdminDriverReview(driverId, driverName))
+                },
+                onSignOut = { authViewModel.logout() },
+            )
+        }
+
+        composable<Route.AdminDriverReview> { backStackEntry ->
+            val route: Route.AdminDriverReview = backStackEntry.toRoute()
+            AdminDriverReviewScreen(
+                driverId = route.driverId,
+                driverName = route.driverName,
+                onVerified = { navController.popBackStack() },
+                onBackClick = { navController.popBackStack() },
         composable<Route.KycUpload> {
             DocumentScreen(
                 onSuccessNavigate = {
@@ -181,7 +226,11 @@ private fun NavGraphBuilder.authNavGraph(navController: NavController) {
         LoginScreen(
             onForgotPasswordClick = { navController.navigate(Route.ResetPassword) },
             onLoginSuccess = { role ->
-                val home = if (role == UserRole.DRIVER) Route.DriverOnboardingVehicle else Route.ClientHome
+                val home = when (role) {
+                    UserRole.ADMIN -> Route.AdminHome
+                    UserRole.DRIVER -> Route.DriverOnboardingVehicle
+                    UserRole.CLIENT -> Route.ClientHome
+                }
                 navController.navigate(home) {
                     popUpTo(0) { inclusive = true }
                 }

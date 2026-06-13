@@ -93,6 +93,91 @@
     <string name="driver_home_load_error">Could not load driver data. Please try again.</string>
     <string name="driver_home_availability_error">Connection error. Could not update your availability.</string>
     <string name="driver_home_tracking_error">Error updating your location. Please check your GPS.</string>
+    <string name="driver_home_location_permission_denied">Location permission is required to share your position during trips. Enable it in system settings.</string>
+    <string name="driver_home_available_trips_title">Available trips</string>
+    <string name="driver_home_no_available_trips">No trips nearby right now. We\'ll keep looking.</string>
+    <string name="driver_home_accept_button">Accept</string>
+    <string name="driver_home_accept_error">Could not accept the trip. Please try again.</string>
+    <string name="driver_home_trip_taken_error">Another driver took this trip.</string>
+    <string name="driver_home_available_trips_error">Could not load available trips.</string>
+    <string name="driver_home_trip_distance">%1$s km</string>
+    <string name="driver_home_history_desc">Trip history</string>
+
+    <!-- Trip detail (client view) -->
+    <string name="trip_detail_title">Shipment detail</string>
+    <string name="trip_detail_back_button">Go back</string>
+    <string name="trip_detail_driver_section">Driver</string>
+    <string name="trip_detail_driver_pending">We are looking for a driver for your shipment…</string>
+    <string name="trip_detail_plate_label">Plate</string>
+    <string name="trip_detail_origin_label">Pickup</string>
+    <string name="trip_detail_destination_label">Delivery</string>
+    <string name="trip_detail_cargo_label">Cargo</string>
+    <string name="trip_detail_price_label">Price</string>
+    <string name="trip_detail_delivery_code_title">Delivery code</string>
+    <string name="trip_detail_delivery_code_hint">Share this code only with the recipient. The driver needs it to complete the delivery.</string>
+    <string name="trip_detail_cancel_button">Cancel shipment</string>
+    <string name="trip_detail_cancel_confirm_title">Cancel shipment?</string>
+    <string name="trip_detail_cancel_confirm_message">This cannot be undone. The driver will be notified.</string>
+    <string name="trip_detail_cancel_confirm_yes">Yes, cancel</string>
+    <string name="trip_detail_cancel_confirm_no">Keep shipment</string>
+    <string name="trip_detail_load_error">Could not load the shipment. Please try again.</string>
+    <string name="trip_detail_cancel_error">Could not cancel the shipment. Please try again.</string>
+
+    <!-- Trip active (driver view) -->
+    <string name="trip_active_title">Active trip</string>
+    <string name="trip_active_back_button">Go back</string>
+    <string name="trip_active_client_section">Client</string>
+    <string name="trip_active_phone_label">Phone: %1$s</string>
+    <string name="trip_active_origin_label">Pickup</string>
+    <string name="trip_active_destination_label">Delivery</string>
+    <string name="trip_active_cargo_section">Cargo</string>
+    <string name="trip_active_action_start">Start trip</string>
+    <string name="trip_active_action_arrived">I arrived at pickup</string>
+    <string name="trip_active_action_pickup">Cargo picked up — start delivery</string>
+    <string name="trip_active_action_complete">Complete delivery</string>
+    <string name="trip_active_complete_dialog_title">Complete delivery</string>
+    <string name="trip_active_complete_dialog_message">Ask the recipient for the delivery code to confirm the handover.</string>
+    <string name="trip_active_complete_dialog_hint">Delivery code</string>
+    <string name="trip_active_complete_dialog_confirm">Confirm</string>
+    <string name="trip_active_complete_dialog_cancel">Cancel</string>
+    <string name="trip_active_invalid_code_error">The delivery code is not correct. Ask the recipient and try again.</string>
+    <string name="trip_active_update_error">Could not update the trip. Please try again.</string>
+    <string name="trip_active_load_error">Could not load the trip. Please try again.</string>
+
+    <!-- Trip history -->
+    <string name="trip_history_title">Trip history</string>
+    <string name="trip_history_back_button">Go back</string>
+    <string name="trip_history_empty">No trips yet. They will show up here.</string>
+    <string name="trip_history_load_error">Could not load your trips. Please try again.</string>
+
+    <!-- Create trip -->
+    <string name="create_trip_title">New shipment</string>
+    <string name="create_trip_back_button">Go back</string>
+    <string name="create_trip_step_origin">Origin</string>
+    <string name="create_trip_step_destination">Destination</string>
+    <string name="create_trip_step_details">Details</string>
+    <string name="create_trip_origin_label">Pickup address</string>
+    <string name="create_trip_origin_placeholder">e.g. Cra 7 # 12-34</string>
+    <string name="create_trip_destination_label">Delivery address</string>
+    <string name="create_trip_destination_placeholder">e.g. Cl 100 # 8-20</string>
+    <string name="create_trip_map_hint">Tap the map to drop the pin at the exact spot</string>
+    <string name="create_trip_pin_required">Select the location on the map</string>
+    <string name="create_trip_cargo_label">What are you sending?</string>
+    <string name="create_trip_cargo_placeholder">e.g. Box of spare parts, 5 kg</string>
+    <string name="create_trip_quote_title">Estimated price</string>
+    <string name="create_trip_quote_distance">Distance: %1$s km</string>
+    <string name="create_trip_quote_base">Base fare</string>
+    <string name="create_trip_quote_per_distance">Distance charge</string>
+    <string name="create_trip_quote_total">Total</string>
+    <string name="create_trip_payment_title">Payment method</string>
+    <string name="create_trip_payment_cash">Cash</string>
+    <string name="create_trip_payment_wallet">Wallet (coming soon)</string>
+    <string name="create_trip_next_button">Continue</string>
+    <string name="create_trip_submit_button">Request shipment</string>
+    <string name="create_trip_quote_error">Could not calculate the price. Check your connection and try again.</string>
+    <string name="create_trip_submit_error">Could not create the shipment. Please try again.</string>
+    <string name="create_trip_invalid_error">Check the shipment details and try again.</string>
+    <string name="create_trip_user_not_authenticated">Your session has expired. Please log in again.</string>
 
     <!-- Trip status -->
     <string name="trip_status_searching">Searching for driver</string>
@@ -105,7 +190,7 @@
 
     <!-- Map -->
     <string name="map_your_location">Your location</string>
-    <string name="map_not_available_ios">Map not available on iOS simulator</string>
+    <string name="map_not_available_ios">Map not available on this device yet</string>
 
     <!-- Global errors -->
     <string name="network_error">Network error. Check your connection and try again.</string>
@@ -129,6 +214,8 @@
     <string name="validation_vehicle_year_required">Please enter the vehicle year</string>
     <string name="validation_vehicle_year_invalid">Enter a valid year (1990–2030)</string>
     <string name="validation_document_required">Please upload this document</string>
+    <string name="validation_address_required">Please enter the address</string>
+    <string name="validation_cargo_description_required">Please describe what you are sending</string>
 
     <!-- Vehicle Registration -->
     <string name="vehicle_reg_title">Vehicle registration</string>
@@ -181,6 +268,27 @@
     <string name="onboarding_step_vehicle">Vehicle</string>
     <string name="onboarding_step_documents">Documents</string>
     <string name="onboarding_step_review">Review</string>
+
+    <!-- Admin -->
+    <string name="admin_home_title">Driver verification</string>
+    <string name="admin_home_subtitle">Drivers waiting for review</string>
+    <string name="admin_home_empty">No drivers pending review.</string>
+    <string name="admin_home_load_error">Could not load pending drivers. Please try again.</string>
+    <string name="admin_home_plate">Vehicle: %1$s · %2$s</string>
+    <string name="admin_review_back_button">Go back</string>
+    <string name="admin_review_view_document">View document</string>
+    <string name="admin_review_approve">Approve</string>
+    <string name="admin_review_reject">Reject</string>
+    <string name="admin_review_reject_dialog_title">Reject document</string>
+    <string name="admin_review_reject_dialog_hint">Reason (visible to the driver)</string>
+    <string name="admin_review_reject_dialog_confirm">Reject</string>
+    <string name="admin_review_reject_dialog_cancel">Cancel</string>
+    <string name="admin_review_verify_button">Verify driver</string>
+    <string name="admin_review_verify_hint">The driver can be verified once all documents are approved. Rejected documents must be re-uploaded by the driver.</string>
+    <string name="admin_review_no_documents">This driver has not uploaded documents yet.</string>
+    <string name="admin_review_load_error">Could not load the documents. Please try again.</string>
+    <string name="admin_review_action_error">Could not update the document. Please try again.</string>
+    <string name="admin_review_verify_error">Could not verify the driver. Make sure all documents are approved and try again.</string>
 
     <!-- Accessibility -->
     <string name="cd_toggle_password_visibility">Show or hide password</string>

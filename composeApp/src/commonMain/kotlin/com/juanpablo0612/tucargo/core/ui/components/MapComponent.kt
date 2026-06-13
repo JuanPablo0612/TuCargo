@@ -8,5 +8,6 @@ expect fun MapComponent(
     modifier: Modifier = Modifier,
     latitude: Double,
     longitude: Double,
-    zoom: Float = 15f
+    zoom: Float = 15f,
+    onMapClick: ((latitude: Double, longitude: Double) -> Unit)? = null
 )

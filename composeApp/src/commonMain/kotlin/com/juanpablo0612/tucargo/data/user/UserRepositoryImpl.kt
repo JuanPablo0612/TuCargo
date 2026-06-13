@@ -58,4 +58,16 @@ class UserRepositoryImpl(
         val uid = auth.currentUser?.uid ?: return flowOf(null)
         return userRemoteDataSource.observeUser(uid).map { it?.toDomain() }
     }
+
+    override suspend fun getPendingDrivers(): Result<List<User>> = safeCall {
+        withContext(dispatchers.io) {
+            userRemoteDataSource.getPendingDrivers().map { it.toDomain() }
+        }
+    }
+
+    override suspend fun setDriverVerified(userId: String, verified: Boolean): Result<Unit> = safeCall {
+        withContext(dispatchers.io) {
+            userRemoteDataSource.setDriverVerified(userId, verified)
+        }
+    }
 }

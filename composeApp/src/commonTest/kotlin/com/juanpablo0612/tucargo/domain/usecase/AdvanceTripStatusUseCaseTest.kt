@@ -1,0 +1,40 @@
+package com.juanpablo0612.tucargo.domain.usecase
+
+import com.juanpablo0612.tucargo.domain.model.AppError
+import com.juanpablo0612.tucargo.domain.model.Trip
+import com.juanpablo0612.tucargo.domain.model.TripStatus
+import com.juanpablo0612.tucargo.testutil.FakeTripRepository
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+
+class AdvanceTripStatusUseCaseTest {
+
+    private val tripRepository = FakeTripRepository()
+    private val useCase = AdvanceTripStatusUseCase(tripRepository)
+
+    @Test
+    fun illegalTransition_failsWithoutRepositoryCall() = runTest {
+        val trip = Trip(id = "t1", status = TripStatus.SEARCHING)
+
+        val result = useCase(trip, TripStatus.COMPLETED)
+
+        assertTrue(result.exceptionOrNull() is AppError.Trip.InvalidTransition)
+        assertNull(tripRepository.lastStatusUpdate)
+    }
+
+    @Test
+    fun legalTransition_callsRepositoryWithExpectedStatuses() = runTest {
+        val trip = Trip(id = "t1", status = TripStatus.ASSIGNED)
+
+        val result = useCase(trip, TripStatus.ON_WAY)
+
+        assertTrue(result.isSuccess)
+        assertEquals(
+            Triple("t1", TripStatus.ASSIGNED, TripStatus.ON_WAY),
+            tripRepository.lastStatusUpdate
+        )
+    }
+}
