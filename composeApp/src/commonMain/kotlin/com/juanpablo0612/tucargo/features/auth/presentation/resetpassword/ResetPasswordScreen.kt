@@ -68,7 +68,7 @@ fun ResetPasswordScreen(
     ResetPasswordScreenContent(
         uiState = uiState,
         emailState = viewModel.emailState,
-        onSubmit = viewModel::onSubmit,
+        onSubmit = { viewModel.onAction(ResetPasswordAction.Submit) },
         onBackClick = onBackClick,
     )
 }

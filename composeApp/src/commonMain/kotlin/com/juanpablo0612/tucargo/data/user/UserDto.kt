@@ -1,6 +1,5 @@
 package com.juanpablo0612.tucargo.data.user
 
-import com.juanpablo0612.tucargo.data.document.KycDocumentDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -27,9 +26,7 @@ data class UserDto(
     val status: String = "ACTIVE",
     @SerialName("fcm_token")
     val fcmToken: String = "",
-    val vehicle: Vehicle? = null,
-    @SerialName("kyc_documents")
-    val kycDocuments: List<KycDocumentDto>? = null
+    val vehicle: Vehicle? = null
 )
 
 @Serializable
