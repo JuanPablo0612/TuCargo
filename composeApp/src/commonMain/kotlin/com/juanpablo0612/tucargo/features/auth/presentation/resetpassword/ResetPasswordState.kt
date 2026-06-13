@@ -10,8 +10,3 @@ data class ResetPasswordState(
     val emailError: FieldError? = null,
     val authError: ResetPasswordError? = null
 )
-
-sealed interface ResetPasswordError {
-    data object NetworkError : ResetPasswordError
-    data object UnknownError : ResetPasswordError
-}

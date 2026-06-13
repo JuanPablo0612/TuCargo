@@ -1,5 +1,7 @@
 package com.juanpablo0612.tucargo.core.logging
 
+import platform.Foundation.NSLog
+
 actual fun logError(tag: String, message: String) {
-    println("ERROR [$tag]: $message")
+    NSLog("ERROR [%@]: %@", tag, message)
 }

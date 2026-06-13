@@ -54,6 +54,24 @@ class DriverHomeViewModel(
         }
     }
 
+    private fun onLocationPermissionResult(granted: Boolean) {
+        _uiState.update {
+            it.copy(
+                hasLocationPermission = granted,
+                error = if (granted) it.error else DriverHomeError.LocationPermissionDenied
+            )
+        }
+        if (granted) {
+            trackableTripId(_uiState.value.activeTrips)?.let { tripId ->
+                tripTracker.startTracking(tripId)
+            }
+        }
+    }
+
+    private fun trackableTripId(trips: List<Trip>): String? = trips.firstOrNull {
+        it.status == TripStatus.IN_PROGRESS || it.status == TripStatus.ON_WAY || it.status == TripStatus.ARRIVED_PICKUP
+    }?.id
+
     private fun observeTrackerState() {
         tripTracker.state.onEach { state ->
             if (state is TrackingState.Error) {
@@ -67,11 +85,14 @@ class DriverHomeViewModel(
         observeDriverActiveTripsUseCase(userId)
             .onEach { trips ->
                 _uiState.update { it.copy(activeTrips = trips.toImmutableList()) }
-                val activeTrip = trips.firstOrNull {
-                    it.status == TripStatus.IN_PROGRESS || it.status == TripStatus.ON_WAY || it.status == TripStatus.ARRIVED_PICKUP
-                }
-                if (activeTrip != null) {
-                    tripTracker.startTracking(activeTrip.id)
+                val activeTripId = trackableTripId(trips)
+                if (activeTripId != null) {
+                    // Without the permission the provider flow fails
+                    // immediately; tracking starts later from
+                    // onLocationPermissionResult once it is granted.
+                    if (_uiState.value.hasLocationPermission) {
+                        tripTracker.startTracking(activeTripId)
+                    }
                 } else {
                     tripTracker.stopTracking()
                 }
