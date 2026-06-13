@@ -44,7 +44,9 @@ import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UploadKycDocumentUseCase
 import com.juanpablo0612.tucargo.features.admin.home.AdminHomeViewModel
 import com.juanpablo0612.tucargo.features.admin.review.AdminDriverReviewViewModel
+import com.juanpablo0612.tucargo.domain.usecase.UploadDocumentsUseCase
 import com.juanpablo0612.tucargo.features.auth.presentation.AuthViewModel
+import com.juanpablo0612.tucargo.features.auth.presentation.documents.DocumentViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.documents.KycPendingViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.driverdocs.DriverDocsUploadViewModel
 import com.juanpablo0612.tucargo.features.auth.presentation.login.LoginViewModel
@@ -109,6 +111,7 @@ val domainModule = module {
     singleOf(::AcceptTripUseCase)
     singleOf(::AdvanceTripStatusUseCase)
     singleOf(::CancelTripUseCase)
+    singleOf(::UploadDocumentsUseCase)
 
     singleOf(::LogoutUseCase)
     singleOf(::SendPasswordResetEmailUseCase)
@@ -127,6 +130,7 @@ val domainModule = module {
 val viewModelModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
+    viewModelOf(::DocumentViewModel)
     viewModelOf(::ClientHomeViewModel)
     viewModelOf(::CreateTripViewModel)
     viewModelOf(::DriverHomeViewModel)

@@ -26,7 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +37,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.juanpablo0612.tucargo.core.permissions.rememberLocationPermissionRequester
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
 import com.juanpablo0612.tucargo.core.ui.components.TripStatusBadge
@@ -83,15 +81,6 @@ fun DriverHomeScreen(
     onHistoryClick: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-
-    val requestLocationPermission = rememberLocationPermissionRequester { granted ->
-        viewModel.onAction(DriverHomeAction.LocationPermissionResult(granted))
-    }
-    LaunchedEffect(state.isAvailable) {
-        if (state.isAvailable && !state.hasLocationPermission) {
-            requestLocationPermission()
-        }
-    }
 
     Scaffold(
         topBar = {

@@ -6,6 +6,12 @@ import com.juanpablo0612.tucargo.domain.model.KycStatus
 import kotlinx.coroutines.flow.Flow
 
 interface DocumentRepository {
+    suspend fun uploadDocuments(
+        userId: String,
+        frontBytes: ByteArray,
+        backBytes: ByteArray
+    ): Result<Unit>
+
     suspend fun uploadDocument(
         userId: String,
         type: KycDocumentType,

@@ -19,10 +19,12 @@ class UserRepositoryImpl(
 
     override suspend fun updateDriverStatus(userId: String, isOnline: Boolean): Result<Unit> = safeCall {
         withContext(dispatchers.io) {
-            userRemoteDataSource.updateOnlineStatus(
+            userRemoteDataSource.updateFields(
                 uid = userId,
-                isOnline = isOnline,
-                timestampMillis = Clock.System.now().toEpochMilliseconds()
+                fields = mapOf(
+                    "is_online" to isOnline,
+                    "last_status_update" to Clock.System.now().toEpochMilliseconds()
+                )
             )
         }
     }

@@ -9,6 +9,8 @@ import tucargo.composeapp.generated.resources.validation_cargo_description_requi
 import tucargo.composeapp.generated.resources.validation_document_required
 import tucargo.composeapp.generated.resources.validation_email_invalid
 import tucargo.composeapp.generated.resources.validation_email_required
+import tucargo.composeapp.generated.resources.validation_id_back_required
+import tucargo.composeapp.generated.resources.validation_id_front_required
 import tucargo.composeapp.generated.resources.validation_name_required
 import tucargo.composeapp.generated.resources.validation_password_required
 import tucargo.composeapp.generated.resources.validation_password_too_short
@@ -32,6 +34,8 @@ fun FieldError.asString(): String = when (this) {
     FieldError.NameRequired -> stringResource(Res.string.validation_name_required)
     FieldError.PhoneRequired -> stringResource(Res.string.validation_phone_required)
     FieldError.PhoneInvalid -> stringResource(Res.string.validation_phone_invalid)
+    FieldError.IdFrontRequired -> stringResource(Res.string.validation_id_front_required)
+    FieldError.IdBackRequired -> stringResource(Res.string.validation_id_back_required)
     FieldError.PlateRequired -> stringResource(Res.string.validation_plate_required)
     FieldError.PlateInvalid -> stringResource(Res.string.validation_plate_invalid)
     FieldError.VehicleModelRequired -> stringResource(Res.string.validation_vehicle_model_required)

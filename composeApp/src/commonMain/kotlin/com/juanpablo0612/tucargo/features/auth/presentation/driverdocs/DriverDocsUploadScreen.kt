@@ -45,7 +45,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.driver_docs_back_button
-import tucargo.composeapp.generated.resources.driver_docs_file_too_large
 import tucargo.composeapp.generated.resources.driver_docs_id_back
 import tucargo.composeapp.generated.resources.driver_docs_id_front
 import tucargo.composeapp.generated.resources.driver_docs_license
@@ -167,7 +166,6 @@ internal fun DriverDocsUploadScreenContent(
                     val msgRes = when (it) {
                         DriverDocsError.UserNotAuthenticated -> Res.string.driver_docs_user_not_authenticated
                         DriverDocsError.UploadError, DriverDocsError.SomeDocsFailed -> Res.string.driver_docs_upload_error
-                        DriverDocsError.FileTooLarge -> Res.string.driver_docs_file_too_large
                     }
                     ErrorCard(
                         message = stringResource(msgRes),
