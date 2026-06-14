@@ -46,6 +46,12 @@ interface TripRepository {
     /** Calls the rejectOffer Cloud Function. */
     suspend fun rejectOffer(tripId: String, offerId: String): Result<Unit>
 
+    /**
+     * Calls the completeTrip Cloud Function which validates the delivery code
+     * server-side, enforces attempt limits, and transitions to COMPLETED.
+     */
+    suspend fun completeTrip(tripId: String, deliveryCode: String): Result<Unit>
+
     suspend fun getTrip(tripId: String): Result<Trip>
     suspend fun updateDriverLocation(tripId: String, lat: Double, lng: Double): Result<Unit>
     fun observeTrip(tripId: String): Flow<Trip>

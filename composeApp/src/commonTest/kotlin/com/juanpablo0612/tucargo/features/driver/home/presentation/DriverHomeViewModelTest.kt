@@ -82,7 +82,7 @@ class DriverHomeViewModelTest {
     @Test
     fun trackingWaitsForLocationPermission() = runTest {
         tripRepository.activeTripsFlow.value =
-            listOf(Trip(id = "t1", status = TripStatus.ON_WAY))
+            listOf(Trip(id = "t1", status = TripStatus.AT_PICKUP))
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Without permission the tracker must not start (it used to crash

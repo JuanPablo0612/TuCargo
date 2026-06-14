@@ -20,19 +20,19 @@ class TripTransitionsTest {
         assertTrue(TripStatus.OFFERED.canTransitionTo(TripStatus.ACCEPTED))
         assertTrue(TripStatus.OFFERED.canTransitionTo(TripStatus.CANCELLED_CLIENT))
         assertTrue(TripStatus.OFFERED.canTransitionTo(TripStatus.CANCELLED_NO_DRIVER))
-        assertTrue(TripStatus.ACCEPTED.canTransitionTo(TripStatus.ON_WAY))
+        assertTrue(TripStatus.ACCEPTED.canTransitionTo(TripStatus.AT_PICKUP))
         assertTrue(TripStatus.ACCEPTED.canTransitionTo(TripStatus.CANCELLED_DRIVER))
-        assertTrue(TripStatus.ON_WAY.canTransitionTo(TripStatus.ARRIVED_PICKUP))
-        assertTrue(TripStatus.ARRIVED_PICKUP.canTransitionTo(TripStatus.IN_PROGRESS))
-        assertTrue(TripStatus.IN_PROGRESS.canTransitionTo(TripStatus.COMPLETED))
+        assertTrue(TripStatus.AT_PICKUP.canTransitionTo(TripStatus.IN_TRANSIT))
+        assertTrue(TripStatus.IN_TRANSIT.canTransitionTo(TripStatus.AT_DROPOFF))
+        assertTrue(TripStatus.AT_DROPOFF.canTransitionTo(TripStatus.COMPLETED))
     }
 
     @Test
     fun invalidTransitions_areRejected() {
-        assertFalse(TripStatus.REQUESTED.canTransitionTo(TripStatus.ON_WAY))
+        assertFalse(TripStatus.REQUESTED.canTransitionTo(TripStatus.AT_PICKUP))
         assertFalse(TripStatus.REQUESTED.canTransitionTo(TripStatus.COMPLETED))
-        assertFalse(TripStatus.ON_WAY.canTransitionTo(TripStatus.CANCELLED_CLIENT))
-        assertFalse(TripStatus.IN_PROGRESS.canTransitionTo(TripStatus.CANCELLED_CLIENT))
+        assertFalse(TripStatus.AT_PICKUP.canTransitionTo(TripStatus.CANCELLED_CLIENT))
+        assertFalse(TripStatus.AT_DROPOFF.canTransitionTo(TripStatus.CANCELLED_CLIENT))
         assertFalse(TripStatus.COMPLETED.canTransitionTo(TripStatus.REQUESTED))
         assertFalse(TripStatus.CANCELLED_CLIENT.canTransitionTo(TripStatus.ACCEPTED))
     }
@@ -48,10 +48,10 @@ class TripTransitionsTest {
 
     @Test
     fun nextDriverStatus_followsTheLifecycle() {
-        assertEquals(TripStatus.ON_WAY, TripStatus.ACCEPTED.nextDriverStatus())
-        assertEquals(TripStatus.ARRIVED_PICKUP, TripStatus.ON_WAY.nextDriverStatus())
-        assertEquals(TripStatus.IN_PROGRESS, TripStatus.ARRIVED_PICKUP.nextDriverStatus())
-        assertEquals(TripStatus.COMPLETED, TripStatus.IN_PROGRESS.nextDriverStatus())
+        assertEquals(TripStatus.AT_PICKUP, TripStatus.ACCEPTED.nextDriverStatus())
+        assertEquals(TripStatus.IN_TRANSIT, TripStatus.AT_PICKUP.nextDriverStatus())
+        assertEquals(TripStatus.AT_DROPOFF, TripStatus.IN_TRANSIT.nextDriverStatus())
+        assertEquals(TripStatus.COMPLETED, TripStatus.AT_DROPOFF.nextDriverStatus())
         assertEquals(null, TripStatus.REQUESTED.nextDriverStatus())
         assertEquals(null, TripStatus.COMPLETED.nextDriverStatus())
         assertEquals(null, TripStatus.CANCELLED_CLIENT.nextDriverStatus())

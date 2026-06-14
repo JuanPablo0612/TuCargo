@@ -27,12 +27,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -64,19 +66,31 @@ import tucargo.composeapp.generated.resources.trip_detail_delivery_code_title
 import tucargo.composeapp.generated.resources.trip_detail_destination_label
 import tucargo.composeapp.generated.resources.trip_detail_driver_pending
 import tucargo.composeapp.generated.resources.trip_detail_driver_section
+import tucargo.composeapp.generated.resources.trip_detail_driver_phone_label
 import tucargo.composeapp.generated.resources.trip_detail_load_error
 import tucargo.composeapp.generated.resources.trip_detail_origin_label
 import tucargo.composeapp.generated.resources.trip_detail_plate_label
 import tucargo.composeapp.generated.resources.trip_detail_price_label
+import tucargo.composeapp.generated.resources.trip_detail_status_accepted
+import tucargo.composeapp.generated.resources.trip_detail_status_at_dropoff
+import tucargo.composeapp.generated.resources.trip_detail_status_at_pickup
+import tucargo.composeapp.generated.resources.trip_detail_status_in_transit
 import tucargo.composeapp.generated.resources.trip_detail_title
 
 @Composable
 fun TripDetailScreen(
     tripId: String,
     onBackClick: () -> Unit,
+    onTripCompleted: () -> Unit = {},
 ) {
     val viewModel: TripDetailViewModel = koinViewModel { parametersOf(tripId) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState.trip?.status) {
+        if (uiState.trip?.status == TripStatus.COMPLETED) {
+            onTripCompleted()
+        }
+    }
 
     TripDetailScreenContent(
         uiState = uiState,
@@ -218,6 +232,36 @@ private fun TripDetailBody(
             )
         }
 
+        if (uiState.isClient) {
+            val statusText = when (trip.status) {
+                TripStatus.ACCEPTED -> stringResource(Res.string.trip_detail_status_accepted)
+                TripStatus.AT_PICKUP -> stringResource(Res.string.trip_detail_status_at_pickup)
+                TripStatus.IN_TRANSIT -> stringResource(Res.string.trip_detail_status_in_transit)
+                TripStatus.AT_DROPOFF -> stringResource(Res.string.trip_detail_status_at_dropoff)
+                else -> null
+            }
+            if (statusText != null) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.large,
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+                ) {
+                    Text(
+                        text = statusText,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+            }
+        }
+
+        val uriHandler = LocalUriHandler.current
         DetailSection(title = stringResource(Res.string.trip_detail_driver_section)) {
             if (trip.driverId == null) {
                 Text(
@@ -231,6 +275,18 @@ private fun TripDetailBody(
                     label = stringResource(Res.string.trip_detail_plate_label),
                     value = trip.driverPlate,
                 )
+                if (uiState.isClient && trip.driverPhone.isNotBlank()) {
+                    TextButton(
+                        onClick = { uriHandler.openUri("tel:${trip.driverPhone}") },
+                        modifier = Modifier.padding(0.dp),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.trip_detail_driver_phone_label, trip.driverPhone),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
             }
         }
 

@@ -95,15 +95,15 @@ service cloud.firestore {
 
       allow update: if
         // (1) The assigned driver advances the lifecycle one hop at a time.
+        // COMPLETED is intentionally excluded — it must go through the completeTrip Cloud Function.
         (resource.data.driver_id == request.auth.uid
-          && changedKeys().hasOnly(['status', 'completed_at'])
-          && ((resource.data.status == 'ACCEPTED'        && request.resource.data.status == 'ON_WAY')
-           || (resource.data.status == 'ON_WAY'          && request.resource.data.status == 'ARRIVED_PICKUP')
-           || (resource.data.status == 'ARRIVED_PICKUP'  && request.resource.data.status == 'IN_PROGRESS')
-           || (resource.data.status == 'IN_PROGRESS'     && request.resource.data.status == 'COMPLETED')))
+          && changedKeys().hasOnly(['status'])
+          && ((resource.data.status == 'ACCEPTED'   && request.resource.data.status == 'AT_PICKUP')
+           || (resource.data.status == 'AT_PICKUP'  && request.resource.data.status == 'IN_TRANSIT')
+           || (resource.data.status == 'IN_TRANSIT' && request.resource.data.status == 'AT_DROPOFF')))
         // (2) The assigned driver streams location while the trip is active.
         || (resource.data.driver_id == request.auth.uid
-          && resource.data.status in ['ACCEPTED', 'ON_WAY', 'ARRIVED_PICKUP', 'IN_PROGRESS']
+          && resource.data.status in ['ACCEPTED', 'AT_PICKUP', 'IN_TRANSIT', 'AT_DROPOFF']
           && changedKeys().hasOnly(['driver_last_lat', 'driver_last_lng', 'last_location_update']))
         // (3) The client may cancel before pickup.
         || (resource.data.client_id == request.auth.uid
@@ -127,6 +127,11 @@ service cloud.firestore {
       // Cloud Functions only.
       allow read: if false;
       allow write: if false;
+    }
+
+    match /audit_log/{docId} {
+      // Cloud Functions only — no direct client access.
+      allow read, write: if false;
     }
 
     match /config/{docId} {

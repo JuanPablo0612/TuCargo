@@ -8,5 +8,6 @@ data class TripActiveState(
     val isLoading: Boolean = true,
     val trip: Trip? = null,
     val isUpdating: Boolean = false,
-    val error: TripActiveError? = null
+    val error: TripActiveError? = null,
+    val showGeofenceDialog: Boolean = false,
 )

@@ -74,6 +74,7 @@ export const acceptOffer = onCall(
         driver_id: uid,
         driver_name: driver["full_name"] ?? "",
         driver_plate: driver["vehicle"]?.["plate"] ?? "",
+        driver_phone: driver["phone"] ?? "",
         accepted_at: admin.firestore.FieldValue.serverTimestamp(),
       });
       tx.update(driverRef, { availability: "ON_TRIP" });

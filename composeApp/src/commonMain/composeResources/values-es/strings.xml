@@ -105,12 +105,13 @@
     <string name="trip_detail_driver_section">Conductor</string>
     <string name="trip_detail_driver_pending">Estamos buscando un conductor para tu envío…</string>
     <string name="trip_detail_plate_label">Placa</string>
+    <string name="trip_detail_driver_phone_label">Llamar: %1$s</string>
     <string name="trip_detail_origin_label">Recogida</string>
     <string name="trip_detail_destination_label">Entrega</string>
     <string name="trip_detail_cargo_label">Carga</string>
     <string name="trip_detail_price_label">Precio</string>
     <string name="trip_detail_delivery_code_title">Código de entrega</string>
-    <string name="trip_detail_delivery_code_hint">Comparte este código solo con quien recibe. El conductor lo necesita para completar la entrega.</string>
+    <string name="trip_detail_delivery_code_hint">Comparte este código solo cuando recibas tu carga.</string>
     <string name="trip_detail_cancel_button">Cancelar envío</string>
     <string name="trip_detail_cancel_confirm_title">¿Cancelar envío?</string>
     <string name="trip_detail_cancel_confirm_message">Esta acción no se puede deshacer. El conductor será notificado.</string>
@@ -118,6 +119,22 @@
     <string name="trip_detail_cancel_confirm_no">Mantener envío</string>
     <string name="trip_detail_load_error">No se pudo cargar el envío. Intenta de nuevo.</string>
     <string name="trip_detail_cancel_error">No se pudo cancelar el envío. Intenta de nuevo.</string>
+    <!-- Estado activo del envío (barra de estado para el cliente) -->
+    <string name="trip_detail_status_accepted">Tu moto-carguero está en camino</string>
+    <string name="trip_detail_status_at_pickup">Tu moto-carguero llegó al origen</string>
+    <string name="trip_detail_status_in_transit">Tu envío está en tránsito</string>
+    <string name="trip_detail_status_at_dropoff">Tu moto-carguero llegó al destino</string>
+
+    <!-- Pantalla de viaje completado -->
+    <string name="trip_completed_title_driver">Viaje completado</string>
+    <string name="trip_completed_title_client">¡Entrega completada!</string>
+    <string name="trip_completed_earnings">Ganaste %1$s</string>
+    <string name="trip_completed_commission">Comisión plataforma: %1$s</string>
+    <string name="trip_completed_balance_placeholder">Balance actualizado (próximamente)</string>
+    <string name="trip_completed_rating_placeholder">Calificación (próximamente)</string>
+    <string name="trip_completed_rate_placeholder">Calificar conductor (próximamente)</string>
+    <string name="trip_completed_delivered_at">Entregado el %1$s</string>
+    <string name="trip_completed_home_button">Volver al inicio</string>
 
     <!-- Viaje activo (vista del conductor) -->
     <string name="trip_active_title">Viaje activo</string>
@@ -127,16 +144,20 @@
     <string name="trip_active_origin_label">Recogida</string>
     <string name="trip_active_destination_label">Entrega</string>
     <string name="trip_active_cargo_section">Carga</string>
+    <string name="trip_active_action_arrived_at_origin">Llegué al origen</string>
     <string name="trip_active_action_start">Iniciar viaje</string>
-    <string name="trip_active_action_arrived">Llegué al punto de recogida</string>
-    <string name="trip_active_action_pickup">Carga recogida — iniciar entrega</string>
-    <string name="trip_active_action_complete">Completar entrega</string>
-    <string name="trip_active_complete_dialog_title">Completar entrega</string>
-    <string name="trip_active_complete_dialog_message">Pide al destinatario el código de entrega para confirmar la recepción.</string>
-    <string name="trip_active_complete_dialog_hint">Código de entrega</string>
+    <string name="trip_active_action_arrived_at_destination">Llegué al destino</string>
+    <string name="trip_active_action_complete">Finalizar entrega</string>
+    <string name="trip_active_complete_dialog_title">Finalizar entrega</string>
+    <string name="trip_active_complete_dialog_message">Pide al destinatario el código de 4 dígitos para confirmar la recepción.</string>
     <string name="trip_active_complete_dialog_confirm">Confirmar</string>
     <string name="trip_active_complete_dialog_cancel">Cancelar</string>
-    <string name="trip_active_invalid_code_error">El código de entrega no es correcto. Pídelo al destinatario e intenta de nuevo.</string>
+    <string name="trip_active_code_invalid_attempts">Código incorrecto. Intentos restantes: %1$d</string>
+    <string name="trip_active_code_locked">El código está bloqueado. Contacta a soporte.</string>
+    <string name="trip_active_geofence_dialog_title">Lejos del origen</string>
+    <string name="trip_active_geofence_dialog_message">Estás a más de 50 metros del origen. ¿Confirmar de todas formas?</string>
+    <string name="trip_active_geofence_confirm">Confirmar</string>
+    <string name="trip_active_geofence_cancel">Cancelar</string>
     <string name="trip_active_update_error">No se pudo actualizar el viaje. Intenta de nuevo.</string>
     <string name="trip_active_load_error">No se pudo cargar el viaje. Intenta de nuevo.</string>
 
@@ -178,9 +199,9 @@
     <!-- Estado del viaje -->
     <string name="trip_status_searching">Buscando conductor</string>
     <string name="trip_status_assigned">Conductor asignado</string>
-    <string name="trip_status_on_way">En camino</string>
-    <string name="trip_status_arrived_pickup">Llegó al punto de recogida</string>
-    <string name="trip_status_in_progress">En progreso</string>
+    <string name="trip_status_at_pickup">En camino al origen</string>
+    <string name="trip_status_in_transit">En tránsito</string>
+    <string name="trip_status_at_dropoff">En el destino</string>
     <string name="trip_status_completed">Completado</string>
     <string name="trip_status_cancelled">Cancelado</string>
     <string name="trip_status_requested">Buscando conductor</string>

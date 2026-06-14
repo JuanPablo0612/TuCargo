@@ -157,7 +157,7 @@ class DriverHomeViewModel(
     }
 
     private fun trackableTripId(trips: List<Trip>): String? = trips.firstOrNull {
-        it.status == TripStatus.IN_PROGRESS || it.status == TripStatus.ON_WAY || it.status == TripStatus.ARRIVED_PICKUP
+        it.status == TripStatus.AT_DROPOFF || it.status == TripStatus.AT_PICKUP || it.status == TripStatus.IN_TRANSIT
     }?.id
 
     private fun observeTrackerState() {
