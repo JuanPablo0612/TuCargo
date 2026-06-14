@@ -40,7 +40,17 @@ class AndroidLocationProvider(private val context: Context) : LocationProvider {
         val callback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 result.lastLocation?.let {
-                    trySend(LocationUpdate(it.latitude, it.longitude, it.altitude, it.accuracy, it.time))
+                    trySend(
+                        LocationUpdate(
+                            latitude = it.latitude,
+                            longitude = it.longitude,
+                            altitude = it.altitude,
+                            accuracy = it.accuracy,
+                            timestamp = it.time,
+                            speedMs = if (it.hasSpeed()) it.speed else null,
+                            bearingDeg = if (it.hasBearing()) it.bearing else null
+                        )
+                    )
                 }
             }
         }

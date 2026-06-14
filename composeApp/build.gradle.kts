@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.buildKonfig)
+    alias(libs.plugins.ksp)
 }
 
 val secrets = Properties().apply {
@@ -53,6 +54,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.mapbox.maps.android)
             implementation(libs.firebase.messaging.native)
+            implementation(libs.room.runtime)
+            implementation(libs.room.ktx)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -79,6 +82,7 @@ kotlin {
             implementation(libs.materialIconsExtended)
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
+            implementation(libs.firebase.database)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -102,6 +106,7 @@ composeCompiler {
 
 dependencies {
     androidRuntimeClasspath(libs.ui.tooling)
+    add("kspAndroid", libs.room.compiler)
 }
 
 tasks.register("assembleDebug") {

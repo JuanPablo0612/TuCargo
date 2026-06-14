@@ -23,6 +23,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -40,6 +42,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.location.DriverLocation
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.MapComponent
 import com.juanpablo0612.tucargo.core.ui.components.TripStatusBadge
@@ -223,12 +226,29 @@ private fun TripDetailBody(
         }
 
         Card(shape = MaterialTheme.shapes.large) {
+            val driverLat = uiState.driverLocation?.lat ?: trip.driverLastLat ?: trip.origin.lat
+            val driverLng = uiState.driverLocation?.lng ?: trip.driverLastLng ?: trip.origin.lng
             MapComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(220.dp),
-                latitude = trip.driverLastLat ?: trip.origin.lat,
-                longitude = trip.driverLastLng ?: trip.origin.lng,
+                latitude = driverLat,
+                longitude = driverLng,
+                driverLocation = uiState.driverLocation,
+                originLatLng = trip.origin.lat to trip.origin.lng,
+                destinationLatLng = trip.destination.lat to trip.destination.lng,
+            )
+        }
+
+        if (uiState.isClient && uiState.etaMinutes != null &&
+            trip.status in listOf(TripStatus.ACCEPTED, TripStatus.AT_PICKUP, TripStatus.IN_TRANSIT, TripStatus.AT_DROPOFF)
+        ) {
+            SuggestionChip(
+                onClick = {},
+                label = { Text("~${uiState.etaMinutes} min") },
+                colors = SuggestionChipDefaults.suggestionChipColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
             )
         }
 

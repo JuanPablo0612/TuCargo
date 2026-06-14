@@ -12,3 +12,9 @@ actual fun rememberLocationPermissionRequester(onResult: (Boolean) -> Unit): () 
     val currentOnResult by rememberUpdatedState(onResult)
     return { currentOnResult(false) }
 }
+
+@Composable
+actual fun rememberBackgroundLocationPermissionRequester(onResult: (Boolean) -> Unit): () -> Unit {
+    val currentOnResult by rememberUpdatedState(onResult)
+    return { currentOnResult(true) }
+}

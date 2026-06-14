@@ -38,6 +38,8 @@ google-maps = "19.0.0"
 play-services-location = "21.3.0"
 buildKonfig = "0.21.0"
 filekit = "0.14.1"
+androidx-room = "2.7.1"
+ksp = "2.3.21-2.0.1"
 
 [libraries]
 runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "runtime" }
@@ -83,6 +85,10 @@ play-services-maps = { module = "com.google.android.gms:play-services-maps", ver
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
 filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
+firebase-database = { module = "dev.gitlive:firebase-database", version.ref = "firebase" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -93,3 +99,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 googleServices = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
