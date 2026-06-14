@@ -278,6 +278,7 @@
     <string name="admin_review_verify_hint">El conductor podrá ser verificado cuando todos los documentos estén aprobados. Los documentos rechazados deben volver a subirse.</string>
     <string name="admin_review_no_documents">Este conductor aún no ha subido documentos.</string>
     <string name="admin_review_load_error">No se pudieron cargar los documentos. Intenta de nuevo.</string>
+    <string name="admin_review_retry">Intentar de nuevo</string>
     <string name="admin_review_action_error">No se pudo actualizar el documento. Intenta de nuevo.</string>
     <string name="admin_review_verify_error">No se pudo verificar al conductor. Asegúrate de que todos los documentos estén aprobados e intenta de nuevo.</string>
 

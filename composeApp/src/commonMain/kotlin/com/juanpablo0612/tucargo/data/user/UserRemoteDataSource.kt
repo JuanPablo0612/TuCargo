@@ -8,8 +8,10 @@ class UserRemoteDataSource(private val firestore: FirebaseFirestore) {
 
     private val usersCollection get() = firestore.collection("users")
 
-    suspend fun getUser(uid: String): UserDto =
-        usersCollection.document(uid).get().data<UserDto>()
+    suspend fun getUser(uid: String): UserDto {
+        val snap = usersCollection.document(uid).get()
+        return snap.data<UserDto>().copy(id = snap.id)
+    }
 
     suspend fun createUser(uid: String, user: UserDto) {
         usersCollection.document(uid).set(user)
@@ -38,7 +40,10 @@ class UserRemoteDataSource(private val firestore: FirebaseFirestore) {
             .where { "is_verified" equalTo false }
             .get()
             .documents
-            .map { it.data<UserDto>() }
+            // Always populate id from the Firestore document ID so that
+            // downstream callers receive the correct UID even when the id
+            // field is missing or not decoded from the document data.
+            .map { snap -> snap.data<UserDto>().copy(id = snap.id) }
 
     suspend fun setDriverVerified(uid: String, verified: Boolean) {
         usersCollection.document(uid).update(mapOf("is_verified" to verified))
@@ -46,6 +51,6 @@ class UserRemoteDataSource(private val firestore: FirebaseFirestore) {
 
     fun observeUser(uid: String): Flow<UserDto?> =
         usersCollection.document(uid).snapshots.map { snap ->
-            runCatching { snap.data<UserDto>() }.getOrNull()
+            runCatching { snap.data<UserDto>().copy(id = snap.id) }.getOrNull()
         }
 }

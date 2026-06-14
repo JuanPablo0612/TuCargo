@@ -278,6 +278,7 @@
     <string name="admin_review_verify_hint">The driver can be verified once all documents are approved. Rejected documents must be re-uploaded by the driver.</string>
     <string name="admin_review_no_documents">This driver has not uploaded documents yet.</string>
     <string name="admin_review_load_error">Could not load the documents. Please try again.</string>
+    <string name="admin_review_retry">Try again</string>
     <string name="admin_review_action_error">Could not update the document. Please try again.</string>
     <string name="admin_review_verify_error">Could not verify the driver. Make sure all documents are approved and try again.</string>
 

@@ -17,6 +17,7 @@ import com.juanpablo0612.tucargo.domain.model.User
 import com.juanpablo0612.tucargo.domain.model.UserRole
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeAuthRepository : AuthRepository {
@@ -105,10 +106,14 @@ class FakeDocumentRepository : DocumentRepository {
     var updateStatusResult: Result<Unit> = Result.success(Unit)
     var lastStatusUpdate: Triple<KycDocumentType, KycStatus, String?>? = null
     val documentsFlow = MutableStateFlow<List<KycDocument>>(emptyList())
+    var flowError: Throwable? = null
 
     override suspend fun uploadDocument(userId: String, type: KycDocumentType, imageBytes: ByteArray): Result<Unit> = uploadResult
     override suspend fun getDocumentsForUser(userId: String): Result<List<KycDocument>> = documentsResult
-    override fun observeDocumentsForUser(userId: String): Flow<List<KycDocument>> = documentsFlow
+    override fun observeDocumentsForUser(userId: String): Flow<List<KycDocument>> {
+        val error = flowError
+        return if (error != null) flow { throw error } else documentsFlow
+    }
     override suspend fun updateDocumentStatus(
         userId: String,
         type: KycDocumentType,
