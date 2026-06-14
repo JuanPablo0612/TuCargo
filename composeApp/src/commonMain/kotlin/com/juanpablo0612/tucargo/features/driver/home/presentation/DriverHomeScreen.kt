@@ -50,6 +50,7 @@ import com.juanpablo0612.tucargo.core.ui.toDistanceString
 import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.features.driver.home.presentation.components.AvailabilityButton
 import com.juanpablo0612.tucargo.features.driver.home.presentation.components.BalanceCard
+import com.juanpablo0612.tucargo.features.driver.offer.OfferScreen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -68,6 +69,10 @@ import tucargo.composeapp.generated.resources.driver_home_history_desc
 import tucargo.composeapp.generated.resources.driver_home_load_error
 import tucargo.composeapp.generated.resources.driver_home_location_permission_denied
 import tucargo.composeapp.generated.resources.driver_home_no_available_trips
+import tucargo.composeapp.generated.resources.driver_home_offer_accept_error
+import tucargo.composeapp.generated.resources.driver_home_offer_expired_error
+import tucargo.composeapp.generated.resources.driver_home_offer_reject_error
+import tucargo.composeapp.generated.resources.driver_home_offer_wallet_error
 import tucargo.composeapp.generated.resources.driver_home_offline_desc
 import tucargo.composeapp.generated.resources.driver_home_title
 import tucargo.composeapp.generated.resources.driver_home_tracking_error
@@ -162,6 +167,10 @@ fun DriverHomeScreen(
                             DriverHomeError.AvailableTripsError -> Res.string.driver_home_available_trips_error
                             DriverHomeError.AcceptTripError -> Res.string.driver_home_accept_error
                             DriverHomeError.TripAlreadyTaken -> Res.string.driver_home_trip_taken_error
+                            DriverHomeError.AcceptOfferError -> Res.string.driver_home_offer_accept_error
+                            DriverHomeError.RejectOfferError -> Res.string.driver_home_offer_reject_error
+                            DriverHomeError.OfferExpiredError -> Res.string.driver_home_offer_expired_error
+                            DriverHomeError.WalletInsufficientError -> Res.string.driver_home_offer_wallet_error
                         }
                         ErrorCard(
                             message = stringResource(errorRes),
@@ -266,6 +275,19 @@ fun DriverHomeScreen(
                     }
                 }
             }
+        }
+    }
+
+    if (state.showOfferDialog) {
+        state.activeOffer?.let { offer ->
+            OfferScreen(
+                offer = offer,
+                isAccepting = state.isAcceptingOffer,
+                isRejecting = state.isRejectingOffer,
+                onAccept = { viewModel.onAction(DriverHomeAction.AcceptOffer(offer.id, offer.tripId)) },
+                onReject = { viewModel.onAction(DriverHomeAction.RejectOffer(offer.id, offer.tripId)) },
+                onDismiss = { viewModel.onAction(DriverHomeAction.DismissOffer) }
+            )
         }
     }
 }

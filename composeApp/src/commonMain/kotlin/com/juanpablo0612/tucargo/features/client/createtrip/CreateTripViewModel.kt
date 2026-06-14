@@ -164,7 +164,7 @@ class CreateTripViewModel(
             }
 
             val trip = Trip(
-                status = TripStatus.SEARCHING,
+                status = TripStatus.REQUESTED,
                 clientId = user.id,
                 clientName = user.fullName,
                 clientPhone = user.phone,

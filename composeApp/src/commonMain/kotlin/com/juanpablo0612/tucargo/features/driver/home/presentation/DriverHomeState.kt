@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.features.driver.home.presentation
 
 import androidx.compose.runtime.Immutable
 import com.juanpablo0612.tucargo.domain.model.Trip
+import com.juanpablo0612.tucargo.domain.model.TripOffer
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -16,5 +17,9 @@ data class DriverHomeState(
     val activeTrips: ImmutableList<Trip> = persistentListOf(),
     val availableTrips: ImmutableList<Trip> = persistentListOf(),
     val isAccepting: Boolean = false,
+    val activeOffer: TripOffer? = null,
+    val showOfferDialog: Boolean = false,
+    val isAcceptingOffer: Boolean = false,
+    val isRejectingOffer: Boolean = false,
     val error: DriverHomeError? = null
 )

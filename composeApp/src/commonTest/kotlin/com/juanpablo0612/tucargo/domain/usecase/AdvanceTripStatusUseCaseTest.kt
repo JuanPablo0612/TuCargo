@@ -17,7 +17,7 @@ class AdvanceTripStatusUseCaseTest {
 
     @Test
     fun illegalTransition_failsWithoutRepositoryCall() = runTest {
-        val trip = Trip(id = "t1", status = TripStatus.SEARCHING)
+        val trip = Trip(id = "t1", status = TripStatus.REQUESTED)
 
         val result = useCase(trip, TripStatus.COMPLETED)
 
@@ -27,13 +27,13 @@ class AdvanceTripStatusUseCaseTest {
 
     @Test
     fun legalTransition_callsRepositoryWithExpectedStatuses() = runTest {
-        val trip = Trip(id = "t1", status = TripStatus.ASSIGNED)
+        val trip = Trip(id = "t1", status = TripStatus.ACCEPTED)
 
         val result = useCase(trip, TripStatus.ON_WAY)
 
         assertTrue(result.isSuccess)
         assertEquals(
-            Triple("t1", TripStatus.ASSIGNED, TripStatus.ON_WAY),
+            Triple("t1", TripStatus.ACCEPTED, TripStatus.ON_WAY),
             tripRepository.lastStatusUpdate
         )
     }

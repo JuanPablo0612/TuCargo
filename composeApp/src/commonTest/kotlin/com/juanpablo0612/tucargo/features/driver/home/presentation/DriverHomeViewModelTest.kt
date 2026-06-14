@@ -7,11 +7,13 @@ import com.juanpablo0612.tucargo.domain.model.User
 import com.juanpablo0612.tucargo.domain.model.UserRole
 import com.juanpablo0612.tucargo.domain.trip.TrackingState
 import com.juanpablo0612.tucargo.domain.trip.TripTracker
+import com.juanpablo0612.tucargo.domain.usecase.AcceptOfferUseCase
 import com.juanpablo0612.tucargo.domain.usecase.AcceptTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAvailableTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.RejectOfferUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
 import com.juanpablo0612.tucargo.testutil.FakeLocationProvider
 import com.juanpablo0612.tucargo.testutil.FakeTripRepository
@@ -65,6 +67,8 @@ class DriverHomeViewModelTest {
             observeDriverActiveTripsUseCase = ObserveDriverActiveTripsUseCase(tripRepository),
             observeAvailableTripsUseCase = ObserveAvailableTripsUseCase(tripRepository),
             acceptTripUseCase = AcceptTripUseCase(tripRepository, userRepository),
+            acceptOfferUseCase = AcceptOfferUseCase(tripRepository),
+            rejectOfferUseCase = RejectOfferUseCase(tripRepository),
             tripTracker = tracker
         )
     }
@@ -105,7 +109,7 @@ class DriverHomeViewModelTest {
     @Test
     fun availableTrips_areCollectedWhileOnline() = runTest {
         tripRepository.availableTripsFlow.value =
-            listOf(Trip(id = "t2", status = TripStatus.SEARCHING))
+            listOf(Trip(id = "t2", status = TripStatus.REQUESTED))
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertEquals(1, viewModel.uiState.value.availableTrips.size)

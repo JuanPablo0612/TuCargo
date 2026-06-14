@@ -1,5 +1,6 @@
 package com.juanpablo0612.tucargo.data.trip
 
+import com.juanpablo0612.tucargo.domain.model.CancelledBy
 import com.juanpablo0612.tucargo.domain.model.PaymentMethod
 import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.domain.model.TripLocation
@@ -7,7 +8,7 @@ import com.juanpablo0612.tucargo.domain.model.TripStatus
 
 fun TripDto.toDomain(): Trip = Trip(
     id = id,
-    status = try { TripStatus.valueOf(status) } catch (e: Exception) { TripStatus.SEARCHING },
+    status = try { TripStatus.valueOf(status) } catch (e: Exception) { TripStatus.REQUESTED },
     createdAt = createdAt,
     completedAt = completedAt,
     clientId = clientId,
@@ -27,7 +28,9 @@ fun TripDto.toDomain(): Trip = Trip(
     destination = destination.toDomain(),
     distanceKm = distanceKm,
     cargoDescription = cargoDescription,
-    deliveryCode = deliveryCode
+    deliveryCode = deliveryCode,
+    quoteId = quoteId,
+    cancelledBy = cancelledBy?.let { try { CancelledBy.valueOf(it) } catch (e: Exception) { null } }
 )
 
 fun TripLocationDto.toDomain(): TripLocation = TripLocation(
@@ -58,7 +61,9 @@ fun Trip.toDto(): TripDto = TripDto(
     destination = destination.toDto(),
     distanceKm = distanceKm,
     cargoDescription = cargoDescription,
-    deliveryCode = deliveryCode
+    deliveryCode = deliveryCode,
+    quoteId = quoteId,
+    cancelledBy = cancelledBy?.name
 )
 
 fun TripLocation.toDto(): TripLocationDto = TripLocationDto(

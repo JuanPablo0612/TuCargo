@@ -11,11 +11,19 @@ sealed class AppError(message: String? = null, cause: Throwable? = null) : Excep
         data object FileTooLarge : Validation()
         data object InvalidTrip : Validation()
         data object KycIncomplete : Validation()
+        data object SameOriginDest : Validation()
+        data object QuoteOutOfRange : Validation()
+        data object NoRoute : Validation()
+        data object ServiceUnavailable : Validation()
     }
     sealed class Trip : AppError() {
         data object AlreadyTaken : Trip()
         data object InvalidTransition : Trip()
         data object DriverNotVerified : Trip()
+        data object QuoteExpired : Trip()
+        data object QuoteAlreadyUsed : Trip()
+        data object OfferExpired : Trip()
+        data object WalletInsufficient : Trip()
     }
     data class DataCorruption(override val message: String) : AppError(message)
     data object Network : AppError()

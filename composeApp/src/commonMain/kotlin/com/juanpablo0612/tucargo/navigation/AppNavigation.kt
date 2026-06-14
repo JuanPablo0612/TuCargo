@@ -31,6 +31,11 @@ import com.juanpablo0612.tucargo.features.auth.presentation.resetpassword.ResetP
 import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegistrationScreen
 import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripScreen
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeScreen
+import com.juanpablo0612.tucargo.features.client.quote.CargoScreen
+import com.juanpablo0612.tucargo.features.client.quote.PickDestScreen
+import com.juanpablo0612.tucargo.features.client.quote.PickOriginScreen
+import com.juanpablo0612.tucargo.features.client.quote.QuoteScreen
+import com.juanpablo0612.tucargo.features.client.searching.SearchingScreen
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailScreen
@@ -48,6 +53,11 @@ import org.koin.compose.viewmodel.koinViewModel
     @Serializable data object ClientHome : Route()
     @Serializable data object DriverHome : Route()
     @Serializable data object CreateTrip : Route()
+    @Serializable data object PickOrigin : Route()
+    @Serializable data object PickDest : Route()
+    @Serializable data object Cargo : Route()
+    @Serializable data object Quote : Route()
+    @Serializable data class Searching(val tripId: String) : Route()
     @Serializable data object TripHistory : Route()
     @Serializable data class TripActive(val tripId: String) : Route()
     @Serializable data class TripDetail(val tripId: String) : Route()
@@ -102,7 +112,7 @@ fun AppNavigation() {
 
         composable<Route.ClientHome> {
             ClientHomeScreen(
-                onNewTrip = { navController.navigate(Route.CreateTrip) },
+                onNewTrip = { navController.navigate(Route.PickOrigin) },
                 onSignOut = { authViewModel.logout() },
                 onTripClick = { tripId -> navController.navigate(Route.TripDetail(tripId)) },
                 onViewAllClick = { navController.navigate(Route.TripHistory) },
@@ -117,6 +127,65 @@ fun AppNavigation() {
                     }
                 },
                 onBackClick = { navController.popBackStack() },
+            )
+        }
+
+        composable<Route.PickOrigin> {
+            PickOriginScreen(
+                onConfirmed = { navController.navigate(Route.PickDest) },
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable<Route.PickDest> {
+            PickDestScreen(
+                onConfirmed = { navController.navigate(Route.Cargo) },
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable<Route.Cargo> {
+            CargoScreen(
+                onNext = { navController.navigate(Route.Quote) },
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable<Route.Quote> {
+            QuoteScreen(
+                onTripCreated = { tripId ->
+                    navController.navigate(Route.Searching(tripId)) {
+                        popUpTo<Route.PickOrigin> { inclusive = true }
+                    }
+                },
+                onNewQuote = {
+                    navController.navigate(Route.PickOrigin) {
+                        popUpTo<Route.PickOrigin> { inclusive = true }
+                    }
+                },
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable<Route.Searching> { backStackEntry ->
+            val route: Route.Searching = backStackEntry.toRoute()
+            SearchingScreen(
+                tripId = route.tripId,
+                onTripAccepted = { tripId ->
+                    navController.navigate(Route.TripActive(tripId)) {
+                        popUpTo<Route.ClientHome> { inclusive = false }
+                    }
+                },
+                onRetry = {
+                    navController.navigate(Route.PickOrigin) {
+                        popUpTo<Route.ClientHome> { inclusive = false }
+                    }
+                },
+                onCancel = {
+                    navController.navigate(Route.ClientHome) {
+                        popUpTo<Route.ClientHome> { inclusive = true }
+                    }
+                }
             )
         }
 

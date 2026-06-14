@@ -94,6 +94,10 @@
     <string name="driver_home_available_trips_error">Could not load available trips.</string>
     <string name="driver_home_trip_distance">%1$s km</string>
     <string name="driver_home_history_desc">Trip history</string>
+    <string name="driver_home_offer_accept_error">Could not accept the offer. Please try again.</string>
+    <string name="driver_home_offer_reject_error">Could not reject the offer. Please try again.</string>
+    <string name="driver_home_offer_expired_error">The offer has expired.</string>
+    <string name="driver_home_offer_wallet_error">Insufficient balance to accept trips.</string>
 
     <!-- Trip detail (client view) -->
     <string name="trip_detail_title">Shipment detail</string>
@@ -179,6 +183,50 @@
     <string name="trip_status_in_progress">In progress</string>
     <string name="trip_status_completed">Completed</string>
     <string name="trip_status_cancelled">Cancelled</string>
+    <string name="trip_status_requested">Searching for driver</string>
+    <string name="trip_status_offered">Offer sent</string>
+    <string name="trip_status_accepted">Driver accepted</string>
+    <string name="trip_status_cancelled_no_driver">No driver available</string>
+    <string name="trip_status_cancelled_client">Cancelled by client</string>
+    <string name="trip_status_cancelled_driver">Cancelled by driver</string>
+    <string name="trip_status_cancelled_admin">Cancelled by admin</string>
+
+    <!-- Quote flow -->
+    <string name="pick_location_confirm_button">Confirmar ubicación</string>
+    <string name="pick_origin_title">Punto de origen</string>
+    <string name="pick_dest_title">Punto de destino</string>
+    <string name="cargo_title">Detalles de la carga</string>
+    <string name="cargo_description_label">¿Qué vas a enviar?</string>
+    <string name="cargo_description_placeholder">Ej: Caja de repuestos, 5 kg</string>
+    <string name="cargo_weight_confirm">Confirmo que la carga cabe en un platón estándar y no supera 400 kg.</string>
+    <string name="cargo_next_button">Siguiente</string>
+    <string name="quote_title">Tu cotización</string>
+    <string name="quote_distance_label">%1$s km</string>
+    <string name="quote_commission_note">Comisión del conductor: %1$s</string>
+    <string name="quote_valid_for">Cotización válida por %1$s</string>
+    <string name="quote_expired">Esta cotización expiró. Solicita una nueva.</string>
+    <string name="quote_new_button">Nueva cotización</string>
+    <string name="quote_request_button">Pedir moto-carguero</string>
+    <string name="quote_error_same_origin">El origen y el destino no pueden ser iguales</string>
+    <string name="quote_error_out_of_range">La distancia máxima permitida es 60 km</string>
+    <string name="quote_error_no_route">No encontramos una ruta. Verifica las direcciones.</string>
+    <string name="quote_error_service_unavailable">No pudimos calcular el precio. Intenta de nuevo.</string>
+
+    <!-- Searching screen -->
+    <string name="searching_title">Buscando tu moto-carguero…</string>
+    <string name="searching_no_driver_title">Sin conductores disponibles</string>
+    <string name="searching_no_driver_message">No encontramos un conductor cerca. ¿Quieres intentar de nuevo?</string>
+    <string name="searching_retry_button">Intentar de nuevo</string>
+    <string name="searching_cancel_button">Cancelar</string>
+
+    <!-- Offer screen (driver) -->
+    <string name="offer_title">Nueva solicitud</string>
+    <string name="offer_commission_label">Comisión: %1$s</string>
+    <string name="offer_distance_label">%1$s km</string>
+    <string name="offer_accept_button">Aceptar</string>
+    <string name="offer_reject_button">Rechazar</string>
+    <string name="offer_error_expired">La oferta ha expirado</string>
+    <string name="offer_error_wallet">Saldo insuficiente para aceptar viajes</string>
 
     <!-- Map -->
     <string name="map_your_location">Your location</string>
