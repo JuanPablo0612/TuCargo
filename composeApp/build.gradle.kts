@@ -51,6 +51,8 @@ kotlin {
             implementation(libs.kotlinx.coroutines.play.services)
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.mapbox.maps.android)
+            implementation(libs.firebase.messaging.native)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -69,6 +71,7 @@ kotlin {
             implementation(libs.firebase.auth)
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.storage)
+            implementation(libs.firebase.functions)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
@@ -88,6 +91,7 @@ buildkonfig {
     packageName = "com.juanpablo0612.tucargo"
     defaultConfigs {
         buildConfigField(Type.STRING, "GOOGLE_MAPS_API_KEY", secrets.getProperty("GOOGLE_MAPS_API_KEY") ?: "")
+        buildConfigField(Type.STRING, "MAPBOX_PUBLIC_TOKEN", secrets.getProperty("MAPBOX_PUBLIC_TOKEN") ?: "")
     }
 }
 

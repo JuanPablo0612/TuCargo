@@ -8,4 +8,8 @@ sealed interface DriverHomeError {
     data object AvailableTripsError : DriverHomeError
     data object AcceptTripError : DriverHomeError
     data object TripAlreadyTaken : DriverHomeError
+    data object AcceptOfferError : DriverHomeError
+    data object RejectOfferError : DriverHomeError
+    data object OfferExpiredError : DriverHomeError
+    data object WalletInsufficientError : DriverHomeError
 }

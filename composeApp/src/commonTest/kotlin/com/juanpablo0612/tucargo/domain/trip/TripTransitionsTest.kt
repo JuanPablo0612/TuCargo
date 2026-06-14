@@ -15,10 +15,13 @@ class TripTransitionsTest {
 
     @Test
     fun validTransitions_areAllowed() {
-        assertTrue(TripStatus.SEARCHING.canTransitionTo(TripStatus.ASSIGNED))
-        assertTrue(TripStatus.SEARCHING.canTransitionTo(TripStatus.CANCELLED))
-        assertTrue(TripStatus.ASSIGNED.canTransitionTo(TripStatus.ON_WAY))
-        assertTrue(TripStatus.ASSIGNED.canTransitionTo(TripStatus.CANCELLED))
+        assertTrue(TripStatus.REQUESTED.canTransitionTo(TripStatus.OFFERED))
+        assertTrue(TripStatus.REQUESTED.canTransitionTo(TripStatus.CANCELLED_CLIENT))
+        assertTrue(TripStatus.OFFERED.canTransitionTo(TripStatus.ACCEPTED))
+        assertTrue(TripStatus.OFFERED.canTransitionTo(TripStatus.CANCELLED_CLIENT))
+        assertTrue(TripStatus.OFFERED.canTransitionTo(TripStatus.CANCELLED_NO_DRIVER))
+        assertTrue(TripStatus.ACCEPTED.canTransitionTo(TripStatus.ON_WAY))
+        assertTrue(TripStatus.ACCEPTED.canTransitionTo(TripStatus.CANCELLED_DRIVER))
         assertTrue(TripStatus.ON_WAY.canTransitionTo(TripStatus.ARRIVED_PICKUP))
         assertTrue(TripStatus.ARRIVED_PICKUP.canTransitionTo(TripStatus.IN_PROGRESS))
         assertTrue(TripStatus.IN_PROGRESS.canTransitionTo(TripStatus.COMPLETED))
@@ -26,28 +29,31 @@ class TripTransitionsTest {
 
     @Test
     fun invalidTransitions_areRejected() {
-        assertFalse(TripStatus.SEARCHING.canTransitionTo(TripStatus.ON_WAY))
-        assertFalse(TripStatus.SEARCHING.canTransitionTo(TripStatus.COMPLETED))
-        assertFalse(TripStatus.ON_WAY.canTransitionTo(TripStatus.CANCELLED))
-        assertFalse(TripStatus.IN_PROGRESS.canTransitionTo(TripStatus.CANCELLED))
-        assertFalse(TripStatus.COMPLETED.canTransitionTo(TripStatus.SEARCHING))
-        assertFalse(TripStatus.CANCELLED.canTransitionTo(TripStatus.ASSIGNED))
+        assertFalse(TripStatus.REQUESTED.canTransitionTo(TripStatus.ON_WAY))
+        assertFalse(TripStatus.REQUESTED.canTransitionTo(TripStatus.COMPLETED))
+        assertFalse(TripStatus.ON_WAY.canTransitionTo(TripStatus.CANCELLED_CLIENT))
+        assertFalse(TripStatus.IN_PROGRESS.canTransitionTo(TripStatus.CANCELLED_CLIENT))
+        assertFalse(TripStatus.COMPLETED.canTransitionTo(TripStatus.REQUESTED))
+        assertFalse(TripStatus.CANCELLED_CLIENT.canTransitionTo(TripStatus.ACCEPTED))
     }
 
     @Test
     fun terminalStatuses_haveNoTransitions() {
         assertTrue(tripTransitions.getValue(TripStatus.COMPLETED).isEmpty())
-        assertTrue(tripTransitions.getValue(TripStatus.CANCELLED).isEmpty())
+        assertTrue(tripTransitions.getValue(TripStatus.CANCELLED_CLIENT).isEmpty())
+        assertTrue(tripTransitions.getValue(TripStatus.CANCELLED_NO_DRIVER).isEmpty())
+        assertTrue(tripTransitions.getValue(TripStatus.CANCELLED_DRIVER).isEmpty())
+        assertTrue(tripTransitions.getValue(TripStatus.CANCELLED_ADMIN).isEmpty())
     }
 
     @Test
     fun nextDriverStatus_followsTheLifecycle() {
-        assertEquals(TripStatus.ON_WAY, TripStatus.ASSIGNED.nextDriverStatus())
+        assertEquals(TripStatus.ON_WAY, TripStatus.ACCEPTED.nextDriverStatus())
         assertEquals(TripStatus.ARRIVED_PICKUP, TripStatus.ON_WAY.nextDriverStatus())
         assertEquals(TripStatus.IN_PROGRESS, TripStatus.ARRIVED_PICKUP.nextDriverStatus())
         assertEquals(TripStatus.COMPLETED, TripStatus.IN_PROGRESS.nextDriverStatus())
-        assertEquals(null, TripStatus.SEARCHING.nextDriverStatus())
+        assertEquals(null, TripStatus.REQUESTED.nextDriverStatus())
         assertEquals(null, TripStatus.COMPLETED.nextDriverStatus())
-        assertEquals(null, TripStatus.CANCELLED.nextDriverStatus())
+        assertEquals(null, TripStatus.CANCELLED_CLIENT.nextDriverStatus())
     }
 }

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TripDto(
     val id: String = "",
-    val status: String = "SEARCHING",
+    val status: String = "REQUESTED",
     @SerialName("created_at")
     val createdAt: Long = 0L,
     @SerialName("completed_at")
@@ -30,15 +30,15 @@ data class TripDto(
     @SerialName("driver_last_lng")
     val driverLastLng: Double? = null,
 
-    // Economía
+    // Economía — stored as integers (no floats allowed)
     @SerialName("price_total")
-    val priceTotal: Double = 0.0,
+    val priceTotal: Int = 0,
     @SerialName("price_base")
-    val priceBase: Double = 0.0,
+    val priceBase: Int = 0,
     @SerialName("price_distance")
-    val priceDistance: Double = 0.0,
+    val priceDistance: Int = 0,
     @SerialName("commission_fee")
-    val commissionFee: Double = 0.0,
+    val commissionFee: Int = 0,
     @SerialName("payment_method")
     val paymentMethod: String = "CASH",
 
@@ -50,7 +50,11 @@ data class TripDto(
     @SerialName("cargo_description")
     val cargoDescription: String = "",
     @SerialName("delivery_code")
-    val deliveryCode: String = ""
+    val deliveryCode: String = "",
+    @SerialName("quote_id")
+    val quoteId: String = "",
+    @SerialName("cancelled_by")
+    val cancelledBy: String? = null
 )
 
 @Serializable

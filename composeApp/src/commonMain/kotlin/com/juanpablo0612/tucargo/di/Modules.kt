@@ -10,16 +10,19 @@ import com.juanpablo0612.tucargo.data.document.DocumentRepository
 import com.juanpablo0612.tucargo.data.document.DocumentRepositoryImpl
 import com.juanpablo0612.tucargo.data.config.ConfigRepository
 import com.juanpablo0612.tucargo.data.config.ConfigRepositoryImpl
-import com.juanpablo0612.tucargo.data.config.SystemConfig
+import com.juanpablo0612.tucargo.data.quote.QuoteRepository
+import com.juanpablo0612.tucargo.data.quote.QuoteRepositoryImpl
 import com.juanpablo0612.tucargo.data.trip.TripRepository
 import com.juanpablo0612.tucargo.data.trip.TripRepositoryImpl
 import com.juanpablo0612.tucargo.domain.trip.TripTracker
 import com.juanpablo0612.tucargo.data.user.UserRepository
 import com.juanpablo0612.tucargo.data.user.UserRepositoryImpl
+import com.juanpablo0612.tucargo.domain.usecase.AcceptOfferUseCase
 import com.juanpablo0612.tucargo.domain.usecase.AcceptTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.AdvanceTripStatusUseCase
 import com.juanpablo0612.tucargo.domain.usecase.CalculateTripPriceUseCase
 import com.juanpablo0612.tucargo.domain.usecase.CancelTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ComputeQuoteUseCase
 import com.juanpablo0612.tucargo.domain.usecase.CreateTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
@@ -30,6 +33,7 @@ import com.juanpablo0612.tucargo.domain.usecase.GetPendingDriversUseCase
 import com.juanpablo0612.tucargo.domain.usecase.IsUserLoggedInUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
 import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveActiveOfferUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAvailableTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveCurrentUserUseCase
@@ -38,6 +42,9 @@ import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterVehicleUseCase
+import com.juanpablo0612.tucargo.domain.usecase.RejectOfferUseCase
+import com.juanpablo0612.tucargo.domain.usecase.RequestQuoteUseCase
+import com.juanpablo0612.tucargo.domain.usecase.RequestTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ReviewKycDocumentUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SetDriverVerifiedUseCase
@@ -54,6 +61,7 @@ import com.juanpablo0612.tucargo.features.auth.presentation.resetpassword.ResetP
 import com.juanpablo0612.tucargo.features.auth.presentation.vehicle.VehicleRegistrationViewModel
 import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripViewModel
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
+import com.juanpablo0612.tucargo.features.client.quote.TripRequestViewModel
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailViewModel
@@ -61,6 +69,7 @@ import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryV
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
+import dev.gitlive.firebase.functions.functions
 import dev.gitlive.firebase.storage.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -76,6 +85,7 @@ val dataModule = module {
     single { Firebase.auth }
     single { Firebase.firestore }
     single { Firebase.storage }
+    single { Firebase.functions }
 
     single { AppDispatchers() }
     single(named("ApplicationScope")) {
@@ -89,7 +99,8 @@ val dataModule = module {
     single<DocumentRepository> { DocumentRepositoryImpl(get(), get(), get()) }
     single<ConfigRepository> { ConfigRepositoryImpl(get(), get()) }
     single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
-    single<TripRepository> { TripRepositoryImpl(get(), get()) }
+    single<TripRepository> { TripRepositoryImpl(get(), get(), get()) }
+    single<QuoteRepository> { QuoteRepositoryImpl(get()) }
     single { TripTracker(get(), get(), get(named("ApplicationScope"))) }
 }
 
@@ -105,9 +116,15 @@ val domainModule = module {
     singleOf(::GetDriverTripsUseCase)
     singleOf(::CreateTripUseCase)
     singleOf(::CalculateTripPriceUseCase)
+    singleOf(::ComputeQuoteUseCase)
+    singleOf(::RequestQuoteUseCase)
+    singleOf(::RequestTripUseCase)
     singleOf(::ObserveTripUseCase)
     singleOf(::ObserveAvailableTripsUseCase)
     singleOf(::AcceptTripUseCase)
+    singleOf(::AcceptOfferUseCase)
+    singleOf(::RejectOfferUseCase)
+    singleOf(::ObserveActiveOfferUseCase)
     singleOf(::AdvanceTripStatusUseCase)
     singleOf(::CancelTripUseCase)
 
@@ -130,6 +147,7 @@ val viewModelModule = module {
     viewModelOf(::RegisterViewModel)
     viewModelOf(::ClientHomeViewModel)
     viewModelOf(::CreateTripViewModel)
+    viewModelOf(::TripRequestViewModel)
     viewModelOf(::DriverHomeViewModel)
     viewModelOf(::ResetPasswordViewModel)
     viewModelOf(::AuthViewModel)

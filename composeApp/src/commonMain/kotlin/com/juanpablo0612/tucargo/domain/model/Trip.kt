@@ -2,7 +2,7 @@ package com.juanpablo0612.tucargo.domain.model
 
 data class Trip(
     val id: String = "",
-    val status: TripStatus = TripStatus.SEARCHING,
+    val status: TripStatus = TripStatus.REQUESTED,
     val createdAt: Long = 0L,
     val completedAt: Long? = null,
     val clientId: String = "",
@@ -15,16 +15,18 @@ data class Trip(
     val driverPlate: String = "",
     val driverLastLat: Double? = null,
     val driverLastLng: Double? = null,
-    val priceTotal: Double = 0.0,
-    val priceBase: Double = 0.0,
-    val priceDistance: Double = 0.0,
-    val commissionFee: Double = 0.0,
+    val priceTotal: Int = 0,
+    val priceBase: Int = 0,
+    val priceDistance: Int = 0,
+    val commissionFee: Int = 0,
     val paymentMethod: PaymentMethod = PaymentMethod.CASH,
     val origin: TripLocation = TripLocation(),
     val destination: TripLocation = TripLocation(),
     val distanceKm: Double = 0.0,
     val cargoDescription: String = "",
-    val deliveryCode: String = ""
+    val deliveryCode: String = "",
+    val quoteId: String = "",
+    val cancelledBy: CancelledBy? = null
 )
 
 data class TripLocation(
@@ -34,13 +36,17 @@ data class TripLocation(
 )
 
 enum class TripStatus {
-    SEARCHING,
-    ASSIGNED,
+    REQUESTED,
+    OFFERED,
+    ACCEPTED,
     ON_WAY,
     ARRIVED_PICKUP,
     IN_PROGRESS,
     COMPLETED,
-    CANCELLED
+    CANCELLED_NO_DRIVER,
+    CANCELLED_CLIENT,
+    CANCELLED_DRIVER,
+    CANCELLED_ADMIN
 }
 
 enum class PaymentMethod {

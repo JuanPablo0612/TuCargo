@@ -45,6 +45,7 @@ import com.juanpablo0612.tucargo.core.ui.toCurrencyString
 import com.juanpablo0612.tucargo.core.ui.toDistanceString
 import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.domain.model.TripStatus
+import com.juanpablo0612.tucargo.domain.trip.isCancelled
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -258,7 +259,7 @@ private fun TripDetailBody(
             )
         }
 
-        if (uiState.isClient && trip.status != TripStatus.COMPLETED && trip.status != TripStatus.CANCELLED) {
+        if (uiState.isClient && trip.status != TripStatus.COMPLETED && !trip.status.isCancelled()) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
@@ -294,7 +295,7 @@ private fun TripDetailBody(
         }
 
         if (uiState.isClient &&
-            (trip.status == TripStatus.SEARCHING || trip.status == TripStatus.ASSIGNED)
+            (trip.status == TripStatus.REQUESTED || trip.status == TripStatus.OFFERED || trip.status == TripStatus.ACCEPTED)
         ) {
             OutlinedButton(
                 onClick = onCancelClick,

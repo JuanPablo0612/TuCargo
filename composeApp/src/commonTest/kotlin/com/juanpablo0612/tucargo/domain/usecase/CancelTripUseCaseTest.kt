@@ -26,14 +26,27 @@ class CancelTripUseCaseTest {
     }
 
     @Test
-    fun cancellingWhileSearching_succeeds() = runTest {
-        val trip = Trip(id = "t1", status = TripStatus.SEARCHING)
+    fun cancellingWhileRequested_succeeds() = runTest {
+        val trip = Trip(id = "t1", status = TripStatus.REQUESTED)
 
         val result = useCase(trip)
 
         assertTrue(result.isSuccess)
         assertEquals(
-            Triple("t1", TripStatus.SEARCHING, TripStatus.CANCELLED),
+            Triple("t1", TripStatus.REQUESTED, TripStatus.CANCELLED_CLIENT),
+            tripRepository.lastStatusUpdate
+        )
+    }
+
+    @Test
+    fun cancellingWhileOffered_succeeds() = runTest {
+        val trip = Trip(id = "t1", status = TripStatus.OFFERED)
+
+        val result = useCase(trip)
+
+        assertTrue(result.isSuccess)
+        assertEquals(
+            Triple("t1", TripStatus.OFFERED, TripStatus.CANCELLED_CLIENT),
             tripRepository.lastStatusUpdate
         )
     }

@@ -8,13 +8,18 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.material3.MaterialTheme
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.trip_status_accepted
 import tucargo.composeapp.generated.resources.trip_status_arrived_pickup
-import tucargo.composeapp.generated.resources.trip_status_assigned
 import tucargo.composeapp.generated.resources.trip_status_cancelled
+import tucargo.composeapp.generated.resources.trip_status_cancelled_admin
+import tucargo.composeapp.generated.resources.trip_status_cancelled_client
+import tucargo.composeapp.generated.resources.trip_status_cancelled_driver
+import tucargo.composeapp.generated.resources.trip_status_cancelled_no_driver
 import tucargo.composeapp.generated.resources.trip_status_completed
 import tucargo.composeapp.generated.resources.trip_status_in_progress
+import tucargo.composeapp.generated.resources.trip_status_offered
 import tucargo.composeapp.generated.resources.trip_status_on_way
-import tucargo.composeapp.generated.resources.trip_status_searching
+import tucargo.composeapp.generated.resources.trip_status_requested
 
 @Composable
 fun TripStatus.displayName(): String = stringResource(this.toDisplayNameRes())
@@ -23,11 +28,14 @@ fun TripStatus.displayName(): String = stringResource(this.toDisplayNameRes())
 fun TripStatus.displayContainerColor(): Color {
     val extendedColors = LocalExtendedColors.current
     return when (this) {
-        TripStatus.SEARCHING -> MaterialTheme.colorScheme.secondaryContainer
-        TripStatus.ASSIGNED, TripStatus.ON_WAY, TripStatus.ARRIVED_PICKUP -> MaterialTheme.colorScheme.primaryContainer
+        TripStatus.REQUESTED, TripStatus.OFFERED -> MaterialTheme.colorScheme.secondaryContainer
+        TripStatus.ACCEPTED, TripStatus.ON_WAY, TripStatus.ARRIVED_PICKUP -> MaterialTheme.colorScheme.primaryContainer
         TripStatus.IN_PROGRESS -> MaterialTheme.colorScheme.tertiaryContainer
         TripStatus.COMPLETED -> extendedColors.successContainer
-        TripStatus.CANCELLED -> MaterialTheme.colorScheme.errorContainer
+        TripStatus.CANCELLED_NO_DRIVER,
+        TripStatus.CANCELLED_CLIENT,
+        TripStatus.CANCELLED_DRIVER,
+        TripStatus.CANCELLED_ADMIN -> MaterialTheme.colorScheme.errorContainer
     }
 }
 
@@ -35,20 +43,27 @@ fun TripStatus.displayContainerColor(): Color {
 fun TripStatus.onDisplayContainerColor(): Color {
     val extendedColors = LocalExtendedColors.current
     return when (this) {
-        TripStatus.SEARCHING -> MaterialTheme.colorScheme.onSecondaryContainer
-        TripStatus.ASSIGNED, TripStatus.ON_WAY, TripStatus.ARRIVED_PICKUP -> MaterialTheme.colorScheme.onPrimaryContainer
+        TripStatus.REQUESTED, TripStatus.OFFERED -> MaterialTheme.colorScheme.onSecondaryContainer
+        TripStatus.ACCEPTED, TripStatus.ON_WAY, TripStatus.ARRIVED_PICKUP -> MaterialTheme.colorScheme.onPrimaryContainer
         TripStatus.IN_PROGRESS -> MaterialTheme.colorScheme.onTertiaryContainer
         TripStatus.COMPLETED -> extendedColors.onSuccessContainer
-        TripStatus.CANCELLED -> MaterialTheme.colorScheme.onErrorContainer
+        TripStatus.CANCELLED_NO_DRIVER,
+        TripStatus.CANCELLED_CLIENT,
+        TripStatus.CANCELLED_DRIVER,
+        TripStatus.CANCELLED_ADMIN -> MaterialTheme.colorScheme.onErrorContainer
     }
 }
 
 internal fun TripStatus.toDisplayNameRes(): StringResource = when (this) {
-    TripStatus.SEARCHING -> Res.string.trip_status_searching
-    TripStatus.ASSIGNED -> Res.string.trip_status_assigned
+    TripStatus.REQUESTED -> Res.string.trip_status_requested
+    TripStatus.OFFERED -> Res.string.trip_status_offered
+    TripStatus.ACCEPTED -> Res.string.trip_status_accepted
     TripStatus.ON_WAY -> Res.string.trip_status_on_way
     TripStatus.ARRIVED_PICKUP -> Res.string.trip_status_arrived_pickup
     TripStatus.IN_PROGRESS -> Res.string.trip_status_in_progress
     TripStatus.COMPLETED -> Res.string.trip_status_completed
-    TripStatus.CANCELLED -> Res.string.trip_status_cancelled
+    TripStatus.CANCELLED_NO_DRIVER -> Res.string.trip_status_cancelled_no_driver
+    TripStatus.CANCELLED_CLIENT -> Res.string.trip_status_cancelled_client
+    TripStatus.CANCELLED_DRIVER -> Res.string.trip_status_cancelled_driver
+    TripStatus.CANCELLED_ADMIN -> Res.string.trip_status_cancelled_admin
 }

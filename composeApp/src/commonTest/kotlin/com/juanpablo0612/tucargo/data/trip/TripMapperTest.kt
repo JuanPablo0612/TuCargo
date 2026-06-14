@@ -10,22 +10,22 @@ class TripMapperTest {
     fun tripDto_toDomain_mapsCorrectly() {
         val dto = TripDto(
             id = "123",
-            status = "ASSIGNED",
-            priceTotal = 50000.0
+            status = "ACCEPTED",
+            priceTotal = 50000
         )
 
         val domain = dto.toDomain()
 
         assertEquals("123", domain.id)
-        assertEquals(TripStatus.ASSIGNED, domain.status)
-        assertEquals(50000.0, domain.priceTotal)
+        assertEquals(TripStatus.ACCEPTED, domain.status)
+        assertEquals(50000, domain.priceTotal)
     }
 
     @Test
     fun tripDto_toDomain_fallbackOnUnknownStatus() {
         val dto = TripDto(status = "UNKNOWN_STATUS")
         val domain = dto.toDomain()
-        assertEquals(TripStatus.SEARCHING, domain.status)
+        assertEquals(TripStatus.REQUESTED, domain.status)
     }
 
     @Test
@@ -56,5 +56,22 @@ class TripMapperTest {
         assertEquals("+573001234567", domain.clientPhone)
         assertEquals(4.61, domain.driverLastLat)
         assertEquals(-74.08, domain.driverLastLng)
+    }
+
+    @Test
+    fun tripDto_toDomain_mapsIntegerPricesCorrectly() {
+        val dto = TripDto(
+            priceTotal = 62000,
+            priceBase = 35000,
+            priceDistance = 27000,
+            commissionFee = 6200
+        )
+
+        val domain = dto.toDomain()
+
+        assertEquals(62000, domain.priceTotal)
+        assertEquals(35000, domain.priceBase)
+        assertEquals(27000, domain.priceDistance)
+        assertEquals(6200, domain.commissionFee)
     }
 }

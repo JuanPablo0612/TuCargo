@@ -27,14 +27,9 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      // Trip counterpart data (driver/client name, phone, plate) is
-      // denormalized onto the trip document, so cross-user reads are not
-      // needed by the apps.
       allow get: if isSelf(userId) || isAdmin();
       allow list: if isAdmin();
 
-      // Registration: a user may only create their own document, never as
-      // ADMIN, never pre-verified, and never with money or ratings.
       allow create: if isSelf(userId)
         && request.resource.data.id == userId
         && request.resource.data.role in ['CLIENT', 'DRIVER']
@@ -44,9 +39,6 @@ service cloud.firestore {
         && request.resource.data.rating_avg == 0
         && request.resource.data.rating_count == 0;
 
-      // Owners may touch profile/presence fields only; role, verification,
-      // wallet balance, account status and ratings are off limits.
-      // Admins may change verification and account status only.
       allow update: if
         (isSelf(userId) && changedKeys().hasOnly(
           ['full_name', 'phone', 'is_online', 'last_status_update',
@@ -58,7 +50,6 @@ service cloud.firestore {
       match /kyc_documents/{docId} {
         allow read: if isSelf(userId) || isAdmin();
 
-        // Drivers upload their own documents; status is forced to PENDING.
         allow create: if isSelf(userId)
           && request.resource.data.status == 'PENDING'
           && request.resource.data.id == docId
@@ -66,7 +57,6 @@ service cloud.firestore {
              ['ID_FRONT', 'ID_BACK', 'DRIVER_LICENSE', 'SOAT',
               'VEHICLE_TECH_REVIEW', 'VEHICLE_REGISTRATION_CARD'];
 
-        // Re-upload resets to PENDING; only admins can approve or reject.
         allow update: if
           (isSelf(userId)
             && request.resource.data.status == 'PENDING'
@@ -79,6 +69,15 @@ service cloud.firestore {
       }
     }
 
+    match /quotes/{quoteId} {
+      // Clients can read their own quotes to display the QuoteScreen.
+      allow read: if isSignedIn() && resource.data.client_id == request.auth.uid;
+      // Cloud Functions only — clients cannot create or modify quotes.
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
     match /trips/{tripId} {
       function isParticipant() {
         return isSignedIn()
@@ -86,62 +85,52 @@ service cloud.firestore {
               || resource.data.driver_id == request.auth.uid);
       }
 
-      // List queries must be constrained so every result satisfies this:
-      // clients query where client_id == uid, drivers query where
-      // driver_id == uid or where status == 'SEARCHING'.
+      // Drivers may read REQUESTED trips to display the available list;
+      // all other reads require being a participant or admin.
       allow read: if isParticipant() || isAdmin()
-        || (isVerifiedDriver() && resource.data.status == 'SEARCHING');
+        || (isVerifiedDriver() && resource.data.status == 'REQUESTED');
 
-      // Clients create trips for themselves with consistent, positive
-      // pricing. The price formula itself is validated client-side from
-      // config; server-side recomputation needs Cloud Functions (backlog).
-      allow create: if isSignedIn()
-        && caller().role == 'CLIENT'
-        && request.resource.data.client_id == request.auth.uid
-        && request.resource.data.id == tripId
-        && request.resource.data.status == 'SEARCHING'
-        && request.resource.data.driver_id == null
-        && request.resource.data.distance_km > 0
-        && request.resource.data.price_base >= 0
-        && request.resource.data.price_distance >= 0
-        && request.resource.data.price_total > 0
-        && request.resource.data.price_total ==
-           request.resource.data.price_base + request.resource.data.price_distance
-        && request.resource.data.commission_fee >= 0
-        && request.resource.data.payment_method in ['CASH', 'WALLET'];
+      // Trip creation is now handled exclusively by the requestTrip Cloud Function.
+      allow create: if false;
 
       allow update: if
-        // (1) Accept: Firestore serializes writes, so when two drivers race,
-        //     the second one sees status != SEARCHING and is denied.
-        (isVerifiedDriver()
-          && resource.data.status == 'SEARCHING'
-          && resource.data.driver_id == null
-          && request.resource.data.status == 'ASSIGNED'
-          && request.resource.data.driver_id == request.auth.uid
-          && changedKeys().hasOnly(['status', 'driver_id', 'driver_name', 'driver_plate']))
-        // (2) The assigned driver advances the lifecycle one hop at a time.
-        || (resource.data.driver_id == request.auth.uid
+        // (1) The assigned driver advances the lifecycle one hop at a time.
+        (resource.data.driver_id == request.auth.uid
           && changedKeys().hasOnly(['status', 'completed_at'])
-          && ((resource.data.status == 'ASSIGNED'       && request.resource.data.status == 'ON_WAY')
-           || (resource.data.status == 'ON_WAY'         && request.resource.data.status == 'ARRIVED_PICKUP')
-           || (resource.data.status == 'ARRIVED_PICKUP' && request.resource.data.status == 'IN_PROGRESS')
-           || (resource.data.status == 'IN_PROGRESS'    && request.resource.data.status == 'COMPLETED')))
-        // (3) The assigned driver streams location while the trip is active.
+          && ((resource.data.status == 'ACCEPTED'        && request.resource.data.status == 'ON_WAY')
+           || (resource.data.status == 'ON_WAY'          && request.resource.data.status == 'ARRIVED_PICKUP')
+           || (resource.data.status == 'ARRIVED_PICKUP'  && request.resource.data.status == 'IN_PROGRESS')
+           || (resource.data.status == 'IN_PROGRESS'     && request.resource.data.status == 'COMPLETED')))
+        // (2) The assigned driver streams location while the trip is active.
         || (resource.data.driver_id == request.auth.uid
-          && resource.data.status in ['ASSIGNED', 'ON_WAY', 'ARRIVED_PICKUP', 'IN_PROGRESS']
+          && resource.data.status in ['ACCEPTED', 'ON_WAY', 'ARRIVED_PICKUP', 'IN_PROGRESS']
           && changedKeys().hasOnly(['driver_last_lat', 'driver_last_lng', 'last_location_update']))
-        // (4) The client may cancel before pickup.
+        // (3) The client may cancel before pickup.
         || (resource.data.client_id == request.auth.uid
-          && resource.data.status in ['SEARCHING', 'ASSIGNED']
-          && request.resource.data.status == 'CANCELLED'
-          && changedKeys().hasOnly(['status']));
+          && resource.data.status in ['REQUESTED', 'OFFERED', 'ACCEPTED']
+          && request.resource.data.status == 'CANCELLED_CLIENT'
+          && changedKeys().hasOnly(['status', 'cancelled_by']));
 
       allow delete: if false;
     }
 
+    match /trip_offers/{offerId} {
+      // Drivers can only read their own offers.
+      allow read: if isSignedIn() && resource.data.driver_id == request.auth.uid;
+      // Cloud Functions only — no direct writes from clients.
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /dispatch_locks/{tripId} {
+      // Cloud Functions only.
+      allow read: if false;
+      allow write: if false;
+    }
+
     match /config/{docId} {
       allow read: if isSignedIn();
-      // Seeded and edited via the Firebase console or CLI only.
       allow write: if false;
     }
   }

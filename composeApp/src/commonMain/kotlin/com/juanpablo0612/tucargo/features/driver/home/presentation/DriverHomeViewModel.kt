@@ -2,17 +2,23 @@ package com.juanpablo0612.tucargo.features.driver.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juanpablo0612.tucargo.core.fcm.OfferEventBus
 import com.juanpablo0612.tucargo.core.logging.logError
 import com.juanpablo0612.tucargo.domain.model.AppError
+import com.juanpablo0612.tucargo.domain.model.Cop
+import com.juanpablo0612.tucargo.domain.model.OfferResponse
 import com.juanpablo0612.tucargo.domain.model.Trip
+import com.juanpablo0612.tucargo.domain.model.TripOffer
 import com.juanpablo0612.tucargo.domain.model.TripStatus
 import com.juanpablo0612.tucargo.domain.trip.TrackingState
 import com.juanpablo0612.tucargo.domain.trip.TripTracker
+import com.juanpablo0612.tucargo.domain.usecase.AcceptOfferUseCase
 import com.juanpablo0612.tucargo.domain.usecase.AcceptTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAvailableTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.RejectOfferUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -32,6 +38,8 @@ class DriverHomeViewModel(
     private val observeDriverActiveTripsUseCase: ObserveDriverActiveTripsUseCase,
     private val observeAvailableTripsUseCase: ObserveAvailableTripsUseCase,
     private val acceptTripUseCase: AcceptTripUseCase,
+    private val acceptOfferUseCase: AcceptOfferUseCase,
+    private val rejectOfferUseCase: RejectOfferUseCase,
     private val tripTracker: TripTracker
 ) : ViewModel() {
 
@@ -44,6 +52,7 @@ class DriverHomeViewModel(
         loadDriverData()
         observeActiveTrips()
         observeTrackerState()
+        observeOfferEvents()
     }
 
     fun onAction(action: DriverHomeAction) {
@@ -51,7 +60,86 @@ class DriverHomeViewModel(
             is DriverHomeAction.ToggleAvailability -> toggleAvailability(action.available)
             is DriverHomeAction.LocationPermissionResult -> onLocationPermissionResult(action.granted)
             is DriverHomeAction.AcceptTrip -> acceptTrip(action.tripId)
+            is DriverHomeAction.AcceptOffer -> acceptOffer(action.offerId, action.tripId)
+            is DriverHomeAction.RejectOffer -> rejectOffer(action.offerId, action.tripId)
+            is DriverHomeAction.DismissOffer -> dismissOffer()
         }
+    }
+
+    private fun observeOfferEvents() {
+        OfferEventBus.incomingOffers.onEach { data ->
+            val offer = parseFcmOffer(data) ?: return@onEach
+            _uiState.update { it.copy(activeOffer = offer, showOfferDialog = true) }
+        }.launchIn(viewModelScope)
+
+        OfferEventBus.cancelledOffers.onEach { tripId ->
+            val current = _uiState.value.activeOffer
+            if (current != null && current.tripId == tripId) {
+                _uiState.update { it.copy(showOfferDialog = false, activeOffer = null) }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun parseFcmOffer(data: Map<String, String>): TripOffer? {
+        return try {
+            TripOffer(
+                id = data["offer_id"] ?: return null,
+                tripId = data["trip_id"] ?: return null,
+                driverId = data["driver_id"] ?: "",
+                attempt = data["attempt"]?.toIntOrNull() ?: 0,
+                sentAt = data["sent_at"]?.toLongOrNull() ?: 0L,
+                expiresAt = data["expires_at"]?.toLongOrNull() ?: return null,
+                response = OfferResponse.PENDING,
+                totalPrice = Cop(data["total_price"]?.toIntOrNull() ?: return null),
+                commissionFee = Cop(data["commission_fee"]?.toIntOrNull() ?: return null),
+                distanceKm = data["distance_km"]?.toDoubleOrNull() ?: 0.0,
+                originAddr = data["origin_addr"] ?: "",
+                destAddr = data["dest_addr"] ?: ""
+            )
+        } catch (e: Exception) {
+            logError("DriverHomeViewModel", "Failed to parse FCM offer: ${e.message}")
+            null
+        }
+    }
+
+    private fun acceptOffer(offerId: String, tripId: String) {
+        if (_uiState.value.isAcceptingOffer) return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isAcceptingOffer = true, error = null) }
+            acceptOfferUseCase(tripId, offerId).fold(
+                onSuccess = {
+                    _uiState.update { it.copy(isAcceptingOffer = false, showOfferDialog = false, activeOffer = null) }
+                },
+                onFailure = { e ->
+                    val error = when (e) {
+                        is AppError.Trip.OfferExpired -> DriverHomeError.OfferExpiredError
+                        is AppError.Trip.WalletInsufficient -> DriverHomeError.WalletInsufficientError
+                        else -> DriverHomeError.AcceptOfferError
+                    }
+                    _uiState.update { it.copy(isAcceptingOffer = false, error = error) }
+                }
+            )
+        }
+    }
+
+    private fun rejectOffer(offerId: String, tripId: String) {
+        if (_uiState.value.isRejectingOffer) return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isRejectingOffer = true, error = null) }
+            rejectOfferUseCase(tripId, offerId).fold(
+                onSuccess = {
+                    _uiState.update { it.copy(isRejectingOffer = false, showOfferDialog = false, activeOffer = null) }
+                },
+                onFailure = { e ->
+                    logError("DriverHomeViewModel", "Failed to reject offer: ${e.message}")
+                    _uiState.update { it.copy(isRejectingOffer = false, error = DriverHomeError.RejectOfferError) }
+                }
+            )
+        }
+    }
+
+    private fun dismissOffer() {
+        _uiState.update { it.copy(showOfferDialog = false, activeOffer = null) }
     }
 
     private fun onLocationPermissionResult(granted: Boolean) {
@@ -87,9 +175,6 @@ class DriverHomeViewModel(
                 _uiState.update { it.copy(activeTrips = trips.toImmutableList()) }
                 val activeTripId = trackableTripId(trips)
                 if (activeTripId != null) {
-                    // Without the permission the provider flow fails
-                    // immediately; tracking starts later from
-                    // onLocationPermissionResult once it is granted.
                     if (_uiState.value.hasLocationPermission) {
                         tripTracker.startTracking(activeTripId)
                     }
@@ -124,8 +209,6 @@ class DriverHomeViewModel(
             _uiState.update { it.copy(isAccepting = true, error = null) }
             acceptTripUseCase(tripId).fold(
                 onSuccess = {
-                    // The trip moves from the available list to the active
-                    // list through the existing snapshot listeners.
                     _uiState.update { it.copy(isAccepting = false) }
                 },
                 onFailure = { e ->
@@ -153,7 +236,7 @@ class DriverHomeViewModel(
                         driverName = user.fullName,
                         balance = user.walletBalance,
                         isAvailable = user.isOnline,
-                        totalTrips = user.ratingCount // Fallback since totalTrips isn't in User yet
+                        totalTrips = user.ratingCount
                     )
                 }
                 setAvailableTripsCollection(user.isOnline)
