@@ -12,6 +12,7 @@ import com.juanpablo0612.tucargo.data.config.ConfigRepository
 import com.juanpablo0612.tucargo.data.config.ConfigRepositoryImpl
 import com.juanpablo0612.tucargo.data.quote.QuoteRepository
 import com.juanpablo0612.tucargo.data.quote.QuoteRepositoryImpl
+import com.juanpablo0612.tucargo.data.tracking.TrackingRepository
 import com.juanpablo0612.tucargo.data.trip.TripRepository
 import com.juanpablo0612.tucargo.data.trip.TripRepositoryImpl
 import com.juanpablo0612.tucargo.domain.trip.TripTracker
@@ -25,6 +26,7 @@ import com.juanpablo0612.tucargo.domain.usecase.CalculateTripPriceUseCase
 import com.juanpablo0612.tucargo.domain.usecase.CancelTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ComputeQuoteUseCase
 import com.juanpablo0612.tucargo.domain.usecase.CreateTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.FlushLocationBufferUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.GetDriverTripsUseCase
@@ -39,6 +41,7 @@ import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAvailableTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverLocationUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RegisterUseCase
@@ -47,6 +50,7 @@ import com.juanpablo0612.tucargo.domain.usecase.RejectOfferUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RequestQuoteUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RequestTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ReviewKycDocumentUseCase
+import com.juanpablo0612.tucargo.domain.usecase.SendLocationUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SetDriverVerifiedUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
@@ -66,10 +70,13 @@ import com.juanpablo0612.tucargo.features.client.quote.TripRequestViewModel
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.completed.TripCompletedViewModel
+import com.juanpablo0612.tucargo.core.service.LocationServiceController
+import com.juanpablo0612.tucargo.data.tracking.TrackingRepositoryImpl
 import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
+import dev.gitlive.firebase.database.database
 import dev.gitlive.firebase.firestore.firestore
 import dev.gitlive.firebase.functions.functions
 import dev.gitlive.firebase.storage.storage
@@ -88,6 +95,7 @@ val dataModule = module {
     single { Firebase.firestore }
     single { Firebase.storage }
     single { Firebase.functions }
+    single { Firebase.database }
 
     single { AppDispatchers() }
     single(named("ApplicationScope")) {
@@ -103,6 +111,7 @@ val dataModule = module {
     single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
     single<TripRepository> { TripRepositoryImpl(get(), get(), get()) }
     single<QuoteRepository> { QuoteRepositoryImpl(get()) }
+    single<TrackingRepository> { TrackingRepositoryImpl(get(), get()) }
     single { TripTracker(get(), get(), get(named("ApplicationScope"))) }
 }
 
@@ -130,6 +139,9 @@ val domainModule = module {
     singleOf(::AdvanceTripStatusUseCase)
     singleOf(::CompleteTripUseCase)
     singleOf(::CancelTripUseCase)
+    singleOf(::SendLocationUseCase)
+    singleOf(::FlushLocationBufferUseCase)
+    singleOf(::ObserveDriverLocationUseCase)
 
     singleOf(::LogoutUseCase)
     singleOf(::SendPasswordResetEmailUseCase)
@@ -158,7 +170,7 @@ val viewModelModule = module {
     viewModelOf(::DriverDocsUploadViewModel)
     viewModelOf(::KycPendingViewModel)
     viewModelOf(::TripHistoryViewModel)
-    viewModel { (tripId: String) -> TripDetailViewModel(tripId, get(), get(), get()) }
+    viewModel { (tripId: String) -> TripDetailViewModel(tripId, get(), get(), get(), get()) }
     viewModel { (tripId: String) -> TripActiveViewModel(tripId, get(), get(), get(), get()) }
     viewModel { (tripId: String) -> TripCompletedViewModel(tripId, get(), get()) }
     viewModelOf(::AdminHomeViewModel)

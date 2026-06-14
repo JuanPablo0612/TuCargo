@@ -30,6 +30,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
@@ -40,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.permissions.rememberBackgroundLocationPermissionRequester
 import com.juanpablo0612.tucargo.core.permissions.rememberLocationPermissionRequester
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
@@ -94,9 +98,27 @@ fun DriverHomeScreen(
     val requestLocationPermission = rememberLocationPermissionRequester { granted ->
         viewModel.onAction(DriverHomeAction.LocationPermissionResult(granted))
     }
+    val requestBackgroundLocationPermission = rememberBackgroundLocationPermissionRequester { _ -> }
+    var showBackgroundDisclosure by remember { mutableStateOf(false) }
+
+    if (showBackgroundDisclosure) {
+        BackgroundLocationDisclosureDialog(
+            onContinue = {
+                showBackgroundDisclosure = false
+                requestBackgroundLocationPermission()
+            },
+            onDismiss = { showBackgroundDisclosure = false }
+        )
+    }
+
     LaunchedEffect(state.isAvailable) {
         if (state.isAvailable && !state.hasLocationPermission) {
             requestLocationPermission()
+        }
+    }
+    LaunchedEffect(state.hasLocationPermission, state.isAvailable) {
+        if (state.hasLocationPermission && state.isAvailable) {
+            showBackgroundDisclosure = true
         }
     }
 

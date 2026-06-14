@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.juanpablo0612.tucargo.core.location.DriverLocation
 
 @Composable
 actual fun MapComponent(
@@ -18,10 +19,11 @@ actual fun MapComponent(
     latitude: Double,
     longitude: Double,
     zoom: Float,
-    onMapClick: ((latitude: Double, longitude: Double) -> Unit)?
+    onMapClick: ((latitude: Double, longitude: Double) -> Unit)?,
+    driverLocation: DriverLocation?,
+    originLatLng: Pair<Double, Double>?,
+    destinationLatLng: Pair<Double, Double>?,
 ) {
-    // Placeholder para iOS para satisfacer la declaración 'expect'
-    // En una fase posterior, se integrará con Google Maps SDK para iOS o MapKit vía interop
     Box(
         modifier = modifier.fillMaxSize().background(Color.LightGray),
         contentAlignment = Alignment.Center

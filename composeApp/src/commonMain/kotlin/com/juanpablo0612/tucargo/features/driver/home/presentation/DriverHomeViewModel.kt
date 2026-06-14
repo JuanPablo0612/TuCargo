@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.core.fcm.OfferEventBus
 import com.juanpablo0612.tucargo.core.logging.logError
+import com.juanpablo0612.tucargo.core.service.LocationServiceController
 import com.juanpablo0612.tucargo.domain.model.AppError
 import com.juanpablo0612.tucargo.domain.model.Cop
 import com.juanpablo0612.tucargo.domain.model.OfferResponse
@@ -40,7 +41,8 @@ class DriverHomeViewModel(
     private val acceptTripUseCase: AcceptTripUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
     private val rejectOfferUseCase: RejectOfferUseCase,
-    private val tripTracker: TripTracker
+    private val tripTracker: TripTracker,
+    private val locationServiceController: LocationServiceController
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DriverHomeState())
@@ -150,14 +152,18 @@ class DriverHomeViewModel(
             )
         }
         if (granted) {
-            trackableTripId(_uiState.value.activeTrips)?.let { tripId ->
-                tripTracker.startTracking(tripId)
-            }
+            val userId = getCurrentUserIdUseCase() ?: return
+            locationServiceController.startService(userId)
+            val activeTripId = trackableTripId(_uiState.value.activeTrips)
+            locationServiceController.updateTripMode(activeTripId)
         }
     }
 
     private fun trackableTripId(trips: List<Trip>): String? = trips.firstOrNull {
-        it.status == TripStatus.AT_DROPOFF || it.status == TripStatus.AT_PICKUP || it.status == TripStatus.IN_TRANSIT
+        it.status == TripStatus.ACCEPTED ||
+            it.status == TripStatus.AT_PICKUP ||
+            it.status == TripStatus.IN_TRANSIT ||
+            it.status == TripStatus.AT_DROPOFF
     }?.id
 
     private fun observeTrackerState() {
@@ -174,13 +180,7 @@ class DriverHomeViewModel(
             .onEach { trips ->
                 _uiState.update { it.copy(activeTrips = trips.toImmutableList()) }
                 val activeTripId = trackableTripId(trips)
-                if (activeTripId != null) {
-                    if (_uiState.value.hasLocationPermission) {
-                        tripTracker.startTracking(activeTripId)
-                    }
-                } else {
-                    tripTracker.stopTracking()
-                }
+                locationServiceController.updateTripMode(activeTripId)
             }.launchIn(viewModelScope)
     }
 
@@ -251,12 +251,18 @@ class DriverHomeViewModel(
             val userId = getCurrentUserIdUseCase() ?: return@launch
             _uiState.update { it.copy(isAvailable = available) }
             setAvailableTripsCollection(available)
-            updateDriverStatusUseCase(userId, available).onFailure {
-                _uiState.update {
-                    it.copy(isAvailable = !available, error = DriverHomeError.ToggleAvailabilityError)
+            updateDriverStatusUseCase(userId, available).fold(
+                onSuccess = {
+                    if (!available) locationServiceController.stopService()
+                },
+                onFailure = {
+                    _uiState.update {
+                        it.copy(isAvailable = !available, error = DriverHomeError.ToggleAvailabilityError)
+                    }
+                    setAvailableTripsCollection(!available)
+                    if (available) locationServiceController.stopService()
                 }
-                setAvailableTripsCollection(!available)
-            }
+            )
         }
     }
 }

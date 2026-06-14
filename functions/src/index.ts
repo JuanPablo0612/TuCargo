@@ -9,3 +9,4 @@ export { acceptOffer } from "./acceptOffer";
 export { rejectOffer } from "./rejectOffer";
 export { updateTripStatus } from "./updateTripStatus";
 export { completeTrip } from "./completeTrip";
+export { cleanStaleDriverLocations } from "./cleanStaleDriverLocations";

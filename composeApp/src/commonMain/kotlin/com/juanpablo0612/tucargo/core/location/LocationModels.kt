@@ -8,7 +8,9 @@ data class LocationUpdate(
     val longitude: Double,
     val altitude: Double? = null,
     val accuracy: Float? = null,
-    val timestamp: Long = 0L
+    val timestamp: Long = 0L,
+    val speedMs: Float? = null,
+    val bearingDeg: Float? = null
 )
 
 interface LocationProvider {
