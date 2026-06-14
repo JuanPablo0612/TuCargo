@@ -14,6 +14,11 @@ class TuCargoFirebaseMessagingService : FirebaseMessagingService() {
                 val tripId = data["trip_id"] ?: return
                 OfferEventBus.postCancellation(tripId)
             }
+            // STATUS_UPDATED and TRIP_COMPLETED: Firestore real-time listeners
+            // handle UI updates. FCM wakes the app from background so the
+            // notification body (set by the Cloud Function) surfaces as a
+            // system notification automatically.
+            "STATUS_UPDATED", "TRIP_COMPLETED" -> Unit
         }
     }
 

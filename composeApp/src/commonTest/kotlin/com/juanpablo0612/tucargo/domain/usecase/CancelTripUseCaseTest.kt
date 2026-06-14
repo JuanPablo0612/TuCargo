@@ -17,7 +17,7 @@ class CancelTripUseCaseTest {
 
     @Test
     fun cancellingAfterPickup_failsWithoutRepositoryCall() = runTest {
-        val trip = Trip(id = "t1", status = TripStatus.IN_PROGRESS)
+        val trip = Trip(id = "t1", status = TripStatus.AT_DROPOFF)
 
         val result = useCase(trip)
 

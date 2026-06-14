@@ -7,3 +7,5 @@ export { requestTrip } from "./requestTrip";
 export { onTripCreate } from "./onTripCreate";
 export { acceptOffer } from "./acceptOffer";
 export { rejectOffer } from "./rejectOffer";
+export { updateTripStatus } from "./updateTripStatus";
+export { completeTrip } from "./completeTrip";

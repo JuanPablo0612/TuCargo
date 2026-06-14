@@ -20,6 +20,7 @@ import com.juanpablo0612.tucargo.data.user.UserRepositoryImpl
 import com.juanpablo0612.tucargo.domain.usecase.AcceptOfferUseCase
 import com.juanpablo0612.tucargo.domain.usecase.AcceptTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.AdvanceTripStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.CompleteTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.CalculateTripPriceUseCase
 import com.juanpablo0612.tucargo.domain.usecase.CancelTripUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ComputeQuoteUseCase
@@ -64,6 +65,7 @@ import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
 import com.juanpablo0612.tucargo.features.client.quote.TripRequestViewModel
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveViewModel
+import com.juanpablo0612.tucargo.features.trip.presentation.completed.TripCompletedViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryViewModel
 import dev.gitlive.firebase.Firebase
@@ -126,6 +128,7 @@ val domainModule = module {
     singleOf(::RejectOfferUseCase)
     singleOf(::ObserveActiveOfferUseCase)
     singleOf(::AdvanceTripStatusUseCase)
+    singleOf(::CompleteTripUseCase)
     singleOf(::CancelTripUseCase)
 
     singleOf(::LogoutUseCase)
@@ -156,7 +159,8 @@ val viewModelModule = module {
     viewModelOf(::KycPendingViewModel)
     viewModelOf(::TripHistoryViewModel)
     viewModel { (tripId: String) -> TripDetailViewModel(tripId, get(), get(), get()) }
-    viewModel { (tripId: String) -> TripActiveViewModel(tripId, get(), get()) }
+    viewModel { (tripId: String) -> TripActiveViewModel(tripId, get(), get(), get(), get()) }
+    viewModel { (tripId: String) -> TripCompletedViewModel(tripId, get(), get()) }
     viewModelOf(::AdminHomeViewModel)
     viewModel { (driverId: String) -> AdminDriverReviewViewModel(driverId, get(), get(), get()) }
 }

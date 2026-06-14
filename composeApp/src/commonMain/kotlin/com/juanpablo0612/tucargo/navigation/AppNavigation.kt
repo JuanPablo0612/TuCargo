@@ -38,6 +38,7 @@ import com.juanpablo0612.tucargo.features.client.quote.QuoteScreen
 import com.juanpablo0612.tucargo.features.client.searching.SearchingScreen
 import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveScreen
+import com.juanpablo0612.tucargo.features.trip.presentation.completed.TripCompletedScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryScreen
 import kotlinx.serialization.Serializable
@@ -61,6 +62,7 @@ import org.koin.compose.viewmodel.koinViewModel
     @Serializable data object TripHistory : Route()
     @Serializable data class TripActive(val tripId: String) : Route()
     @Serializable data class TripDetail(val tripId: String) : Route()
+    @Serializable data class TripCompleted(val tripId: String) : Route()
     @Serializable data object AdminHome : Route()
     @Serializable data class AdminDriverReview(val driverId: String, val driverName: String) : Route()
 }
@@ -172,7 +174,7 @@ fun AppNavigation() {
             SearchingScreen(
                 tripId = route.tripId,
                 onTripAccepted = { tripId ->
-                    navController.navigate(Route.TripActive(tripId)) {
+                    navController.navigate(Route.TripDetail(tripId)) {
                         popUpTo<Route.ClientHome> { inclusive = false }
                     }
                 },
@@ -209,6 +211,11 @@ fun AppNavigation() {
             TripActiveScreen(
                 tripId = route.tripId,
                 onBackClick = { navController.popBackStack() },
+                onTripCompleted = {
+                    navController.navigate(Route.TripCompleted(route.tripId)) {
+                        popUpTo<Route.DriverHome> { inclusive = false }
+                    }
+                },
             )
         }
 
@@ -217,6 +224,28 @@ fun AppNavigation() {
             TripDetailScreen(
                 tripId = route.tripId,
                 onBackClick = { navController.popBackStack() },
+                onTripCompleted = {
+                    navController.navigate(Route.TripCompleted(route.tripId)) {
+                        popUpTo<Route.ClientHome> { inclusive = false }
+                    }
+                },
+            )
+        }
+
+        composable<Route.TripCompleted> { backStackEntry ->
+            val route: Route.TripCompleted = backStackEntry.toRoute()
+            TripCompletedScreen(
+                tripId = route.tripId,
+                onDriverHomeClick = {
+                    navController.navigate(Route.DriverHome) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                onClientHomeClick = {
+                    navController.navigate(Route.ClientHome) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
             )
         }
 

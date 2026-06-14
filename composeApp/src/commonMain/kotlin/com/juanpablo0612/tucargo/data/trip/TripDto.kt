@@ -25,6 +25,8 @@ data class TripDto(
     val driverName: String = "",
     @SerialName("driver_plate")
     val driverPlate: String = "",
+    @SerialName("driver_phone")
+    val driverPhone: String = "",
     @SerialName("driver_last_lat")
     val driverLastLat: Double? = null,
     @SerialName("driver_last_lng")
@@ -51,6 +53,16 @@ data class TripDto(
     val cargoDescription: String = "",
     @SerialName("delivery_code")
     val deliveryCode: String = "",
+    @SerialName("delivery_code_attempts")
+    val deliveryCodeAttempts: Int = 0,
+    @SerialName("arrived_pickup_at")
+    val arrivedPickupAt: Long? = null,
+    @SerialName("started_at")
+    val startedAt: Long? = null,
+    @SerialName("arrived_dropoff_at")
+    val arrivedDropoffAt: Long? = null,
+    @SerialName("delivery_code_verified_at")
+    val deliveryCodeVerifiedAt: Long? = null,
     @SerialName("quote_id")
     val quoteId: String = "",
     @SerialName("cancelled_by")

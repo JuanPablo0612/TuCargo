@@ -9,10 +9,10 @@ import com.juanpablo0612.tucargo.domain.model.TripStatus
 val tripTransitions: Map<TripStatus, Set<TripStatus>> = mapOf(
     TripStatus.REQUESTED to setOf(TripStatus.OFFERED, TripStatus.CANCELLED_CLIENT, TripStatus.CANCELLED_NO_DRIVER),
     TripStatus.OFFERED to setOf(TripStatus.ACCEPTED, TripStatus.CANCELLED_CLIENT, TripStatus.CANCELLED_NO_DRIVER),
-    TripStatus.ACCEPTED to setOf(TripStatus.ON_WAY, TripStatus.CANCELLED_DRIVER),
-    TripStatus.ON_WAY to setOf(TripStatus.ARRIVED_PICKUP),
-    TripStatus.ARRIVED_PICKUP to setOf(TripStatus.IN_PROGRESS),
-    TripStatus.IN_PROGRESS to setOf(TripStatus.COMPLETED),
+    TripStatus.ACCEPTED to setOf(TripStatus.AT_PICKUP, TripStatus.CANCELLED_DRIVER),
+    TripStatus.AT_PICKUP to setOf(TripStatus.IN_TRANSIT),
+    TripStatus.IN_TRANSIT to setOf(TripStatus.AT_DROPOFF),
+    TripStatus.AT_DROPOFF to setOf(TripStatus.COMPLETED),
     TripStatus.COMPLETED to emptySet(),
     TripStatus.CANCELLED_NO_DRIVER to emptySet(),
     TripStatus.CANCELLED_CLIENT to emptySet(),
@@ -25,10 +25,10 @@ fun TripStatus.canTransitionTo(next: TripStatus): Boolean =
 
 /** The single forward step a driver takes from the current status, if any. */
 fun TripStatus.nextDriverStatus(): TripStatus? = when (this) {
-    TripStatus.ACCEPTED -> TripStatus.ON_WAY
-    TripStatus.ON_WAY -> TripStatus.ARRIVED_PICKUP
-    TripStatus.ARRIVED_PICKUP -> TripStatus.IN_PROGRESS
-    TripStatus.IN_PROGRESS -> TripStatus.COMPLETED
+    TripStatus.ACCEPTED -> TripStatus.AT_PICKUP
+    TripStatus.AT_PICKUP -> TripStatus.IN_TRANSIT
+    TripStatus.IN_TRANSIT -> TripStatus.AT_DROPOFF
+    TripStatus.AT_DROPOFF -> TripStatus.COMPLETED
     else -> null
 }
 

@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.time.Clock
 
+private val DELIVERY_CODE_INVALID_REGEX = Regex("DELIVERY_CODE_INVALID:(\\d+)")
+
 class TripRepositoryImpl(
     private val firestore: FirebaseFirestore,
     private val dispatchers: AppDispatchers,
@@ -90,22 +92,57 @@ class TripRepositoryImpl(
         from: TripStatus,
         to: TripStatus
     ): Result<Unit> = safeCall {
-        withContext(dispatchers.io) {
-            val docRef = tripsCollection.document(tripId)
-            firestore.runTransaction {
-                val dto = get(docRef).data<TripDto>()
-                if (dto.status != from.name) throw AppError.Trip.InvalidTransition
-                if (to == TripStatus.COMPLETED) {
+        when (to) {
+            TripStatus.AT_PICKUP, TripStatus.IN_TRANSIT, TripStatus.AT_DROPOFF -> {
+                val action = when (to) {
+                    TripStatus.AT_PICKUP -> "ARRIVE_PICKUP"
+                    TripStatus.IN_TRANSIT -> "START_TRIP"
+                    TripStatus.AT_DROPOFF -> "ARRIVE_DROPOFF"
+                    else -> throw AppError.Trip.InvalidTransition
+                }
+                val callable = functions.httpsCallable("updateTripStatus")
+                callable.invoke<Map<String, Any?>, Map<String, Any?>>(
+                    mapOf("tripId" to tripId, "action" to action)
+                )
+            }
+            TripStatus.CANCELLED_CLIENT -> withContext(dispatchers.io) {
+                val docRef = tripsCollection.document(tripId)
+                firestore.runTransaction {
+                    val dto = get(docRef).data<TripDto>()
+                    if (dto.status != from.name) throw AppError.Trip.InvalidTransition
                     update(
                         docRef,
-                        "status" to to.name,
-                        "completed_at" to Clock.System.now().toEpochMilliseconds()
+                        "status" to TripStatus.CANCELLED_CLIENT.name,
+                        "cancelled_by" to "CLIENT"
                     )
-                } else {
-                    update(docRef, "status" to to.name)
                 }
             }
+            else -> throw AppError.Trip.InvalidTransition
+        }
+        Unit
+    }
+
+    override suspend fun completeTrip(tripId: String, deliveryCode: String): Result<Unit> = safeCall {
+        try {
+            val callable = functions.httpsCallable("completeTrip")
+            callable.invoke<Map<String, Any?>, Map<String, Any?>>(
+                mapOf("tripId" to tripId, "deliveryCode" to deliveryCode)
+            )
             Unit
+        } catch (e: Exception) {
+            val msg = e.message ?: throw e
+            when {
+                msg.contains("DELIVERY_CODE_LOCKED") -> throw AppError.Trip.DeliveryCodeLocked
+                msg.contains("INVALID_CODE_FORMAT") -> throw AppError.Trip.InvalidCodeFormat
+                else -> {
+                    val match = DELIVERY_CODE_INVALID_REGEX.find(msg)
+                    if (match != null) {
+                        val remaining = match.groupValues[1].toIntOrNull() ?: 0
+                        throw AppError.Trip.DeliveryCodeInvalid(remaining)
+                    }
+                    throw e
+                }
+            }
         }
     }
 
@@ -181,9 +218,9 @@ class TripRepositoryImpl(
                     .map { it.data<TripDto>().toDomain() }
                     .filter { it.status in listOf(
                         TripStatus.ACCEPTED,
-                        TripStatus.ON_WAY,
-                        TripStatus.ARRIVED_PICKUP,
-                        TripStatus.IN_PROGRESS
+                        TripStatus.AT_PICKUP,
+                        TripStatus.IN_TRANSIT,
+                        TripStatus.AT_DROPOFF
                     )}
             }
 

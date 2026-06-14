@@ -24,6 +24,9 @@ sealed class AppError(message: String? = null, cause: Throwable? = null) : Excep
         data object QuoteAlreadyUsed : Trip()
         data object OfferExpired : Trip()
         data object WalletInsufficient : Trip()
+        data class DeliveryCodeInvalid(val remaining: Int) : Trip()
+        data object DeliveryCodeLocked : Trip()
+        data object InvalidCodeFormat : Trip()
     }
     data class DataCorruption(override val message: String) : AppError(message)
     data object Network : AppError()
