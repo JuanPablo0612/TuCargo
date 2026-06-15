@@ -14,8 +14,10 @@ import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAvailableTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RejectOfferUseCase
-import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ToggleAvailabilityUseCase
+import com.juanpablo0612.tucargo.testutil.FakeConfigRepository
 import com.juanpablo0612.tucargo.testutil.FakeLocationProvider
+import com.juanpablo0612.tucargo.testutil.FakeLocationServiceController
 import com.juanpablo0612.tucargo.testutil.FakeTripRepository
 import com.juanpablo0612.tucargo.testutil.FakeUserRepository
 import kotlinx.coroutines.CoroutineScope
@@ -40,6 +42,7 @@ class DriverHomeViewModelTest {
     private lateinit var trackerScope: CoroutineScope
     private lateinit var tripRepository: FakeTripRepository
     private lateinit var userRepository: FakeUserRepository
+    private lateinit var configRepository: FakeConfigRepository
     private lateinit var tracker: TripTracker
     private lateinit var viewModel: DriverHomeViewModel
 
@@ -59,17 +62,19 @@ class DriverHomeViewModelTest {
             currentUser = Result.success(verifiedDriver)
             currentUserId = verifiedDriver.id
         }
+        configRepository = FakeConfigRepository()
         tracker = TripTracker(tripRepository, FakeLocationProvider(), trackerScope)
         viewModel = DriverHomeViewModel(
             getCurrentUserUseCase = GetCurrentUserUseCase(userRepository),
             getCurrentUserIdUseCase = GetCurrentUserIdUseCase(userRepository),
-            updateDriverStatusUseCase = UpdateDriverStatusUseCase(userRepository),
+            toggleAvailabilityUseCase = ToggleAvailabilityUseCase(userRepository, configRepository),
             observeDriverActiveTripsUseCase = ObserveDriverActiveTripsUseCase(tripRepository),
             observeAvailableTripsUseCase = ObserveAvailableTripsUseCase(tripRepository),
             acceptTripUseCase = AcceptTripUseCase(tripRepository, userRepository),
             acceptOfferUseCase = AcceptOfferUseCase(tripRepository),
             rejectOfferUseCase = RejectOfferUseCase(tripRepository),
-            tripTracker = tracker
+            tripTracker = tracker,
+            locationServiceController = FakeLocationServiceController()
         )
     }
 
@@ -129,5 +134,27 @@ class DriverHomeViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertEquals(DriverHomeError.TripAlreadyTaken, viewModel.uiState.value.error)
+    }
+
+    @Test
+    fun goOnline_withDocNotApproved_showsError() = runTest {
+        userRepository.currentUser = Result.success(verifiedDriver.copy(isVerified = false))
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        viewModel.onAction(DriverHomeAction.ToggleAvailability(true))
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals(DriverHomeError.DocNotApproved, viewModel.uiState.value.error)
+    }
+
+    @Test
+    fun goOnline_withNoVehicle_showsError() = runTest {
+        userRepository.currentUser = Result.success(verifiedDriver.copy(isVerified = true, vehicle = null))
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        viewModel.onAction(DriverHomeAction.ToggleAvailability(true))
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals(DriverHomeError.NoActiveVehicle, viewModel.uiState.value.error)
     }
 }

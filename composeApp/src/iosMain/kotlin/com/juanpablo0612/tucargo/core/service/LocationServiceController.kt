@@ -1,7 +1,7 @@
 package com.juanpablo0612.tucargo.core.service
 
-actual class LocationServiceController {
-    actual fun startService(driverId: String) = Unit
-    actual fun stopService() = Unit
-    actual fun updateTripMode(tripId: String?) = Unit
+class IosLocationServiceController : LocationServiceController {
+    override fun startService(driverId: String) = Unit
+    override fun stopService() = Unit
+    override fun updateTripMode(tripId: String?) = Unit
 }

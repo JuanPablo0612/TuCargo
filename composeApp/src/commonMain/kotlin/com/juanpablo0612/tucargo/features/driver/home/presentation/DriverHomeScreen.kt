@@ -66,6 +66,9 @@ import tucargo.composeapp.generated.resources.driver_home_accept_error
 import tucargo.composeapp.generated.resources.driver_home_active_desc
 import tucargo.composeapp.generated.resources.driver_home_active_trips_title
 import tucargo.composeapp.generated.resources.driver_home_availability_error
+import tucargo.composeapp.generated.resources.driver_home_doc_not_approved
+import tucargo.composeapp.generated.resources.driver_home_no_active_vehicle
+import tucargo.composeapp.generated.resources.driver_home_wallet_insufficient
 import tucargo.composeapp.generated.resources.driver_home_available_trips_error
 import tucargo.composeapp.generated.resources.driver_home_available_trips_title
 import tucargo.composeapp.generated.resources.driver_home_empty_trips_message
@@ -184,6 +187,9 @@ fun DriverHomeScreen(
                         val errorRes = when (driverError) {
                             DriverHomeError.LoadDriverError -> Res.string.driver_home_load_error
                             DriverHomeError.ToggleAvailabilityError -> Res.string.driver_home_availability_error
+                            DriverHomeError.DocNotApproved -> Res.string.driver_home_doc_not_approved
+                            DriverHomeError.NoActiveVehicle -> Res.string.driver_home_no_active_vehicle
+                            DriverHomeError.WalletInsufficient -> Res.string.driver_home_wallet_insufficient
                             DriverHomeError.TrackingError -> Res.string.driver_home_tracking_error
                             DriverHomeError.LocationPermissionDenied -> Res.string.driver_home_location_permission_denied
                             DriverHomeError.AvailableTripsError -> Res.string.driver_home_available_trips_error

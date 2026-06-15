@@ -28,6 +28,11 @@ sealed class AppError(message: String? = null, cause: Throwable? = null) : Excep
         data object DeliveryCodeLocked : Trip()
         data object InvalidCodeFormat : Trip()
     }
+    sealed class Driver : AppError() {
+        data object DocNotApproved : Driver()
+        data object NoActiveVehicle : Driver()
+        data object WalletInsufficient : Driver()
+    }
     data class DataCorruption(override val message: String) : AppError(message)
     data object Network : AppError()
     data class Unknown(override val cause: Throwable?) : AppError(cause?.message, cause)

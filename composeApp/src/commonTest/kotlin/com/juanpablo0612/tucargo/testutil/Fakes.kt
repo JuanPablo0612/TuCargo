@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.testutil
 
 import com.juanpablo0612.tucargo.core.location.LocationProvider
 import com.juanpablo0612.tucargo.core.location.LocationUpdate
+import com.juanpablo0612.tucargo.core.service.LocationServiceController
 import com.juanpablo0612.tucargo.data.auth.AuthRepository
 import com.juanpablo0612.tucargo.data.config.ConfigRepository
 import com.juanpablo0612.tucargo.data.config.SystemConfig
@@ -142,6 +143,12 @@ class FakeDocumentRepository : DocumentRepository {
         lastStatusUpdate = Triple(type, status, rejectionReason)
         return updateStatusResult
     }
+}
+
+class FakeLocationServiceController : LocationServiceController {
+    override fun startService(driverId: String) = Unit
+    override fun stopService() = Unit
+    override fun updateTripMode(tripId: String?) = Unit
 }
 
 class FakeQuoteRepository : QuoteRepository {

@@ -27,8 +27,8 @@ enum class UserRole {
 
 enum class UserStatus {
     ACTIVE,
-    INACTIVE,
-    SUSPENDED
+    SUSPENDED,
+    DELETED
 }
 
 enum class VehicleType {

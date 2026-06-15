@@ -3,6 +3,9 @@ package com.juanpablo0612.tucargo.features.driver.home.presentation
 sealed interface DriverHomeError {
     data object LoadDriverError : DriverHomeError
     data object ToggleAvailabilityError : DriverHomeError
+    data object DocNotApproved : DriverHomeError
+    data object NoActiveVehicle : DriverHomeError
+    data object WalletInsufficient : DriverHomeError
     data object TrackingError : DriverHomeError
     data object LocationPermissionDenied : DriverHomeError
     data object AvailableTripsError : DriverHomeError

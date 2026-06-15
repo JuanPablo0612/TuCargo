@@ -53,6 +53,7 @@ import com.juanpablo0612.tucargo.domain.usecase.ReviewKycDocumentUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendLocationUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SendPasswordResetEmailUseCase
 import com.juanpablo0612.tucargo.domain.usecase.SetDriverVerifiedUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ToggleAvailabilityUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
 import com.juanpablo0612.tucargo.domain.usecase.UploadKycDocumentUseCase
 import com.juanpablo0612.tucargo.features.admin.home.AdminHomeViewModel
@@ -122,6 +123,7 @@ val domainModule = module {
     singleOf(::GetCurrentUserIdUseCase)
     singleOf(::IsUserLoggedInUseCase)
     singleOf(::UpdateDriverStatusUseCase)
+    singleOf(::ToggleAvailabilityUseCase)
     singleOf(::ObserveDriverActiveTripsUseCase)
     singleOf(::GetClientTripsUseCase)
     singleOf(::GetDriverTripsUseCase)
