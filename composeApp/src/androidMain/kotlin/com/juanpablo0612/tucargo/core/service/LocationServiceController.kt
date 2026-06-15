@@ -3,9 +3,9 @@ package com.juanpablo0612.tucargo.core.service
 import android.content.Context
 import android.content.Intent
 
-actual class LocationServiceController(private val context: Context) {
+class AndroidLocationServiceController(private val context: Context) : LocationServiceController {
 
-    actual fun startService(driverId: String) {
+    override fun startService(driverId: String) {
         val intent = Intent(context, DriverLocationService::class.java).apply {
             action = DriverLocationService.ACTION_START
             putExtra(DriverLocationService.EXTRA_DRIVER_ID, driverId)
@@ -13,14 +13,14 @@ actual class LocationServiceController(private val context: Context) {
         context.startForegroundService(intent)
     }
 
-    actual fun stopService() {
+    override fun stopService() {
         val intent = Intent(context, DriverLocationService::class.java).apply {
             action = DriverLocationService.ACTION_STOP
         }
         context.startService(intent)
     }
 
-    actual fun updateTripMode(tripId: String?) {
+    override fun updateTripMode(tripId: String?) {
         val intent = Intent(context, DriverLocationService::class.java).apply {
             action = DriverLocationService.ACTION_UPDATE_TRIP_MODE
             putExtra(DriverLocationService.EXTRA_TRIP_ID, tripId)

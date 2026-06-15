@@ -1,0 +1,27 @@
+package com.juanpablo0612.tucargo.domain.usecase
+
+import com.juanpablo0612.tucargo.data.config.ConfigRepository
+import com.juanpablo0612.tucargo.data.user.UserRepository
+import com.juanpablo0612.tucargo.domain.model.AppError
+
+class ToggleAvailabilityUseCase(
+    private val userRepository: UserRepository,
+    private val configRepository: ConfigRepository
+) {
+    suspend operator fun invoke(userId: String, goOnline: Boolean): Result<Unit> {
+        // Going offline is always allowed
+        if (!goOnline) return userRepository.updateDriverStatus(userId, false)
+
+        val user = userRepository.getCurrentUser().getOrElse { return Result.failure(it) }
+
+        if (!user.isVerified) return Result.failure(AppError.Driver.DocNotApproved)
+        if (user.vehicle == null) return Result.failure(AppError.Driver.NoActiveVehicle)
+
+        val config = configRepository.getSystemConfig().getOrElse { return Result.failure(it) }
+        if (user.walletBalance < config.minWalletBalance) {
+            return Result.failure(AppError.Driver.WalletInsufficient)
+        }
+
+        return userRepository.updateDriverStatus(userId, true)
+    }
+}

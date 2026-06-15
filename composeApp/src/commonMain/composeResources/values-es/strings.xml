@@ -84,6 +84,9 @@
     <string name="driver_home_completed_trips_msg">%1$d viajes completados</string>
     <string name="driver_home_load_error">No se pudo cargar la información del conductor. Intenta de nuevo.</string>
     <string name="driver_home_availability_error">Error de conexión. No se pudo actualizar tu disponibilidad.</string>
+    <string name="driver_home_doc_not_approved">Tu documentación aún no ha sido aprobada</string>
+    <string name="driver_home_no_active_vehicle">Debes registrar un vehículo antes de trabajar</string>
+    <string name="driver_home_wallet_insufficient">Tu saldo es insuficiente. Recarga para continuar.</string>
     <string name="driver_home_tracking_error">Error al actualizar tu ubicación. Por favor verifica tu GPS.</string>
     <string name="driver_home_location_permission_denied">Se requiere el permiso de ubicación para compartir tu posición durante los viajes. Actívalo en los ajustes del sistema.</string>
     <string name="driver_home_available_trips_title">Viajes disponibles</string>

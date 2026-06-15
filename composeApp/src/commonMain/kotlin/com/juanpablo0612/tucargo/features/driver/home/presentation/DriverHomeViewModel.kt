@@ -20,7 +20,7 @@ import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveAvailableTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverActiveTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.RejectOfferUseCase
-import com.juanpablo0612.tucargo.domain.usecase.UpdateDriverStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.ToggleAvailabilityUseCase
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 class DriverHomeViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
-    private val updateDriverStatusUseCase: UpdateDriverStatusUseCase,
+    private val toggleAvailabilityUseCase: ToggleAvailabilityUseCase,
     private val observeDriverActiveTripsUseCase: ObserveDriverActiveTripsUseCase,
     private val observeAvailableTripsUseCase: ObserveAvailableTripsUseCase,
     private val acceptTripUseCase: AcceptTripUseCase,
@@ -251,14 +251,18 @@ class DriverHomeViewModel(
             val userId = getCurrentUserIdUseCase() ?: return@launch
             _uiState.update { it.copy(isAvailable = available) }
             setAvailableTripsCollection(available)
-            updateDriverStatusUseCase(userId, available).fold(
+            toggleAvailabilityUseCase(userId, available).fold(
                 onSuccess = {
                     if (!available) locationServiceController.stopService()
                 },
-                onFailure = {
-                    _uiState.update {
-                        it.copy(isAvailable = !available, error = DriverHomeError.ToggleAvailabilityError)
+                onFailure = { e ->
+                    val error = when (e) {
+                        is AppError.Driver.DocNotApproved -> DriverHomeError.DocNotApproved
+                        is AppError.Driver.NoActiveVehicle -> DriverHomeError.NoActiveVehicle
+                        is AppError.Driver.WalletInsufficient -> DriverHomeError.WalletInsufficient
+                        else -> DriverHomeError.ToggleAvailabilityError
                     }
+                    _uiState.update { it.copy(isAvailable = !available, error = error) }
                     setAvailableTripsCollection(!available)
                     if (available) locationServiceController.stopService()
                 }

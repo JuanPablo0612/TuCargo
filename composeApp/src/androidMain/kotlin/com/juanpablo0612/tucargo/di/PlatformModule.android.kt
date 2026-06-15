@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.di
 
 import com.juanpablo0612.tucargo.core.location.AndroidLocationProvider
 import com.juanpablo0612.tucargo.core.location.LocationProvider
+import com.juanpablo0612.tucargo.core.service.AndroidLocationServiceController
 import com.juanpablo0612.tucargo.core.service.LocationServiceController
 import com.juanpablo0612.tucargo.data.tracking.LocationBuffer
 import com.juanpablo0612.tucargo.data.tracking.RoomLocationBuffer
@@ -15,5 +16,5 @@ actual val platformModule: Module = module {
     single { LocationDatabase.build(androidContext()) }
     single { get<LocationDatabase>().locationDao() }
     single<LocationBuffer> { RoomLocationBuffer(get()) }
-    single { LocationServiceController(androidContext()) }
+    single<LocationServiceController> { AndroidLocationServiceController(androidContext()) }
 }
