@@ -43,11 +43,13 @@ fun PickOriginScreen(
     onConfirmed: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     PickLocationScreenContent(
         title = stringResource(Res.string.pick_origin_title),
-        initialLat = viewModel.uiState.collectAsStateWithLifecycle().value.originLat,
-        initialLng = viewModel.uiState.collectAsStateWithLifecycle().value.originLng,
-        initialAddr = viewModel.uiState.collectAsStateWithLifecycle().value.originAddr,
+        initialLat = state.originLat,
+        initialLng = state.originLng,
+        initialAddr = state.originAddr,
         onConfirm = { lat, lng, addr ->
             viewModel.confirmOrigin(lat, lng, addr)
             onConfirmed()
@@ -62,11 +64,13 @@ fun PickDestScreen(
     onConfirmed: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     PickLocationScreenContent(
         title = stringResource(Res.string.pick_dest_title),
-        initialLat = viewModel.uiState.collectAsStateWithLifecycle().value.destLat,
-        initialLng = viewModel.uiState.collectAsStateWithLifecycle().value.destLng,
-        initialAddr = viewModel.uiState.collectAsStateWithLifecycle().value.destAddr,
+        initialLat = state.destLat,
+        initialLng = state.destLng,
+        initialAddr = state.destAddr,
         onConfirm = { lat, lng, addr ->
             viewModel.confirmDest(lat, lng, addr)
             onConfirmed()

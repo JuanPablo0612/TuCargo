@@ -23,7 +23,7 @@ class UploadKycDocumentUseCase(
         val bytes = withContext(dispatchers.io) { file.readBytes() }
 
         if (bytes.isEmpty()) {
-            throw AppError.Validation.InvalidTrip
+            throw AppError.Validation.EmptyFile
         }
         if (bytes.size > MAX_FILE_BYTES) {
             throw AppError.Validation.FileTooLarge

@@ -81,6 +81,8 @@ class TripRepositoryImpl(
         when (errorMsg) {
             "QUOTE_EXPIRED" -> throw AppError.Trip.QuoteExpired
             "QUOTE_ALREADY_USED" -> throw AppError.Trip.QuoteAlreadyUsed
+            null -> Unit
+            else -> throw AppError.DataCorruption("Unknown requestTrip error code: $errorMsg")
         }
         val tripId = data["tripId"] as? String ?: throw AppError.DataCorruption("Missing tripId")
         val deliveryCode = data["deliveryCode"] as? String ?: throw AppError.DataCorruption("Missing deliveryCode")

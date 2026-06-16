@@ -56,7 +56,7 @@ class TrackingRepositoryImpl(
         locations: List<DriverLocation>
     ): Result<Unit> = safeCall {
         if (locations.isEmpty()) return@safeCall
-        val latest = locations.maxByOrNull { it.capturedAt }!!
+        val latest = locations.maxBy { it.capturedAt }
         coroutineScope {
             launch {
                 database.reference("driver_locations/$driverId").setValue(latest.toRtdbMap())

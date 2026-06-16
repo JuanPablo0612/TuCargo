@@ -9,7 +9,9 @@ sealed class AppError(message: String? = null, cause: Throwable? = null) : Excep
     }
     sealed class Validation : AppError() {
         data object FileTooLarge : Validation()
+        data object EmptyFile : Validation()
         data object InvalidTrip : Validation()
+        data object InvalidPlate : Validation()
         data object KycIncomplete : Validation()
         data object SameOriginDest : Validation()
         data object QuoteOutOfRange : Validation()

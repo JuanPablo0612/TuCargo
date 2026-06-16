@@ -8,7 +8,7 @@ class RegisterVehicleUseCase(private val userRepository: UserRepository) {
     suspend operator fun invoke(vehicle: UserVehicle): Result<Unit> {
         val cleanPlate = vehicle.plate.trim().uppercase()
         if (cleanPlate.length < 5) {
-            return Result.failure(AppError.Validation.InvalidTrip)
+            return Result.failure(AppError.Validation.InvalidPlate)
         }
 
         return userRepository.getCurrentUser().mapCatching { user ->

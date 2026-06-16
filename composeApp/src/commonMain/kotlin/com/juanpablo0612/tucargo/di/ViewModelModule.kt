@@ -9,7 +9,6 @@ import com.juanpablo0612.tucargo.features.auth.login.LoginViewModel
 import com.juanpablo0612.tucargo.features.auth.register.RegisterViewModel
 import com.juanpablo0612.tucargo.features.auth.resetpassword.ResetPasswordViewModel
 import com.juanpablo0612.tucargo.features.auth.vehicle.VehicleRegistrationViewModel
-import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripViewModel
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
 import com.juanpablo0612.tucargo.features.client.quote.TripRequestViewModel
 import com.juanpablo0612.tucargo.features.driver.home.DriverHomeViewModel
@@ -25,7 +24,6 @@ val viewModelModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
     viewModelOf(::ClientHomeViewModel)
-    viewModelOf(::CreateTripViewModel)
     viewModelOf(::TripRequestViewModel)
     viewModelOf(::DriverHomeViewModel)
     viewModelOf(::ResetPasswordViewModel)
