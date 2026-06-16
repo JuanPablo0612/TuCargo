@@ -36,7 +36,7 @@ import com.juanpablo0612.tucargo.features.client.quote.PickDestScreen
 import com.juanpablo0612.tucargo.features.client.quote.PickOriginScreen
 import com.juanpablo0612.tucargo.features.client.quote.QuoteScreen
 import com.juanpablo0612.tucargo.features.client.searching.SearchingScreen
-import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeScreen
+import com.juanpablo0612.tucargo.features.driver.home.DriverHomeScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.completed.TripCompletedScreen
 import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailScreen

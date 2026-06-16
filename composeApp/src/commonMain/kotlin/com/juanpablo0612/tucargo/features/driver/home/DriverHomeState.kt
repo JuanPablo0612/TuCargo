@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.driver.home.presentation
+package com.juanpablo0612.tucargo.features.driver.home
 
 import androidx.compose.runtime.Immutable
 import com.juanpablo0612.tucargo.domain.model.Trip

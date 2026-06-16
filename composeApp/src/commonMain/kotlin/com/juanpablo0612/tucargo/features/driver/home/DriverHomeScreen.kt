@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.driver.home.presentation
+package com.juanpablo0612.tucargo.features.driver.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,8 +52,8 @@ import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import com.juanpablo0612.tucargo.core.ui.toCurrencyString
 import com.juanpablo0612.tucargo.core.ui.toDistanceString
 import com.juanpablo0612.tucargo.domain.model.Trip
-import com.juanpablo0612.tucargo.features.driver.home.presentation.components.AvailabilityButton
-import com.juanpablo0612.tucargo.features.driver.home.presentation.components.BalanceCard
+import com.juanpablo0612.tucargo.features.driver.home.components.AvailabilityButton
+import com.juanpablo0612.tucargo.features.driver.home.components.BalanceCard
 import com.juanpablo0612.tucargo.features.driver.offer.OfferScreen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

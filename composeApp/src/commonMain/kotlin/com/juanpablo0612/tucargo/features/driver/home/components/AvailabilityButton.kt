@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.driver.home.presentation.components
+package com.juanpablo0612.tucargo.features.driver.home.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement

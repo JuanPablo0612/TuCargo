@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.driver.home.presentation
+package com.juanpablo0612.tucargo.features.driver.home
 
 sealed interface DriverHomeError {
     data object LoadDriverError : DriverHomeError

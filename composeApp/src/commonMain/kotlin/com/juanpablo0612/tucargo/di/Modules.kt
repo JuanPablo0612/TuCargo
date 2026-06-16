@@ -68,7 +68,7 @@ import com.juanpablo0612.tucargo.features.auth.vehicle.VehicleRegistrationViewMo
 import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripViewModel
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
 import com.juanpablo0612.tucargo.features.client.quote.TripRequestViewModel
-import com.juanpablo0612.tucargo.features.driver.home.presentation.DriverHomeViewModel
+import com.juanpablo0612.tucargo.features.driver.home.DriverHomeViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveViewModel
 import com.juanpablo0612.tucargo.features.trip.presentation.completed.TripCompletedViewModel
 import com.juanpablo0612.tucargo.core.service.LocationServiceController
