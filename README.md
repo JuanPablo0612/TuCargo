@@ -11,9 +11,10 @@ Motorcycle-logistics marketplace built with Kotlin Multiplatform + Compose Multi
 ## Project layout
 
 - `composeApp/` — shared code (UI + domain + data).
-  - `commonMain/.../features/*` — presentation, one package per feature with `State` / `Action` / `Error` / `ViewModel` / `Screen` files (the `features/auth/presentation/login` package is the reference pattern).
-  - `commonMain/.../domain` — models, use cases, `domain/trip/TripTransitions.kt` (the trip status machine — **keep in sync with `firestore.rules`**).
-  - `commonMain/.../data` — repositories. Convention: repositories may talk to Firestore/Storage directly (via the GitLive SDK); only `auth`/`user` keep dedicated remote data sources. Firestore field names are snake_case via `@SerialName`.
+  - `commonMain/.../features/*` — presentation, one package per feature with `State` / `Action` / `Error` / `ViewModel` / `Screen` files (the `features/auth/login` package is the reference pattern). `features/client/quote` is an intentional exception — a multi-step wizard sharing one `TripRequestViewModel` across its screens — and `features/driver/offer/OfferScreen.kt` is a stateless dialog/component, not an independent screen; neither needs the full file set.
+  - `commonMain/.../domain` — `model/` (flat), `usecase/` (subpackaged by domain concern: `auth`, `user`, `trip`, `quote`, `tracking`, `document`, `admin`), `domain/trip/TripTransitions.kt` (the trip status machine — **keep in sync with `firestore.rules`**).
+  - `commonMain/.../data` — repositories, organized by entity (`auth`, `user`, `trip`, `quote`, `tracking`, `document`, `config`). Convention: repositories may talk to Firestore/Storage directly (via the GitLive SDK); only `auth`/`user` keep dedicated remote data sources. Firestore field names are snake_case via `@SerialName`.
+  - `commonMain/.../di` — Koin modules split by concern: `DataModule.kt`, `DomainModule.kt`, `ViewModelModule.kt`, `AppModule.kt` (aggregates the others + `initKoin`).
   - `androidMain` / `iosMain` — `expect`/`actual` implementations (maps, GPS, permissions, logging).
 - `androidApp/` — Android entry point.
 - `iosApp/` — iOS entry point (Xcode project).
