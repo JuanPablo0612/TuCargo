@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.trip.presentation.detail
+package com.juanpablo0612.tucargo.features.trip.detail
 
 import androidx.compose.runtime.Immutable
 import com.juanpablo0612.tucargo.core.location.DriverLocation

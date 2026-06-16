@@ -22,9 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.juanpablo0612.tucargo.core.ui.theme.TuCargoTheme
 import com.juanpablo0612.tucargo.domain.model.TripStatus
-import com.juanpablo0612.tucargo.features.trip.presentation.displayContainerColor
-import com.juanpablo0612.tucargo.features.trip.presentation.displayName
-import com.juanpablo0612.tucargo.features.trip.presentation.onDisplayContainerColor
+import com.juanpablo0612.tucargo.features.trip.displayContainerColor
+import com.juanpablo0612.tucargo.features.trip.displayName
+import com.juanpablo0612.tucargo.features.trip.onDisplayContainerColor
 
 @Composable
 fun ErrorCard(

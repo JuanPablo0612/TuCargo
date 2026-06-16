@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.trip.presentation.completed
+package com.juanpablo0612.tucargo.features.trip.completed
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

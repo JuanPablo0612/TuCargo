@@ -37,10 +37,10 @@ import com.juanpablo0612.tucargo.features.client.quote.PickOriginScreen
 import com.juanpablo0612.tucargo.features.client.quote.QuoteScreen
 import com.juanpablo0612.tucargo.features.client.searching.SearchingScreen
 import com.juanpablo0612.tucargo.features.driver.home.DriverHomeScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.completed.TripCompletedScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailScreen
-import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryScreen
+import com.juanpablo0612.tucargo.features.trip.active.TripActiveScreen
+import com.juanpablo0612.tucargo.features.trip.completed.TripCompletedScreen
+import com.juanpablo0612.tucargo.features.trip.detail.TripDetailScreen
+import com.juanpablo0612.tucargo.features.trip.history.TripHistoryScreen
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 

@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.trip.presentation.active
+package com.juanpablo0612.tucargo.features.trip.active
 
 sealed interface TripActiveAction {
     /** Single forward step in the lifecycle (ACCEPTED → AT_PICKUP → IN_TRANSIT → AT_DROPOFF). */

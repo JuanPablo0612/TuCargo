@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.trip.presentation.active
+package com.juanpablo0612.tucargo.features.trip.active
 
 sealed interface TripActiveError {
     data object LoadError : TripActiveError

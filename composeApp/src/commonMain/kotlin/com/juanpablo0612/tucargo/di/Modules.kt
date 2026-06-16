@@ -69,12 +69,12 @@ import com.juanpablo0612.tucargo.features.client.createtrip.CreateTripViewModel
 import com.juanpablo0612.tucargo.features.client.home.ClientHomeViewModel
 import com.juanpablo0612.tucargo.features.client.quote.TripRequestViewModel
 import com.juanpablo0612.tucargo.features.driver.home.DriverHomeViewModel
-import com.juanpablo0612.tucargo.features.trip.presentation.active.TripActiveViewModel
-import com.juanpablo0612.tucargo.features.trip.presentation.completed.TripCompletedViewModel
+import com.juanpablo0612.tucargo.features.trip.active.TripActiveViewModel
+import com.juanpablo0612.tucargo.features.trip.completed.TripCompletedViewModel
 import com.juanpablo0612.tucargo.core.service.LocationServiceController
 import com.juanpablo0612.tucargo.data.tracking.TrackingRepositoryImpl
-import com.juanpablo0612.tucargo.features.trip.presentation.detail.TripDetailViewModel
-import com.juanpablo0612.tucargo.features.trip.presentation.history.TripHistoryViewModel
+import com.juanpablo0612.tucargo.features.trip.detail.TripDetailViewModel
+import com.juanpablo0612.tucargo.features.trip.history.TripHistoryViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.database.database

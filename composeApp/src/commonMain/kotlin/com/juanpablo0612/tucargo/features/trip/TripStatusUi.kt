@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.trip.presentation
+package com.juanpablo0612.tucargo.features.trip
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color

@@ -1,4 +1,4 @@
-package com.juanpablo0612.tucargo.features.trip.presentation.history
+package com.juanpablo0612.tucargo.features.trip.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
