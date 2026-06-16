@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.core.logging.logError
 import com.juanpablo0612.tucargo.domain.model.KycDocumentType
-import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ReviewKycDocumentUseCase
-import com.juanpablo0612.tucargo.domain.usecase.SetDriverVerifiedUseCase
+import com.juanpablo0612.tucargo.domain.usecase.document.ObserveKycDocumentsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.admin.ReviewKycDocumentUseCase
+import com.juanpablo0612.tucargo.domain.usecase.admin.SetDriverVerifiedUseCase
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job

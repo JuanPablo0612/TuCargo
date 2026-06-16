@@ -3,8 +3,8 @@ package com.juanpablo0612.tucargo.features.trip.completed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.core.logging.logError
-import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserIdUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.ObserveTripUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch

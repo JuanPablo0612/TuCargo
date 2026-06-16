@@ -20,8 +20,8 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.juanpablo0612.tucargo.core.location.DriverLocation
-import com.juanpablo0612.tucargo.domain.usecase.FlushLocationBufferUseCase
-import com.juanpablo0612.tucargo.domain.usecase.SendLocationUseCase
+import com.juanpablo0612.tucargo.domain.usecase.tracking.FlushLocationBufferUseCase
+import com.juanpablo0612.tucargo.domain.usecase.tracking.SendLocationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

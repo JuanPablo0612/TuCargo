@@ -3,9 +3,9 @@ package com.juanpablo0612.tucargo.features.admin.review
 import com.juanpablo0612.tucargo.domain.model.KycDocument
 import com.juanpablo0612.tucargo.domain.model.KycDocumentType
 import com.juanpablo0612.tucargo.domain.model.KycStatus
-import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ReviewKycDocumentUseCase
-import com.juanpablo0612.tucargo.domain.usecase.SetDriverVerifiedUseCase
+import com.juanpablo0612.tucargo.domain.usecase.document.ObserveKycDocumentsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.admin.ReviewKycDocumentUseCase
+import com.juanpablo0612.tucargo.domain.usecase.admin.SetDriverVerifiedUseCase
 import com.juanpablo0612.tucargo.testutil.FakeDocumentRepository
 import com.juanpablo0612.tucargo.testutil.FakeUserRepository
 import kotlinx.coroutines.Dispatchers

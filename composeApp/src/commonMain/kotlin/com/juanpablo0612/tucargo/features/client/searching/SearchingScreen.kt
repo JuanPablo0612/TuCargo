@@ -21,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.domain.model.TripStatus
-import com.juanpablo0612.tucargo.domain.usecase.CancelTripUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.CancelTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.ObserveTripUseCase
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject

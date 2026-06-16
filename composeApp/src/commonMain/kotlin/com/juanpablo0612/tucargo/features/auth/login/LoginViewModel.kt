@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.core.validation.FieldError
 import com.juanpablo0612.tucargo.core.validation.FormValidators
 import com.juanpablo0612.tucargo.domain.model.AppError
-import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
+import com.juanpablo0612.tucargo.domain.usecase.auth.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

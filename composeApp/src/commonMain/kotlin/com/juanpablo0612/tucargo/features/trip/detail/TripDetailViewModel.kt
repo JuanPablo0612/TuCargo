@@ -7,10 +7,10 @@ import com.juanpablo0612.tucargo.core.location.GeoUtils
 import com.juanpablo0612.tucargo.core.logging.logError
 import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.domain.model.TripStatus
-import com.juanpablo0612.tucargo.domain.usecase.CancelTripUseCase
-import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveDriverLocationUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.CancelTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserIdUseCase
+import com.juanpablo0612.tucargo.domain.usecase.tracking.ObserveDriverLocationUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.ObserveTripUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

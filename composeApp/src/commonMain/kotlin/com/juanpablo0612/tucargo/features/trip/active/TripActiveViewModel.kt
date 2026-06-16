@@ -8,9 +8,9 @@ import com.juanpablo0612.tucargo.core.logging.logError
 import com.juanpablo0612.tucargo.domain.model.AppError
 import com.juanpablo0612.tucargo.domain.model.TripStatus
 import com.juanpablo0612.tucargo.domain.trip.nextDriverStatus
-import com.juanpablo0612.tucargo.domain.usecase.AdvanceTripStatusUseCase
-import com.juanpablo0612.tucargo.domain.usecase.CompleteTripUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.AdvanceTripStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.CompleteTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.ObserveTripUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch

@@ -4,7 +4,7 @@ import com.juanpablo0612.tucargo.core.location.DriverLocation
 import com.juanpablo0612.tucargo.core.location.LocationProvider
 import com.juanpablo0612.tucargo.data.common.ExceptionMapper
 import com.juanpablo0612.tucargo.domain.model.AppError
-import com.juanpablo0612.tucargo.domain.usecase.SendLocationUseCase
+import com.juanpablo0612.tucargo.domain.usecase.tracking.SendLocationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

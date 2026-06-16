@@ -3,9 +3,9 @@ package com.juanpablo0612.tucargo.features.auth.documents
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.core.logging.logError
-import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveCurrentUserUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveKycDocumentsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserIdUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.ObserveCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.document.ObserveKycDocumentsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch

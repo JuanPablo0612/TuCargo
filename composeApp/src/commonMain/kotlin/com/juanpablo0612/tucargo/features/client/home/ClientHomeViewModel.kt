@@ -2,10 +2,10 @@ package com.juanpablo0612.tucargo.features.client.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
-import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
-import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
-import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.GetClientTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserIdUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.auth.LogoutUseCase
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

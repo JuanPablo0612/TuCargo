@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.domain.model.AppError
 import com.juanpablo0612.tucargo.domain.model.QuoteResult
-import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
-import com.juanpablo0612.tucargo.domain.usecase.RequestQuoteUseCase
-import com.juanpablo0612.tucargo.domain.usecase.RequestTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.quote.RequestQuoteUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.RequestTripUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

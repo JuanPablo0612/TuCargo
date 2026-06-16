@@ -3,9 +3,9 @@ package com.juanpablo0612.tucargo.features.trip.history
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.domain.model.UserRole
-import com.juanpablo0612.tucargo.domain.usecase.GetClientTripsUseCase
-import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
-import com.juanpablo0612.tucargo.domain.usecase.GetDriverTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.GetClientTripsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.GetDriverTripsUseCase
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

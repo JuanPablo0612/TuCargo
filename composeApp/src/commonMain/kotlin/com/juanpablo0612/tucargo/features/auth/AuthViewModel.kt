@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.domain.model.DriverOnboardingStatus
 import com.juanpablo0612.tucargo.domain.model.User
 import com.juanpablo0612.tucargo.domain.model.UserRole
-import com.juanpablo0612.tucargo.domain.usecase.GetDriverOnboardingStatusUseCase
-import com.juanpablo0612.tucargo.domain.usecase.LogoutUseCase
-import com.juanpablo0612.tucargo.domain.usecase.ObserveAuthStateUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetDriverOnboardingStatusUseCase
+import com.juanpablo0612.tucargo.domain.usecase.auth.LogoutUseCase
+import com.juanpablo0612.tucargo.domain.usecase.auth.ObserveAuthStateUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

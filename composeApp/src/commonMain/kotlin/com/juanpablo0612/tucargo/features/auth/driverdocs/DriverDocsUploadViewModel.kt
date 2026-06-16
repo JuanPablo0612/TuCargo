@@ -3,8 +3,8 @@ package com.juanpablo0612.tucargo.features.auth.driverdocs
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.domain.model.AppError
-import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserIdUseCase
-import com.juanpablo0612.tucargo.domain.usecase.UploadKycDocumentUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserIdUseCase
+import com.juanpablo0612.tucargo.domain.usecase.document.UploadKycDocumentUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

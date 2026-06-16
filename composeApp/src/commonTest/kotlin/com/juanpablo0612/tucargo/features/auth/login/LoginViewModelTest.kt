@@ -4,7 +4,7 @@ import androidx.compose.foundation.text.input.insert
 import com.juanpablo0612.tucargo.domain.model.AppError
 import com.juanpablo0612.tucargo.domain.model.User
 import com.juanpablo0612.tucargo.domain.model.UserRole
-import com.juanpablo0612.tucargo.domain.usecase.LoginUseCase
+import com.juanpablo0612.tucargo.domain.usecase.auth.LoginUseCase
 import com.juanpablo0612.tucargo.testutil.FakeAuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

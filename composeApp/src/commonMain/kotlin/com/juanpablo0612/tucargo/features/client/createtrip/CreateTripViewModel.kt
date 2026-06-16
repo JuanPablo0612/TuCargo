@@ -10,9 +10,9 @@ import com.juanpablo0612.tucargo.domain.model.PaymentMethod
 import com.juanpablo0612.tucargo.domain.model.Trip
 import com.juanpablo0612.tucargo.domain.model.TripLocation
 import com.juanpablo0612.tucargo.domain.model.TripStatus
-import com.juanpablo0612.tucargo.domain.usecase.CalculateTripPriceUseCase
-import com.juanpablo0612.tucargo.domain.usecase.CreateTripUseCase
-import com.juanpablo0612.tucargo.domain.usecase.GetCurrentUserUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.CalculateTripPriceUseCase
+import com.juanpablo0612.tucargo.domain.usecase.trip.CreateTripUseCase
+import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
