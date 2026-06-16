@@ -117,7 +117,7 @@ fun QuoteScreen(
                         .height(220.dp),
                     latitude = quote.originLat,
                     longitude = quote.originLng,
-                    onMapClick = {}
+                    onMapClick = null
                 )
             }
 

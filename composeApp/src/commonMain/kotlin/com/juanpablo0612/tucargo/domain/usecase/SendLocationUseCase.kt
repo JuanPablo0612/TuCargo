@@ -4,7 +4,7 @@ import com.juanpablo0612.tucargo.core.location.DriverLocation
 import com.juanpablo0612.tucargo.core.logging.logError
 import com.juanpablo0612.tucargo.data.tracking.LocationBuffer
 import com.juanpablo0612.tucargo.data.tracking.TrackingRepository
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 private const val MAX_FUTURE_OFFSET_MS = 60_000L
 private const val MAX_STALENESS_MS = 5 * 60_000L

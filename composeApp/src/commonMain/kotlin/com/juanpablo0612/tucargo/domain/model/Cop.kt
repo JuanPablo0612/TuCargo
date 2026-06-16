@@ -1,5 +1,8 @@
 package com.juanpablo0612.tucargo.domain.model
 
+import kotlin.jvm.JvmInline
+
+@JvmInline
 value class Cop(val amount: Int) {
 
     init {

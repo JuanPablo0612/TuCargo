@@ -7,6 +7,9 @@ fun Double.toCurrencyString(): String {
     return "$$intPart.${decPart.toString().padStart(2, '0')}"
 }
 
+fun Int.toCurrencyString(): String = this.toDouble().toCurrencyString()
+fun Long.toCurrencyString(): String = this.toDouble().toCurrencyString()
+
 fun Double.toDistanceString(): String {
     val tenths = kotlin.math.round(this * 10).toLong()
     return "${tenths / 10}.${kotlin.math.abs(tenths % 10)}"

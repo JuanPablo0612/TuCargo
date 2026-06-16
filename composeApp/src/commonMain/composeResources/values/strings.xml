@@ -255,7 +255,6 @@
 
     <!-- Map -->
     <string name="map_your_location">Your location</string>
-    <string name="map_not_available_ios">Map not available on this device yet</string>
 
     <!-- Global errors -->
     <string name="network_error">Network error. Check your connection and try again.</string>

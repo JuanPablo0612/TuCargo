@@ -42,7 +42,18 @@ kotlin {
             isStatic = true
         }
     }
-    
+
+    // Google Maps SDK for iOS, consumed directly via Kotlin's Swift Package Manager
+    // interop (no CocoaPods, no manual cinterop .def file). Classes are available in
+    // iosMain under the swiftPMImport.* namespace generated for this package.
+    swiftPMDependencies {
+        swiftPackage(
+            url = url("https://github.com/googlemaps/ios-maps-sdk.git"),
+            version = from("10.14.0"),
+            products = listOf(product("GoogleMaps", platforms = setOf(iOS())))
+        )
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(project.dependencies.platform(libs.firebase.bom))
@@ -52,7 +63,6 @@ kotlin {
             implementation(libs.kotlinx.coroutines.play.services)
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.mapbox.maps.android)
             implementation(libs.firebase.messaging.native)
             implementation(libs.room.runtime)
             implementation(libs.room.ktx)
@@ -95,14 +105,14 @@ buildkonfig {
     packageName = "com.juanpablo0612.tucargo"
     defaultConfigs {
         buildConfigField(Type.STRING, "GOOGLE_MAPS_API_KEY", secrets.getProperty("GOOGLE_MAPS_API_KEY") ?: "")
-        buildConfigField(Type.STRING, "MAPBOX_PUBLIC_TOKEN", secrets.getProperty("MAPBOX_PUBLIC_TOKEN") ?: "")
+        buildConfigField(Type.STRING, "GOOGLE_MAPS_IOS_API_KEY", secrets.getProperty("GOOGLE_MAPS_IOS_API_KEY") ?: "")
     }
 }
 
-composeCompiler {
-    reportsDestination = layout.buildDirectory.dir("compose_reports")
-    metricsDestination = layout.buildDirectory.dir("compose_metrics")
-}
+// composeCompiler {
+//    reportsDestination = layout.buildDirectory.dir("compose_reports")
+//    metricsDestination = layout.buildDirectory.dir("compose_metrics")
+// }
 
 dependencies {
     androidRuntimeClasspath(libs.ui.tooling)

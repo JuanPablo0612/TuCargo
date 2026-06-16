@@ -42,26 +42,35 @@ const https_1 = require("firebase-functions/v2/https");
 const params_1 = require("firebase-functions/params");
 const axios_1 = __importDefault(require("axios"));
 const pricing_1 = require("./pricing");
-const MAPBOX_SECRET_TOKEN = (0, params_1.defineSecret)("MAPBOX_SECRET_TOKEN");
-async function fetchRouteWithRetry(token, originLng, originLat, destLng, destLat) {
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/` +
-        `${originLng},${originLat};${destLng},${destLat}` +
-        `?geometries=polyline&overview=full&access_token=${token}`;
+const GOOGLE_MAPS_SERVER_KEY = (0, params_1.defineSecret)("GOOGLE_MAPS_SERVER_KEY");
+async function fetchRouteWithRetry(apiKey, originLng, originLat, destLng, destLat) {
+    const url = "https://routes.googleapis.com/directions/v2:computeRoutes";
+    const body = {
+        origin: { location: { latLng: { latitude: originLat, longitude: originLng } } },
+        destination: { location: { latLng: { latitude: destLat, longitude: destLng } } },
+        travelMode: "DRIVE",
+        routingPreference: "TRAFFIC_AWARE",
+    };
+    const headers = {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": apiKey,
+        "X-Goog-FieldMask": "routes.distanceMeters,routes.polyline.encodedPolyline",
+    };
     let lastError;
     const delays = [0, 200, 500];
     for (const delay of delays) {
         if (delay > 0)
             await new Promise((r) => setTimeout(r, delay));
         try {
-            const response = await axios_1.default.get(url, { timeout: 10000 });
+            const response = await axios_1.default.post(url, body, { headers, timeout: 10000 });
             const routes = response.data?.routes;
             if (!routes || routes.length === 0) {
                 throw new https_1.HttpsError("not-found", "NO_ROUTE");
             }
             const route = routes[0];
             return {
-                distanceM: route.distance,
-                polyline: route.geometry,
+                distanceM: route.distanceMeters,
+                polyline: route.polyline.encodedPolyline,
             };
         }
         catch (e) {
@@ -72,7 +81,7 @@ async function fetchRouteWithRetry(token, originLng, originLat, destLng, destLat
     }
     throw new https_1.HttpsError("unavailable", "SERVICE_UNAVAILABLE", lastError instanceof Error ? lastError.message : undefined);
 }
-exports.createQuote = (0, https_1.onCall)({ secrets: [MAPBOX_SECRET_TOKEN] }, async (request) => {
+exports.createQuote = (0, https_1.onCall)({ secrets: [GOOGLE_MAPS_SERVER_KEY] }, async (request) => {
     if (!request.auth || request.auth.token["role"] !== "CLIENT") {
         throw new https_1.HttpsError("permission-denied", "Clients only");
     }
@@ -90,7 +99,7 @@ exports.createQuote = (0, https_1.onCall)({ secrets: [MAPBOX_SECRET_TOKEN] }, as
     if (originLat === destLat && originLng === destLng) {
         throw new https_1.HttpsError("invalid-argument", "SAME_ORIGIN_DEST");
     }
-    const { distanceM, polyline } = await fetchRouteWithRetry(MAPBOX_SECRET_TOKEN.value(), originLng, originLat, destLng, destLat);
+    const { distanceM, polyline } = await fetchRouteWithRetry(GOOGLE_MAPS_SERVER_KEY.value(), originLng, originLat, destLng, destLat);
     const distanceKmRaw = distanceM / 1000;
     if (distanceKmRaw > 60) {
         throw new https_1.HttpsError("invalid-argument", "QUOTE_OUT_OF_RANGE");

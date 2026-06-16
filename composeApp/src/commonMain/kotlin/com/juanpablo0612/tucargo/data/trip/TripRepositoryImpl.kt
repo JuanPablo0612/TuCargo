@@ -69,14 +69,14 @@ class TripRepositoryImpl(
         weightConfirmed: Boolean
     ): Result<Pair<String, String>> = safeCall {
         val callable = functions.httpsCallable("requestTrip")
-        val response = callable.invoke<Map<String, Any?>, Map<String, Any?>>(
+        val response = callable.invoke(
             mapOf(
                 "quoteId" to quoteId,
                 "cargoDescription" to cargoDescription,
                 "weightConfirmed" to weightConfirmed
             )
         )
-        val data = response.data ?: throw AppError.DataCorruption("Empty response from requestTrip")
+        val data = response.data<Map<String, Any?>?>() ?: throw AppError.DataCorruption("Empty response from requestTrip")
         val errorMsg = data["code"] as? String
         when (errorMsg) {
             "QUOTE_EXPIRED" -> throw AppError.Trip.QuoteExpired
@@ -101,7 +101,7 @@ class TripRepositoryImpl(
                     else -> throw AppError.Trip.InvalidTransition
                 }
                 val callable = functions.httpsCallable("updateTripStatus")
-                callable.invoke<Map<String, Any?>, Map<String, Any?>>(
+                callable.invoke(
                     mapOf("tripId" to tripId, "action" to action)
                 )
             }
@@ -125,7 +125,7 @@ class TripRepositoryImpl(
     override suspend fun completeTrip(tripId: String, deliveryCode: String): Result<Unit> = safeCall {
         try {
             val callable = functions.httpsCallable("completeTrip")
-            callable.invoke<Map<String, Any?>, Map<String, Any?>>(
+            callable.invoke(
                 mapOf("tripId" to tripId, "deliveryCode" to deliveryCode)
             )
             Unit
@@ -173,7 +173,7 @@ class TripRepositoryImpl(
 
     override suspend fun acceptOffer(tripId: String, offerId: String): Result<Unit> = safeCall {
         val callable = functions.httpsCallable("acceptOffer")
-        callable.invoke<Map<String, Any?>, Map<String, Any?>>(
+        callable.invoke(
             mapOf("tripId" to tripId, "offerId" to offerId)
         )
         Unit
@@ -181,7 +181,7 @@ class TripRepositoryImpl(
 
     override suspend fun rejectOffer(tripId: String, offerId: String): Result<Unit> = safeCall {
         val callable = functions.httpsCallable("rejectOffer")
-        callable.invoke<Map<String, Any?>, Map<String, Any?>>(
+        callable.invoke(
             mapOf("tripId" to tripId, "offerId" to offerId)
         )
         Unit

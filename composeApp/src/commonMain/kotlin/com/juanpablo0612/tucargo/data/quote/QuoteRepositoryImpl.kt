@@ -21,7 +21,7 @@ class QuoteRepositoryImpl(private val functions: FirebaseFunctions) : QuoteRepos
         // HttpsErrors from the Cloud Function surface as exceptions caught by safeCall.
         // The message field of the exception matches the second argument of HttpsError().
         val response = runCatching {
-            callable.invoke<Map<String, Any?>, Map<String, Any?>>(
+            callable.invoke(
                 mapOf(
                     "originLat" to originLat,
                     "originLng" to originLng,
@@ -42,7 +42,7 @@ class QuoteRepositoryImpl(private val functions: FirebaseFunctions) : QuoteRepos
             }
         }
 
-        val data = response.data ?: throw AppError.DataCorruption("Empty response from createQuote")
+        val data = response.data<Map<String, Any?>?>() ?: throw AppError.DataCorruption("Empty response from createQuote")
 
         QuoteResult(
             id = data["quoteId"] as? String ?: throw AppError.DataCorruption("Missing quoteId"),

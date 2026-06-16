@@ -53,15 +53,24 @@ config/system {
 }
 ```
 
-### 4. Google Maps key (Android)
+### 4. Google Maps keys
 
 Create `secrets.properties` at the repo root (gitignored):
 
 ```properties
-GOOGLE_MAPS_API_KEY=your-key
+GOOGLE_MAPS_API_KEY=your-android-key
+GOOGLE_MAPS_IOS_API_KEY=your-ios-key
 ```
 
-Restrict the key in Google Cloud Console to the Android app's package name + SHA-1. Debug builds warn if it is missing; **release builds fail**.
+`GOOGLE_MAPS_API_KEY` is consumed by the Android app (Google Maps Compose); restrict it in Google Cloud Console to the Android app's package name + SHA-1. Debug builds warn if it is missing; **release builds fail**.
+
+`GOOGLE_MAPS_IOS_API_KEY` is consumed by the iOS app (Google Maps SDK for iOS, via `BuildKonfig`); restrict it to the iOS app's bundle ID instead — the Android key won't work there.
+
+The backend quoting function uses a separate, server-side `GOOGLE_MAPS_SERVER_KEY` Firebase secret (Google Routes API) — set it once per project:
+
+```shell
+firebase functions:secrets:set GOOGLE_MAPS_SERVER_KEY
+```
 
 ### 5. Build & run
 
@@ -70,7 +79,13 @@ Restrict the key in Google Cloud Console to the Android app's package name + SHA
 ./gradlew :composeApp:allTests          # unit tests
 ```
 
-iOS: open `iosApp/` in Xcode and run (maps and GPS are not implemented on iOS yet — the UI degrades gracefully).
+iOS: the Google Maps SDK for iOS is added via Kotlin's direct Swift Package Manager integration (`swiftPMDependencies` in `composeApp/build.gradle.kts`). On a Mac, once per checkout (or whenever that dependency changes), run:
+
+```shell
+XCODEPROJ_PATH='<path-to>/iosApp/iosApp.xcodeproj' ./gradlew :composeApp:integrateLinkagePackage
+```
+
+then open `iosApp/` in Xcode and run. GPS is still a stub on iOS (see Known limitations).
 
 ## Admin runbook
 
@@ -100,7 +115,7 @@ Manual end-to-end check against the Firebase emulator: `firebase emulators:start
 
 ## Known limitations / backlog
 
-- **iOS**: GPS and maps are stubs (`IosLocationProvider`, iOS `MapComponent`); the permission requester reports denied so the UI shows its unavailable states. Real CoreLocation/MapKit integration is pending.
+- **iOS**: GPS is still a stub (`IosLocationProvider`); the permission requester reports denied so the UI shows its unavailable states. Real CoreLocation integration is pending. Maps are implemented via the Google Maps SDK for iOS (see Setup step 4/5).
 - **Distance** is straight-line (haversine); a routing API would price by road distance.
 - **Delivery code** is verified in the driver's UI only — the driver can read the trip document, so true enforcement needs a Cloud Function.
 - **Wallet**: balance is read-only; top-ups/withdrawals need a payment provider integration.

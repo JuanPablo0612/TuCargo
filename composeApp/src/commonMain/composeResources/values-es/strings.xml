@@ -254,7 +254,6 @@
 
     <!-- Mapa -->
     <string name="map_your_location">Tu ubicación</string>
-    <string name="map_not_available_ios">El mapa aún no está disponible en este dispositivo</string>
 
     <!-- Errores globales -->
     <string name="network_error">Error de red. Verifica tu conexión e intenta de nuevo.</string>
