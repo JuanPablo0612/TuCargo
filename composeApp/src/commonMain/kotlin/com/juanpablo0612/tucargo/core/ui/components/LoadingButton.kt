@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 
 @Composable
 fun LoadingButton(
@@ -24,9 +25,10 @@ fun LoadingButton(
     shape: Shape = MaterialTheme.shapes.large,
     content: @Composable RowScope.() -> Unit
 ) {
+    val dimensions = LocalDimensions.current
     Button(
         onClick = onClick,
-        modifier = modifier.height(56.dp),
+        modifier = modifier.height(dimensions.buttonHeight),
         enabled = enabled && !isLoading,
         shape = shape
     ) {

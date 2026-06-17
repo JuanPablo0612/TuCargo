@@ -43,6 +43,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.components.ErrorBanner
 import com.juanpablo0612.tucargo.core.ui.components.MapComponent
 import com.juanpablo0612.tucargo.core.ui.components.TripCard
@@ -114,6 +116,7 @@ internal fun ClientHomeScreenContent(
             )
         }
     ) { innerPadding ->
+        val dimensions = LocalDimensions.current
         PullToRefreshBox(
             isRefreshing = uiState.isLoadingTrips,
             onRefresh = { onAction(ClientHomeAction.RefreshTrips) },
@@ -126,6 +129,7 @@ internal fun ClientHomeScreenContent(
                     CircularProgressIndicator()
                 }
             } else {
+                ResponsiveContainer(modifier = Modifier.fillMaxSize()) {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     item(key = "error_banner", contentType = "error") {
                         ErrorBanner(
@@ -136,14 +140,14 @@ internal fun ClientHomeScreenContent(
                                 }
                                 stringResource(errorRes)
                             },
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            modifier = Modifier.padding(horizontal = dimensions.screenHorizontalPadding, vertical = 8.dp)
                         )
                     }
 
                     item(key = "greeting", contentType = "greeting") {
                         GreetingSection(
                             userName = uiState.user?.fullName ?: "",
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                            modifier = Modifier.padding(horizontal = dimensions.screenHorizontalPadding, vertical = 12.dp)
                         )
                     }
 
@@ -152,7 +156,7 @@ internal fun ClientHomeScreenContent(
                             tripsCount = uiState.recentTrips.size,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
+                                .padding(horizontal = dimensions.screenHorizontalPadding)
                         )
                     }
 
@@ -161,7 +165,7 @@ internal fun ClientHomeScreenContent(
                             onClick = onNewTrip,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                                .padding(horizontal = dimensions.screenHorizontalPadding, vertical = 12.dp),
                             shape = MaterialTheme.shapes.medium
                         ) {
                             Icon(painterResource(Res.drawable.package_2), contentDescription = null)
@@ -182,7 +186,7 @@ internal fun ClientHomeScreenContent(
                             longitude = uiState.userLongitude,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
+                                .padding(horizontal = dimensions.screenHorizontalPadding)
                         )
                     }
 
@@ -190,7 +194,7 @@ internal fun ClientHomeScreenContent(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 16.dp, end = 8.dp, top = 16.dp, bottom = 4.dp),
+                                .padding(start = dimensions.screenHorizontalPadding, end = 8.dp, top = dimensions.sectionSpacing, bottom = 4.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -211,7 +215,7 @@ internal fun ClientHomeScreenContent(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(100.dp),
+                                    .height(dimensions.loadingPlaceholderHeight),
                                 contentAlignment = Alignment.Center
                             ) {
                                 CircularProgressIndicator(modifier = Modifier.size(28.dp))
@@ -222,7 +226,7 @@ internal fun ClientHomeScreenContent(
                             EmptyTripsSection(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(16.dp)
+                                    .padding(dimensions.screenHorizontalPadding)
                             )
                         }
                     } else {
@@ -236,11 +240,12 @@ internal fun ClientHomeScreenContent(
                                 onClick = { onTripClick(trip.id) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                                    .padding(horizontal = dimensions.screenHorizontalPadding, vertical = 4.dp)
                             )
                         }
                     }
                     item(key = "bottom_spacer") { Spacer(modifier = Modifier.height(24.dp)) }
+                }
                 }
             }
         }
@@ -250,13 +255,14 @@ internal fun ClientHomeScreenContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ClientTopAppBar(user: User?, onSignOut: () -> Unit) {
+    val dimensions = LocalDimensions.current
     TopAppBar(
         title = {
             if (user != null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(dimensions.avatarSize)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.primaryContainer),
                         contentAlignment = Alignment.Center
@@ -381,6 +387,7 @@ private fun StatItem(value: String, label: String) {
 private fun MapSection(latitude: Double?, longitude: Double?, modifier: Modifier = Modifier) {
     val displayLat = latitude ?: 4.6097
     val displayLng = longitude ?: -74.0817
+    val dimensions = LocalDimensions.current
 
     Column(modifier = modifier) {
         Text(
@@ -393,7 +400,7 @@ private fun MapSection(latitude: Double?, longitude: Double?, modifier: Modifier
             MapComponent(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(220.dp),
+                    .height(dimensions.mapHeight),
                 latitude = displayLat,
                 longitude = displayLng
             )
@@ -403,6 +410,7 @@ private fun MapSection(latitude: Double?, longitude: Double?, modifier: Modifier
 
 @Composable
 private fun EmptyTripsSection(modifier: Modifier = Modifier) {
+    val dimensions = LocalDimensions.current
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.large,
@@ -417,7 +425,7 @@ private fun EmptyTripsSection(modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(Res.drawable.package_2),
                 contentDescription = null,
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(dimensions.iconSizeLarge),
                 tint = MaterialTheme.colorScheme.outlineVariant
             )
             Spacer(modifier = Modifier.height(12.dp))

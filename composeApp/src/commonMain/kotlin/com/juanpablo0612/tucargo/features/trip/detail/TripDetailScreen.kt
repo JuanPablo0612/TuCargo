@@ -42,6 +42,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.location.DriverLocation
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.MapComponent
@@ -154,39 +156,42 @@ internal fun TripDetailScreenContent(
             )
         },
     ) { innerPadding ->
-        when {
-            uiState.isLoading -> Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
+        val dimensions = LocalDimensions.current
+        ResponsiveContainer(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            when {
+                uiState.isLoading -> Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
 
-            uiState.trip == null -> Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                ErrorCard(
-                    message = stringResource(Res.string.trip_detail_load_error),
-                    modifier = Modifier.fillMaxWidth(),
+                uiState.trip == null -> Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(dimensions.formHorizontalPadding),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    ErrorCard(
+                        message = stringResource(Res.string.trip_detail_load_error),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+
+                else -> TripDetailBody(
+                    uiState = uiState,
+                    trip = uiState.trip,
+                    onCancelClick = { showCancelDialog = true },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = dimensions.formHorizontalPadding)
+                        .verticalScroll(rememberScrollState()),
                 )
             }
-
-            else -> TripDetailBody(
-                uiState = uiState,
-                trip = uiState.trip,
-                onCancelClick = { showCancelDialog = true },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp)
-                    .verticalScroll(rememberScrollState()),
-            )
         }
     }
 }
@@ -198,9 +203,10 @@ private fun TripDetailBody(
     onCancelClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val dimensions = LocalDimensions.current
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(dimensions.sectionSpacing),
     ) {
         Row(
             modifier = Modifier
@@ -231,7 +237,7 @@ private fun TripDetailBody(
             MapComponent(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(220.dp),
+                    .height(dimensions.mapHeight),
                 latitude = driverLat,
                 longitude = driverLng,
                 driverLocation = uiState.driverLocation,

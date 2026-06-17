@@ -27,6 +27,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.toCurrencyString
 import com.juanpablo0612.tucargo.core.ui.toDistanceString
 import com.juanpablo0612.tucargo.domain.model.Trip
@@ -84,44 +86,45 @@ private fun TripCompletedContent(
             )
         },
     ) { innerPadding ->
-        when {
-            uiState.isLoading -> Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center,
-            ) { CircularProgressIndicator() }
+        val dimensions = LocalDimensions.current
+        ResponsiveContainer(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            when {
+                uiState.isLoading -> Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) { CircularProgressIndicator() }
 
-            uiState.trip == null -> Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center,
-            ) {
-                Button(onClick = onHomeClick) {
-                    Text(stringResource(Res.string.trip_completed_home_button))
+                uiState.trip == null -> Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Button(onClick = onHomeClick) {
+                        Text(stringResource(Res.string.trip_completed_home_button))
+                    }
                 }
+
+                uiState.isDriver -> DriverCompletedBody(
+                    trip = uiState.trip,
+                    onHomeClick = onHomeClick,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = dimensions.formHorizontalPadding)
+                        .verticalScroll(rememberScrollState()),
+                )
+
+                else -> ClientCompletedBody(
+                    trip = uiState.trip,
+                    onHomeClick = onHomeClick,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = dimensions.formHorizontalPadding)
+                        .verticalScroll(rememberScrollState()),
+                )
             }
-
-            uiState.isDriver -> DriverCompletedBody(
-                trip = uiState.trip,
-                onHomeClick = onHomeClick,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp)
-                    .verticalScroll(rememberScrollState()),
-            )
-
-            else -> ClientCompletedBody(
-                trip = uiState.trip,
-                onHomeClick = onHomeClick,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp)
-                    .verticalScroll(rememberScrollState()),
-            )
         }
     }
 }

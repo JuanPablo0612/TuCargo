@@ -42,6 +42,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
 import com.juanpablo0612.tucargo.core.ui.components.RoundedTextField
@@ -179,13 +181,18 @@ internal fun AdminDriverReviewScreenContent(
             return@Scaffold
         }
 
-        Column(
+        val dimensions = LocalDimensions.current
+        ResponsiveContainer(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 24.dp)
+        ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = dimensions.formHorizontalPadding)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(dimensions.sectionSpacing),
         ) {
             Spacer(Modifier.height(0.dp))
 
@@ -255,6 +262,7 @@ internal fun AdminDriverReviewScreenContent(
             }
 
             Spacer(Modifier.height(16.dp))
+        }
         }
     }
 }

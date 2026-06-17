@@ -44,6 +44,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.asString
 import com.juanpablo0612.tucargo.core.ui.components.ErrorBanner
 import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
@@ -140,11 +142,16 @@ internal fun RegisterScreenContent(
             )
         },
     ) { innerPadding ->
-        Column(
+        val dimensions = LocalDimensions.current
+        ResponsiveContainer(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 24.dp)
+        ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = dimensions.formHorizontalPadding)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
@@ -291,6 +298,7 @@ internal fun RegisterScreenContent(
             }
 
             Spacer(Modifier.height(8.dp))
+        }
         }
     }
 }

@@ -30,6 +30,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.TripCard
 import org.jetbrains.compose.resources.stringResource
@@ -91,6 +93,8 @@ internal fun TripHistoryScreenContent(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
+            val dimensions = LocalDimensions.current
+            ResponsiveContainer(modifier = Modifier.fillMaxSize()) {
             when {
                 uiState.isLoading && uiState.trips.isEmpty() -> Box(
                     modifier = Modifier.fillMaxSize(),
@@ -138,7 +142,7 @@ internal fun TripHistoryScreenContent(
                 else -> LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(dimensions.screenHorizontalPadding),
                 ) {
                     items(
                         items = uiState.trips,
@@ -152,6 +156,7 @@ internal fun TripHistoryScreenContent(
                         )
                     }
                 }
+            }
             }
         }
     }

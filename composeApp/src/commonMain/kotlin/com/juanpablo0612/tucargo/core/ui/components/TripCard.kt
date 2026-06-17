@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.juanpablo0612.tucargo.domain.model.Trip
 import androidx.compose.ui.unit.dp
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import tucargo.composeapp.generated.resources.Res
@@ -33,6 +34,7 @@ import tucargo.composeapp.generated.resources.local_shipping
 
 @Composable
 fun TripCard(trip: Trip, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val dimensions = LocalDimensions.current
     Card(
         onClick = onClick,
         modifier = modifier,
@@ -42,12 +44,12 @@ fun TripCard(trip: Trip, onClick: () -> Unit, modifier: Modifier = Modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(dimensions.cardInternalPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(dimensions.avatarSize)
                     .clip(MaterialTheme.shapes.small)
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
                 contentAlignment = Alignment.Center
@@ -56,7 +58,7 @@ fun TripCard(trip: Trip, onClick: () -> Unit, modifier: Modifier = Modifier) {
                     painter = painterResource(Res.drawable.local_shipping),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(dimensions.iconSizeSmall)
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))

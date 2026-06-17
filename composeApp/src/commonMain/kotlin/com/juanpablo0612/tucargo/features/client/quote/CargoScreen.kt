@@ -25,6 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
@@ -58,12 +60,17 @@ fun CargoScreen(
             )
         }
     ) { innerPadding ->
-        Column(
+        val dimensions = LocalDimensions.current
+        ResponsiveContainer(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = dimensions.formHorizontalPadding),
+            verticalArrangement = Arrangement.spacedBy(dimensions.sectionSpacing)
         ) {
             OutlinedTextField(
                 value = description,
@@ -100,6 +107,7 @@ fun CargoScreen(
             ) {
                 Text(stringResource(Res.string.cargo_next_button))
             }
+        }
         }
     }
 }

@@ -40,6 +40,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.asString
 import com.juanpablo0612.tucargo.core.ui.components.ErrorBanner
 import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
@@ -107,30 +109,35 @@ internal fun LoginScreenContent(
     onRegisterClick: () -> Unit,
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
+    val dimensions = LocalDimensions.current
 
     Scaffold { innerPadding ->
-        Column(
+        ResponsiveContainer(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 24.dp),
         ) {
-            Spacer(Modifier.height(48.dp))
-
-            Box(
-                contentAlignment = Alignment.Center,
+            Column(
                 modifier = Modifier
-                    .size(80.dp)
-                    .clip(MaterialTheme.shapes.extraLarge)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .fillMaxSize()
+                    .padding(horizontal = dimensions.formHorizontalPadding),
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.local_shipping),
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
-            }
+                Spacer(Modifier.height(48.dp))
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(dimensions.logoSize)
+                        .clip(MaterialTheme.shapes.extraLarge)
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.local_shipping),
+                        contentDescription = null,
+                        modifier = Modifier.size(dimensions.logoSize / 2),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
 
             Spacer(Modifier.height(28.dp))
 
@@ -262,6 +269,7 @@ internal fun LoginScreenContent(
             }
 
             Spacer(Modifier.height(16.dp))
+            }
         }
     }
 }

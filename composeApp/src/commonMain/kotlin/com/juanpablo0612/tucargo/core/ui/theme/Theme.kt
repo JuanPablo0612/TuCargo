@@ -284,13 +284,21 @@ fun TuCargoTheme(
         else -> lightScheme
     }
 
+    val windowType = rememberWindowType()
+    val dimensions = when (windowType) {
+        WindowType.COMPACT -> CompactDimensions
+        WindowType.MEDIUM -> MediumDimensions
+        WindowType.EXPANDED -> ExpandedDimensions
+    }
+
     CompositionLocalProvider(
         LocalExtendedColors provides ExtendedColors(
             available = AvailableGreen,
             onAvailable = OnAvailableGreen,
             successContainer = SuccessGreenContainer,
             onSuccessContainer = OnSuccessGreenContainer,
-        )
+        ),
+        LocalDimensions provides dimensions,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

@@ -39,6 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.asString
 import com.juanpablo0612.tucargo.core.ui.components.ErrorBanner
 import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
@@ -96,6 +98,12 @@ internal fun ResetPasswordScreenContent(
             )
         },
     ) { innerPadding ->
+        val dimensions = LocalDimensions.current
+        ResponsiveContainer(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
         AnimatedContent(
             targetState = uiState.isSuccess,
             transitionSpec = { fadeIn() togetherWith fadeOut() },
@@ -105,8 +113,7 @@ internal fun ResetPasswordScreenContent(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(horizontal = 32.dp),
+                        .padding(horizontal = dimensions.formHorizontalPadding),
                     contentAlignment = Alignment.Center,
                 ) {
                     Column(
@@ -149,8 +156,7 @@ internal fun ResetPasswordScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(horizontal = 24.dp),
+                        .padding(horizontal = dimensions.formHorizontalPadding),
                 ) {
                     Spacer(Modifier.height(16.dp))
 
@@ -204,6 +210,7 @@ internal fun ResetPasswordScreenContent(
                     Spacer(Modifier.height(24.dp))
                 }
             }
+        }
         }
     }
 }

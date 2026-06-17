@@ -31,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.MapComponent
 import com.juanpablo0612.tucargo.core.util.roundToDecimals
@@ -141,18 +143,23 @@ fun QuoteScreen(
             )
         }
     ) { innerPadding ->
-        Column(
+        val dimensions = LocalDimensions.current
+        ResponsiveContainer(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+        ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = dimensions.screenHorizontalPadding),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Card(shape = MaterialTheme.shapes.large) {
                 MapComponent(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(220.dp),
+                        .height(dimensions.mapHeight),
                     latitude = quote.originLat,
                     longitude = quote.originLng,
                     onMapClick = null
@@ -250,6 +257,7 @@ fun QuoteScreen(
                     Text(stringResource(Res.string.quote_request_button))
                 }
             }
+        }
         }
     }
 }

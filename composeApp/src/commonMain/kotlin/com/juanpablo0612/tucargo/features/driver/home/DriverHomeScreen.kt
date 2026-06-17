@@ -43,6 +43,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.permissions.rememberBackgroundLocationPermissionRequester
 import com.juanpablo0612.tucargo.core.permissions.rememberLocationPermissionRequester
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
@@ -164,6 +166,7 @@ fun DriverHomeScreen(
             )
         }
     ) { padding ->
+        val dimensions = LocalDimensions.current
         if (state.isLoading) {
             Box(
                 modifier = Modifier
@@ -174,13 +177,17 @@ fun DriverHomeScreen(
                 CircularProgressIndicator()
             }
         } else {
-            LazyColumn(
+            ResponsiveContainer(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(vertical = 16.dp),
+            ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = dimensions.screenHorizontalPadding),
+                verticalArrangement = Arrangement.spacedBy(dimensions.sectionSpacing),
+                contentPadding = PaddingValues(vertical = dimensions.sectionSpacing),
             ) {
                 state.error?.let { driverError ->
                     item(key = "error_banner", contentType = "error") {
@@ -302,6 +309,7 @@ fun DriverHomeScreen(
                         ActiveTripItem(trip = trip, onViewTrip = { onTripClick(trip.id) })
                     }
                 }
+            }
             }
         }
     }

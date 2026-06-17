@@ -49,6 +49,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
 import com.juanpablo0612.tucargo.core.ui.components.TripStatusBadge
@@ -167,42 +169,45 @@ internal fun TripActiveScreenContent(
             )
         },
     ) { innerPadding ->
-        when {
-            uiState.isLoading -> Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
+        val dimensions = LocalDimensions.current
+        ResponsiveContainer(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            when {
+                uiState.isLoading -> Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
 
-            uiState.trip == null -> Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                ErrorCard(
-                    message = stringResource(Res.string.trip_active_load_error),
-                    modifier = Modifier.fillMaxWidth(),
+                uiState.trip == null -> Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(dimensions.formHorizontalPadding),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    ErrorCard(
+                        message = stringResource(Res.string.trip_active_load_error),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+
+                else -> TripActiveBody(
+                    uiState = uiState,
+                    trip = uiState.trip,
+                    onAdvanceClick = { isCompletion ->
+                        if (isCompletion) showCompleteDialog = true
+                        else onAction(TripActiveAction.AdvanceStatus)
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = dimensions.formHorizontalPadding)
+                        .verticalScroll(rememberScrollState()),
                 )
             }
-
-            else -> TripActiveBody(
-                uiState = uiState,
-                trip = uiState.trip,
-                onAdvanceClick = { isCompletion ->
-                    if (isCompletion) showCompleteDialog = true
-                    else onAction(TripActiveAction.AdvanceStatus)
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp)
-                    .verticalScroll(rememberScrollState()),
-            )
         }
     }
 }

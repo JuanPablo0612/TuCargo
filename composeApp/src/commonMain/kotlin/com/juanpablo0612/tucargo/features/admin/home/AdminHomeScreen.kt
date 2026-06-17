@@ -33,6 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.domain.model.User
 import org.jetbrains.compose.resources.stringResource
@@ -97,6 +99,7 @@ internal fun AdminHomeScreenContent(
             )
         },
     ) { innerPadding ->
+        val dimensions = LocalDimensions.current
         PullToRefreshBox(
             isRefreshing = uiState.isLoading,
             onRefresh = { onAction(AdminHomeAction.Refresh) },
@@ -104,6 +107,7 @@ internal fun AdminHomeScreenContent(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
+            ResponsiveContainer(modifier = Modifier.fillMaxSize()) {
             when {
                 uiState.isLoading && uiState.pendingDrivers.isEmpty() -> Box(
                     modifier = Modifier.fillMaxSize(),
@@ -151,7 +155,7 @@ internal fun AdminHomeScreenContent(
                 else -> LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(dimensions.screenHorizontalPadding),
                 ) {
                     items(
                         items = uiState.pendingDrivers,
@@ -164,6 +168,7 @@ internal fun AdminHomeScreenContent(
                         )
                     }
                 }
+            }
             }
         }
     }

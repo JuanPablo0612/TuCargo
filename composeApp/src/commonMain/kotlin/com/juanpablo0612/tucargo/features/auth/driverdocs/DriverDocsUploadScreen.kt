@@ -32,6 +32,8 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.core.ui.components.DocumentPickerItem
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.LoadingButton
@@ -139,13 +141,18 @@ internal fun DriverDocsUploadScreenContent(
             )
         },
     ) { innerPadding ->
-        Column(
+        val dimensions = LocalDimensions.current
+        ResponsiveContainer(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 24.dp)
+        ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = dimensions.formHorizontalPadding)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(dimensions.sectionSpacing),
         ) {
             StepIndicator(
                 steps = buildOnboardingSteps(currentStep = 3, labels = stepLabels),
@@ -252,6 +259,7 @@ internal fun DriverDocsUploadScreenContent(
             }
 
             Spacer(Modifier.height(16.dp))
+        }
         }
     }
 }

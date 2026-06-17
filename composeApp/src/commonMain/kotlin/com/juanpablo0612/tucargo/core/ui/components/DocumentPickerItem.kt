@@ -25,6 +25,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 
 @Composable
 fun DocumentPickerItem(
@@ -53,10 +54,11 @@ fun DocumentPickerItem(
     val iconTint = if (isLoaded || isError) MaterialTheme.colorScheme.onPrimary
     else MaterialTheme.colorScheme.surface
 
+    val dimensions = LocalDimensions.current
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(dimensions.documentPickerHeight)
             .clip(MaterialTheme.shapes.medium)
             .background(containerColor)
             .border(2.dp, borderColor, MaterialTheme.shapes.medium)
@@ -70,7 +72,7 @@ fun DocumentPickerItem(
         ) {
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(dimensions.iconSizeMedium)
                     .clip(CircleShape)
                     .background(iconContainerColor),
                 contentAlignment = Alignment.Center,

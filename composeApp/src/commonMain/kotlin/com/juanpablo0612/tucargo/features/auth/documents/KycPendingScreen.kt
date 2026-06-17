@@ -27,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juanpablo0612.tucargo.core.ui.components.ResponsiveContainer
+import com.juanpablo0612.tucargo.core.ui.theme.LocalDimensions
 import com.juanpablo0612.tucargo.domain.model.KycDocument
 import com.juanpablo0612.tucargo.domain.model.KycDocumentType
 import com.juanpablo0612.tucargo.domain.model.KycStatus
@@ -73,10 +75,12 @@ internal fun KycPendingScreenContent(uiState: KycPendingState) {
         return
     }
 
+    val dimensions = LocalDimensions.current
+    ResponsiveContainer(modifier = Modifier.fillMaxSize()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = dimensions.formHorizontalPadding)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -130,6 +134,7 @@ internal fun KycPendingScreenContent(uiState: KycPendingState) {
         }
 
         Spacer(Modifier.height(32.dp))
+    }
     }
 }
 
