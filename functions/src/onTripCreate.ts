@@ -1,4 +1,4 @@
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
+import { onDocumentCreated } from "firebase-functions/firestore";
 import { dispatchTrip } from "./dispatchTrip";
 
 export const onTripCreate = onDocumentCreated(

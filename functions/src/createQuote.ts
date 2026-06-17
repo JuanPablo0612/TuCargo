@@ -3,7 +3,7 @@ import {
   onCall,
   HttpsError,
   CallableRequest,
-} from "firebase-functions/v2/https";
+} from "firebase-functions/https";
 import { defineSecret } from "firebase-functions/params";
 import axios from "axios";
 import { computePrice } from "./pricing";

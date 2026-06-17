@@ -1,14 +1,17 @@
+import { setGlobalOptions } from "firebase-functions/options";
 import * as admin from "firebase-admin";
 
 admin.initializeApp();
 
-export { createQuote } from "./createQuote";
-export { requestTrip } from "./requestTrip";
+setGlobalOptions({ maxInstances: 10 });
+
+export { onUserDocumentCreated } from "./onUserDocumentCreated";
 export { onTripCreate } from "./onTripCreate";
+export { requestTrip } from "./requestTrip";
 export { acceptOffer } from "./acceptOffer";
 export { rejectOffer } from "./rejectOffer";
-export { updateTripStatus } from "./updateTripStatus";
 export { completeTrip } from "./completeTrip";
-export { cleanStaleDriverLocations } from "./cleanStaleDriverLocations";
-export { onUserDocumentCreated } from "./onUserDocumentCreated";
+export { updateTripStatus } from "./updateTripStatus";
 export { approveDriver } from "./approveDriver";
+export { cleanStaleDriverLocations } from "./cleanStaleDriverLocations";
+export { createQuote } from "./createQuote";

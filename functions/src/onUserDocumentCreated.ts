@@ -1,4 +1,4 @@
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
+import { onDocumentCreated } from "firebase-functions/firestore";
 import * as admin from "firebase-admin";
 
 export const onUserDocumentCreated = onDocumentCreated(

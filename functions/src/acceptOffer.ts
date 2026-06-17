@@ -3,7 +3,7 @@ import {
   onCall,
   HttpsError,
   CallableRequest,
-} from "firebase-functions/v2/https";
+} from "firebase-functions/https";
 
 interface AcceptOfferData {
   tripId: string;

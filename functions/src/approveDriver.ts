@@ -3,7 +3,7 @@ import {
   onCall,
   HttpsError,
   CallableRequest,
-} from "firebase-functions/v2/https";
+} from "firebase-functions/https";
 
 interface ApproveDriverData {
   driverId: string;
@@ -67,9 +67,9 @@ export const approveDriver = onCall(
     const fcmToken = userSnap.data()?.["fcm_token"] as string | undefined;
     if (fcmToken) {
       const body =
-        action === "APPROVE"
-          ? "¡Tu documentación fue aprobada! Ya puedes comenzar a trabajar."
-          : `Tu documentación fue rechazada. Razón: ${reason}`;
+        action === "APPROVE" ?
+          "¡Tu documentación fue aprobada! Ya puedes comenzar a trabajar." :
+          `Tu documentación fue rechazada. Razón: ${reason}`;
       await admin
         .messaging()
         .send({ token: fcmToken, notification: { body } })
