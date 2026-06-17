@@ -1,6 +1,6 @@
 package com.juanpablo0612.tucargo.core.location
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 data class DriverLocation(
     val lat: Double,

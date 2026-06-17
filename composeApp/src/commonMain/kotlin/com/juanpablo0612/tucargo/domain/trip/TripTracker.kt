@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.FlowPreview
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 @OptIn(FlowPreview::class)
 class TripTracker(

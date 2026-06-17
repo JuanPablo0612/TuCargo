@@ -3,7 +3,7 @@ package com.juanpablo0612.tucargo.data.tracking
 import com.juanpablo0612.tucargo.core.location.DriverLocation
 import com.juanpablo0612.tucargo.data.tracking.room.LocationDao
 import com.juanpablo0612.tucargo.data.tracking.room.LocationEntity
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 private const val MAX_BUFFER_SIZE = 900
 

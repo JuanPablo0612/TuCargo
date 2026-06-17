@@ -90,7 +90,6 @@ kotlin {
             implementation(libs.firebase.functions)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
