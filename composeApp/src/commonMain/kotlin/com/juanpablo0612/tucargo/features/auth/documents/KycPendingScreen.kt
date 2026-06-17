@@ -1,5 +1,6 @@
 package com.juanpablo0612.tucargo.features.auth.documents
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import org.jetbrains.compose.resources.painterResource
 import tucargo.composeapp.generated.resources.info
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -84,21 +87,28 @@ internal fun KycPendingScreenContent(uiState: KycPendingState) {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(40.dp))
 
-        Icon(
-            painter = painterResource(Res.drawable.info),
-            contentDescription = null,
-            modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(80.dp)
+                .clip(MaterialTheme.shapes.extraLarge)
+                .background(MaterialTheme.colorScheme.secondaryContainer),
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.info),
+                contentDescription = null,
+                modifier = Modifier.size(40.dp),
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+            )
+        }
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(20.dp))
 
         Text(
             text = stringResource(Res.string.kyc_pending_title),
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
             textAlign = TextAlign.Center,
         )
 
@@ -106,13 +116,13 @@ internal fun KycPendingScreenContent(uiState: KycPendingState) {
 
         Text(
             text = stringResource(Res.string.kyc_pending_subtitle),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         if (uiState.documents.isNotEmpty()) {
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(28.dp))
 
             val personalDocs = uiState.documents.filter { it.type in personalDocTypes }
             val vehicleDocs = uiState.documents.filter { it.type in vehicleDocTypes }
@@ -120,15 +130,17 @@ internal fun KycPendingScreenContent(uiState: KycPendingState) {
             if (personalDocs.isNotEmpty()) {
                 DocumentSection(
                     title = stringResource(Res.string.kyc_pending_personal_section),
-                    docs = personalDocs
+                    docs = personalDocs,
                 )
             }
 
             if (vehicleDocs.isNotEmpty()) {
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(20.dp))
+                HorizontalDivider()
+                Spacer(Modifier.height(20.dp))
                 DocumentSection(
                     title = stringResource(Res.string.kyc_pending_vehicle_section),
-                    docs = vehicleDocs
+                    docs = vehicleDocs,
                 )
             }
         }
@@ -141,20 +153,24 @@ internal fun KycPendingScreenContent(uiState: KycPendingState) {
 @Composable
 private fun DocumentSection(
     title: String,
-    docs: List<KycDocument>
+    docs: List<KycDocument>,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
             text = title,
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
-        docs.forEach { doc ->
-            KycDocumentStatusRow(doc = doc)
+
+        Spacer(Modifier.height(10.dp))
+
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            docs.forEach { doc ->
+                KycDocumentStatusRow(doc = doc)
+            }
         }
     }
 }
@@ -164,7 +180,12 @@ private fun KycDocumentStatusRow(doc: KycDocument) {
     val statusColor = when (doc.status) {
         KycStatus.APPROVED -> MaterialTheme.colorScheme.tertiary
         KycStatus.REJECTED -> MaterialTheme.colorScheme.error
-        KycStatus.PENDING -> MaterialTheme.colorScheme.secondary
+        KycStatus.PENDING -> MaterialTheme.colorScheme.outline
+    }
+    val statusBgColor = when (doc.status) {
+        KycStatus.APPROVED -> MaterialTheme.colorScheme.tertiaryContainer
+        KycStatus.REJECTED -> MaterialTheme.colorScheme.errorContainer
+        KycStatus.PENDING -> MaterialTheme.colorScheme.surfaceContainerHighest
     }
     val statusLabel = when (doc.status) {
         KycStatus.APPROVED -> stringResource(Res.string.kyc_status_approved)
@@ -181,34 +202,35 @@ private fun KycDocumentStatusRow(doc: KycDocument) {
     }
 
     Surface(
-        shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier.fillMaxWidth()
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = docLabel,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.weight(1f)
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f, fill = false),
                 )
                 Surface(
-                    shape = MaterialTheme.shapes.extraSmall,
-                    color = statusColor.copy(alpha = 0.15f),
+                    shape = MaterialTheme.shapes.small,
+                    color = statusBgColor,
+                    modifier = Modifier.padding(start = 8.dp),
                 ) {
                     Text(
                         text = statusLabel,
                         style = MaterialTheme.typography.labelSmall,
                         color = statusColor,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                     )
                 }
             }
@@ -216,7 +238,7 @@ private fun KycDocumentStatusRow(doc: KycDocument) {
                 Text(
                     text = stringResource(Res.string.kyc_pending_rejection_reason, doc.rejectionReason),
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
         }
