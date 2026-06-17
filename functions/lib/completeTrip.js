@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.completeTrip = void 0;
 const admin = __importStar(require("firebase-admin"));
 const crypto = __importStar(require("crypto"));
-const https_1 = require("firebase-functions/v2/https");
+const https_1 = require("firebase-functions/https");
 const MAX_ATTEMPTS = 5;
 exports.completeTrip = (0, https_1.onCall)(async (request) => {
     if (!request.auth || request.auth.token["role"] !== "DRIVER") {

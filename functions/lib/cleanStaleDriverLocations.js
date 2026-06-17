@@ -35,10 +35,10 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cleanStaleDriverLocations = void 0;
 const admin = __importStar(require("firebase-admin"));
-const scheduler_1 = require("firebase-functions/v2/scheduler");
+const scheduler_1 = require("firebase-functions/scheduler");
 exports.cleanStaleDriverLocations = (0, scheduler_1.onSchedule)("every 2 minutes", async () => {
     const db = admin.database();
-    const cutoffMs = Date.now() - 90000;
+    const cutoffMs = Date.now() - 90_000;
     const snap = await db
         .ref("driver_locations")
         .orderByChild("capturedAt")

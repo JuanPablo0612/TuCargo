@@ -37,7 +37,7 @@ exports.dispatchTrip = dispatchTrip;
 const admin = __importStar(require("firebase-admin"));
 const OFFER_TIMEOUT_S = 30;
 const OFFER_POLL_INTERVAL_MS = 2000;
-const DISPATCH_LOCK_TTL_MS = 90000;
+const DISPATCH_LOCK_TTL_MS = 90_000;
 async function dispatchTrip(tripId) {
     const db = admin.firestore();
     // Acquire dispatch lock

@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rejectOffer = void 0;
 const admin = __importStar(require("firebase-admin"));
-const https_1 = require("firebase-functions/v2/https");
+const https_1 = require("firebase-functions/https");
 exports.rejectOffer = (0, https_1.onCall)(async (request) => {
     if (!request.auth || request.auth.token["role"] !== "DRIVER") {
         throw new https_1.HttpsError("permission-denied", "Drivers only");

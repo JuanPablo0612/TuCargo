@@ -38,7 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createQuote = void 0;
 const admin = __importStar(require("firebase-admin"));
-const https_1 = require("firebase-functions/v2/https");
+const https_1 = require("firebase-functions/https");
 const params_1 = require("firebase-functions/params");
 const axios_1 = __importDefault(require("axios"));
 const pricing_1 = require("./pricing");

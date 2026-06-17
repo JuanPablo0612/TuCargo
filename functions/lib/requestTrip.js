@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.requestTrip = void 0;
 const admin = __importStar(require("firebase-admin"));
 const crypto = __importStar(require("crypto"));
-const https_1 = require("firebase-functions/v2/https");
+const https_1 = require("firebase-functions/https");
 exports.requestTrip = (0, https_1.onCall)(async (request) => {
     if (!request.auth || request.auth.token["role"] !== "CLIENT") {
         throw new https_1.HttpsError("permission-denied", "Clients only");

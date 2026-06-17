@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.approveDriver = void 0;
 const admin = __importStar(require("firebase-admin"));
-const https_1 = require("firebase-functions/v2/https");
+const https_1 = require("firebase-functions/https");
 exports.approveDriver = (0, https_1.onCall)(async (request) => {
     if (!request.auth || request.auth.token["role"] !== "ADMIN") {
         throw new https_1.HttpsError("permission-denied", "Admins only");
@@ -87,9 +87,9 @@ exports.approveDriver = (0, https_1.onCall)(async (request) => {
     const userSnap = await db.collection("users").doc(driverId).get();
     const fcmToken = userSnap.data()?.["fcm_token"];
     if (fcmToken) {
-        const body = action === "APPROVE"
-            ? "¡Tu documentación fue aprobada! Ya puedes comenzar a trabajar."
-            : `Tu documentación fue rechazada. Razón: ${reason}`;
+        const body = action === "APPROVE" ?
+            "¡Tu documentación fue aprobada! Ya puedes comenzar a trabajar." :
+            `Tu documentación fue rechazada. Razón: ${reason}`;
         await admin
             .messaging()
             .send({ token: fcmToken, notification: { body } })

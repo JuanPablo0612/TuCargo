@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.onUserDocumentCreated = void 0;
-const firestore_1 = require("firebase-functions/v2/firestore");
+const firestore_1 = require("firebase-functions/firestore");
 const admin = __importStar(require("firebase-admin"));
 exports.onUserDocumentCreated = (0, firestore_1.onDocumentCreated)("users/{userId}", async (event) => {
     const data = event.data?.data();

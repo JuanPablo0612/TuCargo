@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTripStatus = void 0;
 const admin = __importStar(require("firebase-admin"));
-const https_1 = require("firebase-functions/v2/https");
+const https_1 = require("firebase-functions/https");
 const ACTION_MAP = {
     ARRIVE_PICKUP: {
         fromStatus: "ACCEPTED",
