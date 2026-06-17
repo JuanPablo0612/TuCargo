@@ -19,3 +19,12 @@ captures
 node_modules/
 /androidApp/google-services.json
 secrets.properties
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Claude Code
+.claude/
