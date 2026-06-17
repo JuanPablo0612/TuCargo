@@ -18,8 +18,7 @@ class QuoteRepositoryImpl(private val functions: FirebaseFunctions) : QuoteRepos
         destAddr: String
     ): Result<QuoteResult> = safeCall {
         val callable = functions.httpsCallable("createQuote")
-        // HttpsErrors from the Cloud Function surface as exceptions caught by safeCall.
-        // The message field of the exception matches the second argument of HttpsError().
+        println("TuCargo: CF invoke — calling createQuote")
         val response = runCatching {
             callable.invoke(
                 mapOf(
@@ -32,6 +31,8 @@ class QuoteRepositoryImpl(private val functions: FirebaseFunctions) : QuoteRepos
                 )
             )
         }.getOrElse { e ->
+            println("TuCargo: CF invoke FAILED — ${e::class.qualifiedName}: ${e.message}")
+            e.cause?.let { println("TuCargo: CF invoke cause — ${it::class.qualifiedName}: ${it.message}") }
             val msg = e.message ?: ""
             when {
                 msg.contains("SAME_ORIGIN_DEST") -> throw AppError.Validation.SameOriginDest

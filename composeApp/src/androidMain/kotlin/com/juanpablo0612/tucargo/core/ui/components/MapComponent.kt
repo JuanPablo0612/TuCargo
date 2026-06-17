@@ -18,7 +18,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.juanpablo0612.tucargo.core.location.DriverLocation
 import org.jetbrains.compose.resources.stringResource
 import tucargo.composeapp.generated.resources.Res
@@ -50,15 +50,11 @@ actual fun MapComponent(
         animLng.animateTo(loc.lng.toFloat(), tween(ANIMATION_DURATION_MS))
     }
 
-    val driverMarkerState = rememberMarkerState(
+    val driverMarkerState = rememberUpdatedMarkerState(
         position = LatLng(animLat.value.toDouble(), animLng.value.toDouble())
     )
-    LaunchedEffect(animLat.value, animLng.value) {
-        driverMarkerState.position = LatLng(animLat.value.toDouble(), animLng.value.toDouble())
-    }
 
-    // Static marker (used when no driverLocation is active)
-    val staticMarkerState = rememberMarkerState(position = staticLocation)
+    val staticMarkerState = rememberUpdatedMarkerState(position = staticLocation)
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(staticLocation, zoom)
@@ -107,10 +103,10 @@ actual fun MapComponent(
         if (driverLocation != null) {
             Marker(state = driverMarkerState, title = "Conductor")
             originLatLng?.let { (lat, lng) ->
-                Marker(state = rememberMarkerState(position = LatLng(lat, lng)), title = "Origen")
+                Marker(state = rememberUpdatedMarkerState(position = LatLng(lat, lng)), title = "Origen")
             }
             destinationLatLng?.let { (lat, lng) ->
-                Marker(state = rememberMarkerState(position = LatLng(lat, lng)), title = "Destino")
+                Marker(state = rememberUpdatedMarkerState(position = LatLng(lat, lng)), title = "Destino")
             }
         } else {
             Marker(state = staticMarkerState, title = markerTitle)

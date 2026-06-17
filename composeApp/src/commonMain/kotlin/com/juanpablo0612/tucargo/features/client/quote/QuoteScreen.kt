@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,13 +19,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.juanpablo0612.tucargo.core.ui.components.ErrorCard
 import com.juanpablo0612.tucargo.core.ui.components.MapComponent
-import com.juanpablo0612.tucargo.domain.model.QuoteResult
+import com.juanpablo0612.tucargo.core.util.roundToDecimals
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,6 +48,7 @@ import tucargo.composeapp.generated.resources.quote_new_button
 import tucargo.composeapp.generated.resources.quote_request_button
 import tucargo.composeapp.generated.resources.quote_title
 import tucargo.composeapp.generated.resources.quote_valid_for
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,25 +69,65 @@ fun QuoteScreen(
 
     val quote = uiState.quote
     if (quote == null) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(Res.string.quote_title)) },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        }
+                    }
+                )
+            }
+        ) { innerPadding ->
+            Box(
+                Modifier.fillMaxSize().padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                if (uiState.error != null) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.padding(32.dp)
+                    ) {
+                        val msg = when (uiState.error) {
+                            QuoteError.SAME_ORIGIN_DEST -> stringResource(Res.string.quote_error_same_origin)
+                            QuoteError.QUOTE_OUT_OF_RANGE -> stringResource(Res.string.quote_error_out_of_range)
+                            QuoteError.NO_ROUTE -> stringResource(Res.string.quote_error_no_route)
+                            QuoteError.SERVICE_UNAVAILABLE -> stringResource(Res.string.quote_error_service_unavailable)
+                            else -> stringResource(Res.string.quote_error_service_unavailable)
+                        }
+                        ErrorCard(message = msg, modifier = Modifier.fillMaxWidth())
+                        Button(onClick = onNewQuote, modifier = Modifier.fillMaxWidth()) {
+                            Text(stringResource(Res.string.quote_new_button))
+                        }
+                    }
+                } else {
+                    CircularProgressIndicator()
+                }
+            }
         }
         return
     }
 
-    var remainingMs by remember(quote.id) { mutableLongStateOf(quote.validUntil - System.currentTimeMillis()) }
+    var remainingMs by remember(quote.id) {
+        mutableLongStateOf(
+            quote.validUntil - kotlin.time.Clock.System.now().toEpochMilliseconds()
+        )
+    }
     val isExpired = remainingMs <= 0
 
     LaunchedEffect(quote.id) {
         while (remainingMs > 0) {
-            delay(1000L)
-            remainingMs = quote.validUntil - System.currentTimeMillis()
+            delay(1000L.milliseconds)
+            remainingMs = quote.validUntil - kotlin.time.Clock.System.now().toEpochMilliseconds()
         }
     }
 
     val minutes = (remainingMs / 1000 / 60).coerceAtLeast(0)
     val seconds = (remainingMs / 1000 % 60).coerceAtLeast(0)
-    val countdownText = "%d:%02d".format(minutes, seconds)
+    val countdownText = "$minutes:${seconds.toString().padStart(2, '0')}"
 
     Scaffold(
         topBar = {
@@ -128,7 +166,7 @@ fun QuoteScreen(
             )
 
             Text(
-                text = "%.1f km".format(quote.distanceKm),
+                text = "${quote.distanceKm.roundToDecimals(1)} km",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -149,10 +187,13 @@ fun QuoteScreen(
                         style = MaterialTheme.typography.displaySmall,
                         fontWeight = FontWeight.Bold,
                         color = if (isExpired) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                else MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = stringResource(Res.string.quote_commission_note, quote.commissionFee.format()),
+                        text = stringResource(
+                            Res.string.quote_commission_note,
+                            quote.commissionFee.format()
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

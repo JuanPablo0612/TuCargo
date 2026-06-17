@@ -66,17 +66,28 @@ class TripRequestViewModel(
 
     fun requestQuote() {
         val state = _uiState.value
-        val originLat = state.originLat ?: return
-        val originLng = state.originLng ?: return
-        val destLat = state.destLat ?: return
-        val destLng = state.destLng ?: return
+        val originLat = state.originLat
+        val originLng = state.originLng
+        val destLat = state.destLat
+        val destLng = state.destLng
+
+        println("TuCargo: requestQuote called — origin=($originLat,$originLng) dest=($destLat,$destLng)")
+
+        if (originLat == null || originLng == null || destLat == null || destLng == null) {
+            println("TuCargo: requestQuote ABORT — coordinates are null")
+            _uiState.update { it.copy(isLoading = false, error = QuoteError.UNKNOWN) }
+            return
+        }
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
+            println("TuCargo: requestQuote — getting current user")
             val clientId = getCurrentUserUseCase().getOrNull()?.id ?: run {
+                println("TuCargo: requestQuote ABORT — getCurrentUser returned null")
                 _uiState.update { it.copy(isLoading = false, error = QuoteError.UNKNOWN) }
                 return@launch
             }
+            println("TuCargo: requestQuote — clientId=$clientId, calling createQuote CF")
             requestQuoteUseCase(
                 clientId = clientId,
                 originLat = originLat,
@@ -87,9 +98,11 @@ class TripRequestViewModel(
                 destAddr = state.destAddr
             ).fold(
                 onSuccess = { quote ->
+                    println("TuCargo: requestQuote SUCCESS — quoteId=${quote.id}")
                     _uiState.update { it.copy(isLoading = false, quote = quote, error = null) }
                 },
                 onFailure = { e ->
+                    println("TuCargo: requestQuote FAILED — ${e::class.simpleName}: ${e.message}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,

@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.juanpablo0612.tucargo.domain.model.DriverOnboardingStatus
@@ -52,6 +53,7 @@ import org.koin.compose.viewmodel.koinViewModel
     @Serializable data object DriverOnboardingDocuments : Route()
     @Serializable data object ClientHome : Route()
     @Serializable data object DriverHome : Route()
+    @Serializable data object TripRequestGraph : Route()
     @Serializable data object PickOrigin : Route()
     @Serializable data object PickDest : Route()
     @Serializable data object Cargo : Route()
@@ -112,48 +114,66 @@ fun AppNavigation() {
 
         composable<Route.ClientHome> {
             ClientHomeScreen(
-                onNewTrip = { navController.navigate(Route.PickOrigin) },
+                onNewTrip = { navController.navigate(Route.TripRequestGraph) },
                 onSignOut = { authViewModel.logout() },
                 onTripClick = { tripId -> navController.navigate(Route.TripDetail(tripId)) },
                 onViewAllClick = { navController.navigate(Route.TripHistory) },
             )
         }
 
-        composable<Route.PickOrigin> {
-            PickOriginScreen(
-                onConfirmed = { navController.navigate(Route.PickDest) },
-                onBackClick = { navController.popBackStack() }
-            )
-        }
+        navigation<Route.TripRequestGraph>(startDestination = Route.PickOrigin) {
+            composable<Route.PickOrigin> { entry ->
+                val parentEntry = remember(entry) {
+                    navController.getBackStackEntry<Route.TripRequestGraph>()
+                }
+                PickOriginScreen(
+                    viewModel = koinViewModel(viewModelStoreOwner = parentEntry),
+                    onConfirmed = { navController.navigate(Route.PickDest) },
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
 
-        composable<Route.PickDest> {
-            PickDestScreen(
-                onConfirmed = { navController.navigate(Route.Cargo) },
-                onBackClick = { navController.popBackStack() }
-            )
-        }
+            composable<Route.PickDest> { entry ->
+                val parentEntry = remember(entry) {
+                    navController.getBackStackEntry<Route.TripRequestGraph>()
+                }
+                PickDestScreen(
+                    viewModel = koinViewModel(viewModelStoreOwner = parentEntry),
+                    onConfirmed = { navController.navigate(Route.Cargo) },
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
 
-        composable<Route.Cargo> {
-            CargoScreen(
-                onNext = { navController.navigate(Route.Quote) },
-                onBackClick = { navController.popBackStack() }
-            )
-        }
+            composable<Route.Cargo> { entry ->
+                val parentEntry = remember(entry) {
+                    navController.getBackStackEntry<Route.TripRequestGraph>()
+                }
+                CargoScreen(
+                    viewModel = koinViewModel(viewModelStoreOwner = parentEntry),
+                    onNext = { navController.navigate(Route.Quote) },
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
 
-        composable<Route.Quote> {
-            QuoteScreen(
-                onTripCreated = { tripId ->
-                    navController.navigate(Route.Searching(tripId)) {
-                        popUpTo<Route.PickOrigin> { inclusive = true }
-                    }
-                },
-                onNewQuote = {
-                    navController.navigate(Route.PickOrigin) {
-                        popUpTo<Route.PickOrigin> { inclusive = true }
-                    }
-                },
-                onBackClick = { navController.popBackStack() }
-            )
+            composable<Route.Quote> { entry ->
+                val parentEntry = remember(entry) {
+                    navController.getBackStackEntry<Route.TripRequestGraph>()
+                }
+                QuoteScreen(
+                    viewModel = koinViewModel(viewModelStoreOwner = parentEntry),
+                    onTripCreated = { tripId ->
+                        navController.navigate(Route.Searching(tripId)) {
+                            popUpTo<Route.TripRequestGraph> { inclusive = true }
+                        }
+                    },
+                    onNewQuote = {
+                        navController.navigate(Route.TripRequestGraph) {
+                            popUpTo<Route.TripRequestGraph> { inclusive = true }
+                        }
+                    },
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
         }
 
         composable<Route.Searching> { backStackEntry ->
@@ -166,7 +186,7 @@ fun AppNavigation() {
                     }
                 },
                 onRetry = {
-                    navController.navigate(Route.PickOrigin) {
+                    navController.navigate(Route.TripRequestGraph) {
                         popUpTo<Route.ClientHome> { inclusive = false }
                     }
                 },

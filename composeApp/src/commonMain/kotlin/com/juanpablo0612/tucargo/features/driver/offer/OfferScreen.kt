@@ -1,5 +1,6 @@
 package com.juanpablo0612.tucargo.features.driver.offer
 
+import com.juanpablo0612.tucargo.core.util.roundToDecimals
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -22,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,6 +46,7 @@ import tucargo.composeapp.generated.resources.offer_commission_label
 import tucargo.composeapp.generated.resources.offer_distance_label
 import tucargo.composeapp.generated.resources.offer_reject_button
 import tucargo.composeapp.generated.resources.offer_title
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun OfferScreen(
@@ -58,7 +59,7 @@ fun OfferScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     var remainingMs by remember(offer.id) {
-        mutableLongStateOf(offer.expiresAt - System.currentTimeMillis())
+        mutableLongStateOf(offer.expiresAt - kotlin.time.Clock.System.now().toEpochMilliseconds())
     }
     val totalMs = remember(offer.id) {
         (offer.expiresAt - offer.sentAt).coerceAtLeast(1L)
@@ -67,8 +68,8 @@ fun OfferScreen(
 
     LaunchedEffect(offer.id) {
         while (remainingMs > 0) {
-            delay(1000L)
-            remainingMs = offer.expiresAt - System.currentTimeMillis()
+            delay(1000L.milliseconds)
+            remainingMs = offer.expiresAt - kotlin.time.Clock.System.now().toEpochMilliseconds()
         }
         onDismiss()
     }
@@ -155,7 +156,7 @@ fun OfferScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = stringResource(Res.string.offer_distance_label, "%.1f".format(offer.distanceKm)),
+                    text = stringResource(Res.string.offer_distance_label, offer.distanceKm.roundToDecimals(1)),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
