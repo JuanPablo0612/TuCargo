@@ -152,18 +152,21 @@ internal fun DriverDocsUploadScreenContent(
                 .fillMaxSize()
                 .padding(horizontal = dimensions.formHorizontalPadding)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(dimensions.sectionSpacing),
         ) {
             StepIndicator(
                 steps = buildOnboardingSteps(currentStep = 3, labels = stepLabels),
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
+            Spacer(Modifier.height(12.dp))
+
             Text(
                 text = stringResource(Res.string.driver_docs_subtitle),
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+
+            Spacer(Modifier.height(16.dp))
 
             AnimatedVisibility(
                 visible = uiState.uploadError != null,
@@ -178,7 +181,9 @@ internal fun DriverDocsUploadScreenContent(
                     }
                     ErrorCard(
                         message = stringResource(msgRes),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp),
                     )
                 }
             }
@@ -189,31 +194,39 @@ internal fun DriverDocsUploadScreenContent(
                 color = MaterialTheme.colorScheme.primary,
             )
 
-            DocumentPickerItem(
-                label = stringResource(Res.string.driver_docs_id_front),
-                isLoaded = uiState.documents[KycDocumentType.ID_FRONT] != null,
-                isError = uiState.documentErrors[KycDocumentType.ID_FRONT] == true,
-                onClick = { idFrontLauncher.launch() },
-                fileName = uiState.documents[KycDocumentType.ID_FRONT]?.name,
-            )
+            Spacer(Modifier.height(10.dp))
 
-            DocumentPickerItem(
-                label = stringResource(Res.string.driver_docs_id_back),
-                isLoaded = uiState.documents[KycDocumentType.ID_BACK] != null,
-                isError = uiState.documentErrors[KycDocumentType.ID_BACK] == true,
-                onClick = { idBackLauncher.launch() },
-                fileName = uiState.documents[KycDocumentType.ID_BACK]?.name,
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                DocumentPickerItem(
+                    label = stringResource(Res.string.driver_docs_id_front),
+                    isLoaded = uiState.documents[KycDocumentType.ID_FRONT] != null,
+                    isError = uiState.documentErrors[KycDocumentType.ID_FRONT] == true,
+                    onClick = { idFrontLauncher.launch() },
+                    fileName = uiState.documents[KycDocumentType.ID_FRONT]?.name,
+                )
 
-            DocumentPickerItem(
-                label = stringResource(Res.string.driver_docs_license),
-                isLoaded = uiState.documents[KycDocumentType.DRIVER_LICENSE] != null,
-                isError = uiState.documentErrors[KycDocumentType.DRIVER_LICENSE] == true,
-                onClick = { licenseLauncher.launch() },
-                fileName = uiState.documents[KycDocumentType.DRIVER_LICENSE]?.name,
-            )
+                DocumentPickerItem(
+                    label = stringResource(Res.string.driver_docs_id_back),
+                    isLoaded = uiState.documents[KycDocumentType.ID_BACK] != null,
+                    isError = uiState.documentErrors[KycDocumentType.ID_BACK] == true,
+                    onClick = { idBackLauncher.launch() },
+                    fileName = uiState.documents[KycDocumentType.ID_BACK]?.name,
+                )
+
+                DocumentPickerItem(
+                    label = stringResource(Res.string.driver_docs_license),
+                    isLoaded = uiState.documents[KycDocumentType.DRIVER_LICENSE] != null,
+                    isError = uiState.documentErrors[KycDocumentType.DRIVER_LICENSE] == true,
+                    onClick = { licenseLauncher.launch() },
+                    fileName = uiState.documents[KycDocumentType.DRIVER_LICENSE]?.name,
+                )
+            }
+
+            Spacer(Modifier.height(20.dp))
 
             HorizontalDivider()
+
+            Spacer(Modifier.height(20.dp))
 
             Text(
                 text = stringResource(Res.string.driver_docs_vehicle_section),
@@ -221,31 +234,35 @@ internal fun DriverDocsUploadScreenContent(
                 color = MaterialTheme.colorScheme.primary,
             )
 
-            DocumentPickerItem(
-                label = stringResource(Res.string.driver_docs_soat),
-                isLoaded = uiState.documents[KycDocumentType.SOAT] != null,
-                isError = uiState.documentErrors[KycDocumentType.SOAT] == true,
-                onClick = { soatLauncher.launch() },
-                fileName = uiState.documents[KycDocumentType.SOAT]?.name,
-            )
+            Spacer(Modifier.height(10.dp))
 
-            DocumentPickerItem(
-                label = stringResource(Res.string.driver_docs_tech_review),
-                isLoaded = uiState.documents[KycDocumentType.VEHICLE_TECH_REVIEW] != null,
-                isError = uiState.documentErrors[KycDocumentType.VEHICLE_TECH_REVIEW] == true,
-                onClick = { techReviewLauncher.launch() },
-                fileName = uiState.documents[KycDocumentType.VEHICLE_TECH_REVIEW]?.name,
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                DocumentPickerItem(
+                    label = stringResource(Res.string.driver_docs_soat),
+                    isLoaded = uiState.documents[KycDocumentType.SOAT] != null,
+                    isError = uiState.documentErrors[KycDocumentType.SOAT] == true,
+                    onClick = { soatLauncher.launch() },
+                    fileName = uiState.documents[KycDocumentType.SOAT]?.name,
+                )
 
-            DocumentPickerItem(
-                label = stringResource(Res.string.driver_docs_registration_card),
-                isLoaded = uiState.documents[KycDocumentType.VEHICLE_REGISTRATION_CARD] != null,
-                isError = uiState.documentErrors[KycDocumentType.VEHICLE_REGISTRATION_CARD] == true,
-                onClick = { regCardLauncher.launch() },
-                fileName = uiState.documents[KycDocumentType.VEHICLE_REGISTRATION_CARD]?.name,
-            )
+                DocumentPickerItem(
+                    label = stringResource(Res.string.driver_docs_tech_review),
+                    isLoaded = uiState.documents[KycDocumentType.VEHICLE_TECH_REVIEW] != null,
+                    isError = uiState.documentErrors[KycDocumentType.VEHICLE_TECH_REVIEW] == true,
+                    onClick = { techReviewLauncher.launch() },
+                    fileName = uiState.documents[KycDocumentType.VEHICLE_TECH_REVIEW]?.name,
+                )
 
-            Spacer(Modifier.height(8.dp))
+                DocumentPickerItem(
+                    label = stringResource(Res.string.driver_docs_registration_card),
+                    isLoaded = uiState.documents[KycDocumentType.VEHICLE_REGISTRATION_CARD] != null,
+                    isError = uiState.documentErrors[KycDocumentType.VEHICLE_REGISTRATION_CARD] == true,
+                    onClick = { regCardLauncher.launch() },
+                    fileName = uiState.documents[KycDocumentType.VEHICLE_REGISTRATION_CARD]?.name,
+                )
+            }
+
+            Spacer(Modifier.height(24.dp))
 
             LoadingButton(
                 onClick = { onAction(DriverDocsAction.OnSubmit) },
@@ -258,7 +275,7 @@ internal fun DriverDocsUploadScreenContent(
                 )
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(24.dp))
         }
         }
     }
