@@ -24,10 +24,12 @@ internal fun textFieldColors() = TextFieldDefaults.colors(
     focusedIndicatorColor = Color.Transparent,
     unfocusedIndicatorColor = Color.Transparent,
     disabledIndicatorColor = Color.Transparent,
+    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
 )
 
 @Composable
-internal fun textFieldShape() = MaterialTheme.shapes.small
+internal fun textFieldShape() = MaterialTheme.shapes.medium
 
 @Composable
 fun RoundedTextField(
@@ -47,7 +49,7 @@ fun RoundedTextField(
     outputTransformation: OutputTransformation? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onKeyboardAction: KeyboardActionHandler? = null,
-    lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default,
+    lineLimits: TextFieldLineLimits = TextFieldLineLimits.SingleLine,
 ) {
     TextField(
         state = state,

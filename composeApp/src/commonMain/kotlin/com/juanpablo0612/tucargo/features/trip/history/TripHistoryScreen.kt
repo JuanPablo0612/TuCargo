@@ -8,8 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,6 +36,7 @@ import com.juanpablo0612.tucargo.core.ui.components.TripCard
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.arrow_back
 import tucargo.composeapp.generated.resources.trip_history_back_button
 import tucargo.composeapp.generated.resources.trip_history_empty
 import tucargo.composeapp.generated.resources.trip_history_load_error
@@ -78,7 +78,7 @@ internal fun TripHistoryScreenContent(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painter = painterResource(Res.drawable.arrow_back),
                             contentDescription = stringResource(Res.string.trip_history_back_button),
                         )
                     }

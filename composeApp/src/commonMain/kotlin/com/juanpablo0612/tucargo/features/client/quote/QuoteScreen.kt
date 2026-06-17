@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import org.jetbrains.compose.resources.painterResource
+import tucargo.composeapp.generated.resources.arrow_back
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -77,7 +77,7 @@ fun QuoteScreen(
                     title = { Text(stringResource(Res.string.quote_title)) },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                            Icon(painterResource(Res.drawable.arrow_back), contentDescription = null)
                         }
                     }
                 )
@@ -137,7 +137,7 @@ fun QuoteScreen(
                 title = { Text(stringResource(Res.string.quote_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        Icon(painterResource(Res.drawable.arrow_back), contentDescription = null)
                     }
                 }
             )

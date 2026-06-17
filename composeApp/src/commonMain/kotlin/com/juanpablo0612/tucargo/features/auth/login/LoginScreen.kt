@@ -1,7 +1,5 @@
 package com.juanpablo0612.tucargo.features.auth.login
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -121,6 +119,7 @@ internal fun LoginScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = dimensions.formHorizontalPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(Modifier.height(48.dp))
 
@@ -139,136 +138,139 @@ internal fun LoginScreenContent(
                     )
                 }
 
-            Spacer(Modifier.height(28.dp))
+                Spacer(Modifier.height(28.dp))
 
-            Text(
-                text = stringResource(Res.string.login_title),
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.semantics { heading() },
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = stringResource(Res.string.login_subtitle),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
-            Spacer(Modifier.height(24.dp))
-
-            ErrorBanner(
-                message = uiState.authError?.let {
-                    val errorRes = when (it) {
-                        LoginError.InvalidCredentials -> Res.string.login_invalid_credentials_error
-                        LoginError.NetworkError -> Res.string.network_error
-                        LoginError.UnknownError -> Res.string.unknown_error
-                    }
-                    stringResource(errorRes)
-                }
-            )
-
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                RoundedTextField(
-                    state = emailState,
+                Text(
+                    text = stringResource(Res.string.login_title),
+                    style = MaterialTheme.typography.headlineLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .semantics { heading() },
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = stringResource(Res.string.login_subtitle),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(Res.string.login_email_label)) },
-                    placeholder = { Text(stringResource(Res.string.login_email_placeholder)) },
-                    leadingIcon = {
-                        Icon(painterResource(Res.drawable.mail), contentDescription = null)
-                    },
-                    isError = uiState.emailError != null,
-                    supportingText = uiState.emailError?.let { err -> { Text(err.asString()) } },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        autoCorrectEnabled = false,
-                        imeAction = ImeAction.Next,
-                    ),
-                    onKeyboardAction = { performDefaultAction ->
-                        onAction(LoginAction.ValidateEmail)
-                        performDefaultAction()
-                    },
                 )
 
-                SecureRoundedTextField(
-                    state = passwordState,
-                    modifier = Modifier.fillMaxWidth(),
-                    textObfuscationMode = if (isPasswordVisible) TextObfuscationMode.Visible else TextObfuscationMode.Hidden,
-                    label = { Text(stringResource(Res.string.login_password_label)) },
-                    placeholder = { Text(stringResource(Res.string.login_password_placeholder)) },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(Res.drawable.lock_24px),
-                            contentDescription = null,
-                        )
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                            Icon(
-                                painter = painterResource(
-                                    if (isPasswordVisible) Res.drawable.visibility_off
-                                    else Res.drawable.visibility
-                                ),
-                                contentDescription = stringResource(Res.string.cd_toggle_password_visibility),
-                            )
+                Spacer(Modifier.height(32.dp))
+
+                ErrorBanner(
+                    message = uiState.authError?.let {
+                        val errorRes = when (it) {
+                            LoginError.InvalidCredentials -> Res.string.login_invalid_credentials_error
+                            LoginError.NetworkError -> Res.string.network_error
+                            LoginError.UnknownError -> Res.string.unknown_error
                         }
-                    },
-                    isError = uiState.passwordError != null,
-                    supportingText = uiState.passwordError?.let { err -> { Text(err.asString()) } },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done,
-                    ),
-                    onKeyboardAction = { performDefaultAction ->
-                        onAction(LoginAction.ValidatePassword)
-                        performDefaultAction()
-                    },
+                        stringResource(errorRes)
+                    }
                 )
-            }
 
-            TextButton(
-                onClick = onForgotPasswordClick,
-                modifier = Modifier.align(Alignment.End),
-            ) {
-                Text(stringResource(Res.string.login_forgot_password_button))
-            }
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    RoundedTextField(
+                        state = emailState,
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text(stringResource(Res.string.login_email_label)) },
+                        placeholder = { Text(stringResource(Res.string.login_email_placeholder)) },
+                        leadingIcon = {
+                            Icon(painterResource(Res.drawable.mail), contentDescription = null)
+                        },
+                        isError = uiState.emailError != null,
+                        supportingText = uiState.emailError?.let { err -> { Text(err.asString()) } },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            autoCorrectEnabled = false,
+                            imeAction = ImeAction.Next,
+                        ),
+                        onKeyboardAction = { performDefaultAction ->
+                            onAction(LoginAction.ValidateEmail)
+                            performDefaultAction()
+                        },
+                    )
 
-            Spacer(Modifier.weight(1f))
+                    SecureRoundedTextField(
+                        state = passwordState,
+                        modifier = Modifier.fillMaxWidth(),
+                        textObfuscationMode = if (isPasswordVisible) TextObfuscationMode.Visible else TextObfuscationMode.Hidden,
+                        label = { Text(stringResource(Res.string.login_password_label)) },
+                        placeholder = { Text(stringResource(Res.string.login_password_placeholder)) },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(Res.drawable.lock_24px),
+                                contentDescription = null,
+                            )
+                        },
+                        trailingIcon = {
+                            IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                                Icon(
+                                    painter = painterResource(
+                                        if (isPasswordVisible) Res.drawable.visibility_off
+                                        else Res.drawable.visibility
+                                    ),
+                                    contentDescription = stringResource(Res.string.cd_toggle_password_visibility),
+                                )
+                            }
+                        },
+                        isError = uiState.passwordError != null,
+                        supportingText = uiState.passwordError?.let { err -> { Text(err.asString()) } },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        ),
+                        onKeyboardAction = { performDefaultAction ->
+                            onAction(LoginAction.ValidatePassword)
+                            performDefaultAction()
+                        },
+                    )
+                }
 
-            LoadingButton(
-                onClick = { onAction(LoginAction.Login) },
-                isLoading = uiState.isLoading,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
+                TextButton(
+                    onClick = onForgotPasswordClick,
+                    modifier = Modifier.align(Alignment.End),
+                ) {
+                    Text(stringResource(Res.string.login_forgot_password_button))
+                }
+
+                Spacer(Modifier.height(32.dp))
+
+                LoadingButton(
+                    onClick = { onAction(LoginAction.Login) },
+                    isLoading = uiState.isLoading,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.login_login_button),
+                            style = MaterialTheme.typography.titleSmall,
+                        )
+                        Icon(
+                            painterResource(Res.drawable.arrow_forward),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                    }
+                }
+
+                Spacer(Modifier.weight(1f))
+
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = stringResource(Res.string.login_login_button),
-                        style = MaterialTheme.typography.titleSmall,
-                    )
-                    Icon(
-                        painterResource(Res.drawable.arrow_forward),
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp),
-                    )
+                    HorizontalDivider(modifier = Modifier.weight(1f))
+                    TextButton(onClick = onRegisterClick) {
+                        Text(stringResource(Res.string.login_register_link))
+                    }
+                    HorizontalDivider(modifier = Modifier.weight(1f))
                 }
-            }
 
-            Spacer(Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                HorizontalDivider(modifier = Modifier.weight(1f))
-                TextButton(onClick = onRegisterClick) {
-                    Text(stringResource(Res.string.login_register_link))
-                }
-                HorizontalDivider(modifier = Modifier.weight(1f))
-            }
-
-            Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
             }
         }
     }

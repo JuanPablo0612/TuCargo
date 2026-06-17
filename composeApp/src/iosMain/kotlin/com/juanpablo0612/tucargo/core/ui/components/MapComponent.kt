@@ -10,6 +10,8 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.juanpablo0612.tucargo.BuildKonfig
 import com.juanpablo0612.tucargo.core.location.DriverLocation
 import kotlinx.cinterop.CValue
@@ -22,6 +24,10 @@ import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.darwin.NSObject
 import org.jetbrains.compose.resources.stringResource
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.map_marker_destination
+import tucargo.composeapp.generated.resources.map_marker_driver
+import tucargo.composeapp.generated.resources.map_content_description
+import tucargo.composeapp.generated.resources.map_marker_origin
 import tucargo.composeapp.generated.resources.map_your_location
 // NOTE ON THIS WHOLE FILE: written without an Xcode/Mac toolchain available, so it could
 // not be compiled here. The import path below uses "TuCargo" as the group segment because
@@ -86,6 +92,10 @@ actual fun MapComponent(
 
     var hasSetInitialBounds by remember { mutableStateOf(false) }
     val yourLocationTitle = stringResource(Res.string.map_your_location)
+    val driverTitle = stringResource(Res.string.map_marker_driver)
+    val originTitle = stringResource(Res.string.map_marker_origin)
+    val destinationTitle = stringResource(Res.string.map_marker_destination)
+    val mapDescription = stringResource(Res.string.map_content_description)
 
     // Markers are created once and mutated imperatively from `update`, since GMSMapView
     // (unlike Compose's Android GoogleMap) has no declarative marker API.
@@ -110,7 +120,7 @@ actual fun MapComponent(
             }
             mapView
         },
-        modifier = modifier,
+        modifier = modifier.semantics { contentDescription = mapDescription },
         update = { mapView ->
             val driverLat = animLat.value.toDouble()
             val driverLng = animLng.value.toDouble()
@@ -120,21 +130,21 @@ actual fun MapComponent(
                 markers.staticMarker = null
 
                 val driverMarker = markers.driver ?: GMSMarker().apply {
-                    title = "Conductor"
+                    title = driverTitle
                     map = mapView
                 }.also { markers.driver = it }
                 driverMarker.position = CLLocationCoordinate2DMake(driverLat, driverLng)
 
                 originLatLng?.let { (lat, lng) ->
                     val marker = markers.origin ?: GMSMarker().apply {
-                        title = "Origen"
+                        title = originTitle
                         map = mapView
                     }.also { markers.origin = it }
                     marker.position = CLLocationCoordinate2DMake(lat, lng)
                 }
                 destinationLatLng?.let { (lat, lng) ->
                     val marker = markers.destination ?: GMSMarker().apply {
-                        title = "Destino"
+                        title = destinationTitle
                         map = mapView
                     }.also { markers.destination = it }
                     marker.position = CLLocationCoordinate2DMake(lat, lng)

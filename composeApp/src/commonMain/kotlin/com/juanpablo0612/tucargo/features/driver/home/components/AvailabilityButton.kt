@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PowerSettingsNew
+import org.jetbrains.compose.resources.painterResource
+import tucargo.composeapp.generated.resources.power_settings_new
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -72,7 +72,7 @@ fun AvailabilityButton(
             horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                imageVector = Icons.Default.PowerSettingsNew,
+                painter = painterResource(Res.drawable.power_settings_new),
                 contentDescription = null
             )
             Spacer(Modifier.width(12.dp))

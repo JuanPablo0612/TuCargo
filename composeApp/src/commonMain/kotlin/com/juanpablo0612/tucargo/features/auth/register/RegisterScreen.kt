@@ -1,7 +1,5 @@
 package com.juanpablo0612.tucargo.features.auth.register
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,16 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
+import tucargo.composeapp.generated.resources.arrow_back
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -134,7 +129,7 @@ internal fun RegisterScreenContent(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painter = painterResource(Res.drawable.arrow_back),
                             contentDescription = stringResource(Res.string.register_back_button),
                         )
                     }
@@ -153,28 +148,38 @@ internal fun RegisterScreenContent(
                 .fillMaxSize()
                 .padding(horizontal = dimensions.formHorizontalPadding)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             Spacer(Modifier.height(4.dp))
 
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
                     text = stringResource(Res.string.register_role_label),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                     SegmentedButton(
                         selected = uiState.selectedRole == UserRole.CLIENT,
                         onClick = { onAction(RegisterAction.SelectRole(UserRole.CLIENT)) },
                         shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
-                        label = { Text(stringResource(Res.string.register_role_client)) },
+                        label = {
+                            Text(
+                                text = stringResource(Res.string.register_role_client),
+                                style = MaterialTheme.typography.labelLarge,
+                            )
+                        },
                     )
                     SegmentedButton(
                         selected = uiState.selectedRole == UserRole.DRIVER,
                         onClick = { onAction(RegisterAction.SelectRole(UserRole.DRIVER)) },
                         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
-                        label = { Text(stringResource(Res.string.register_role_driver)) },
+                        label = {
+                            Text(
+                                text = stringResource(Res.string.register_role_driver),
+                                style = MaterialTheme.typography.labelLarge,
+                            )
+                        },
                     )
                 }
             }
@@ -191,7 +196,7 @@ internal fun RegisterScreenContent(
                 }
             )
 
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 RoundedTextField(
                     state = nameState,
                     label = { Text(stringResource(Res.string.register_name_label)) },
@@ -286,6 +291,8 @@ internal fun RegisterScreenContent(
                 )
             }
 
+            Spacer(Modifier.height(4.dp))
+
             LoadingButton(
                 onClick = { onAction(RegisterAction.Register) },
                 isLoading = uiState.isLoading,
@@ -297,7 +304,7 @@ internal fun RegisterScreenContent(
                 )
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(16.dp))
         }
         }
     }

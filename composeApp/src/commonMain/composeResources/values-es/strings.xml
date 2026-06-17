@@ -12,7 +12,7 @@
 
     <!-- Inicio de sesión -->
     <string name="login_title">Bienvenido de nuevo</string>
-    <string name="login_subtitle">Ingresa a tu cuenta para comenzar a entregar.</string>
+    <string name="login_subtitle">Ingresa a tu cuenta para continuar.</string>
     <string name="login_email_label">Correo electrónico</string>
     <string name="login_email_placeholder">mensajero@tucargo.com</string>
     <string name="login_password_label">Contraseña</string>
@@ -26,11 +26,11 @@
     <string name="register_back_button">Volver</string>
     <string name="register_title">Crea tu cuenta</string>
     <string name="register_role_label">Selecciona tu rol</string>
-    <string name="register_role_client">Necesito enviar una carga</string>
-    <string name="register_role_driver">Soy conductor</string>
+    <string name="register_role_client">Enviar carga</string>
+    <string name="register_role_driver">Conductor</string>
     <string name="register_name_label">Nombre completo</string>
     <string name="register_email_label">Correo electrónico</string>
-    <string name="register_phone_label">Teléfono (formato E.164, ej. +573001234567)</string>
+    <string name="register_phone_label">Número de teléfono</string>
     <string name="register_password_label">Contraseña</string>
     <string name="register_button">Crear cuenta</string>
     <string name="register_name_placeholder">Juan Pérez</string>
@@ -42,6 +42,7 @@
 
     <!-- Restablecer contraseña -->
     <string name="reset_password_title">Restablecer contraseña</string>
+    <string name="reset_password_subtitle">Ingresa tu correo y te enviaremos un enlace para crear una nueva contraseña.</string>
     <string name="reset_password_email_label">Correo electrónico</string>
     <string name="reset_password_email_placeholder">tu@correo.com</string>
     <string name="reset_password_submit_button">Enviar enlace</string>
@@ -254,6 +255,24 @@
 
     <!-- Mapa -->
     <string name="map_your_location">Tu ubicación</string>
+    <string name="map_marker_driver">Conductor</string>
+    <string name="map_marker_origin">Origen</string>
+    <string name="map_marker_destination">Destino</string>
+    <string name="map_content_description">Mapa que muestra la ubicación</string>
+
+    <!-- Disclosure de ubicación en segundo plano -->
+    <string name="bg_location_dialog_title">Acceso a ubicación en segundo plano</string>
+    <string name="bg_location_dialog_intro">TuCargo necesita acceder a tu ubicación en todo momento para:</string>
+    <string name="bg_location_dialog_bullet_updates">• Enviar actualizaciones de ubicación al cliente mientras estás en un viaje activo.</string>
+    <string name="bg_location_dialog_bullet_tracking">• Mantener el seguimiento del viaje aunque la app esté en segundo plano.</string>
+    <string name="bg_location_dialog_instruction">En la siguiente pantalla selecciona \"Permitir todo el tiempo\" para habilitar esta función.</string>
+    <string name="bg_location_dialog_continue">Continuar</string>
+    <string name="bg_location_dialog_not_now">Ahora no</string>
+
+    <!-- Servicio de ubicación del conductor -->
+    <string name="service_notification_text">Estás en línea — esperando viajes</string>
+    <string name="service_channel_name">Ubicación del conductor</string>
+    <string name="service_channel_description">Canal para el seguimiento de ubicación del conductor</string>
 
     <!-- Errores globales -->
     <string name="network_error">Error de red. Verifica tu conexión e intenta de nuevo.</string>

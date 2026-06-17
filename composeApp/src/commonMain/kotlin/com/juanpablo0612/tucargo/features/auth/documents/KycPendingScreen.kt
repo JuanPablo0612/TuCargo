@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import org.jetbrains.compose.resources.painterResource
+import tucargo.composeapp.generated.resources.info
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -87,7 +87,7 @@ internal fun KycPendingScreenContent(uiState: KycPendingState) {
         Spacer(Modifier.height(32.dp))
 
         Icon(
-            imageVector = Icons.Default.Info,
+            painter = painterResource(Res.drawable.info),
             contentDescription = null,
             modifier = Modifier.size(64.dp),
             tint = MaterialTheme.colorScheme.primary

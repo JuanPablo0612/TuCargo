@@ -10,6 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -22,6 +24,10 @@ import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.juanpablo0612.tucargo.core.location.DriverLocation
 import org.jetbrains.compose.resources.stringResource
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.map_marker_destination
+import tucargo.composeapp.generated.resources.map_marker_driver
+import tucargo.composeapp.generated.resources.map_content_description
+import tucargo.composeapp.generated.resources.map_marker_origin
 import tucargo.composeapp.generated.resources.map_your_location
 
 private const val ANIMATION_DURATION_MS = 1500
@@ -86,9 +92,13 @@ actual fun MapComponent(
     }
 
     val markerTitle = stringResource(Res.string.map_your_location)
+    val driverTitle = stringResource(Res.string.map_marker_driver)
+    val originTitle = stringResource(Res.string.map_marker_origin)
+    val destinationTitle = stringResource(Res.string.map_marker_destination)
+    val mapDescription = stringResource(Res.string.map_content_description)
 
     GoogleMap(
-        modifier = modifier,
+        modifier = modifier.semantics { contentDescription = mapDescription },
         cameraPositionState = cameraPositionState,
         onMapClick = onMapClick?.let { callback ->
             { latLng -> callback(latLng.latitude, latLng.longitude) }
@@ -101,12 +111,12 @@ actual fun MapComponent(
         }
     ) {
         if (driverLocation != null) {
-            Marker(state = driverMarkerState, title = "Conductor")
+            Marker(state = driverMarkerState, title = driverTitle)
             originLatLng?.let { (lat, lng) ->
-                Marker(state = rememberUpdatedMarkerState(position = LatLng(lat, lng)), title = "Origen")
+                Marker(state = rememberUpdatedMarkerState(position = LatLng(lat, lng)), title = originTitle)
             }
             destinationLatLng?.let { (lat, lng) ->
-                Marker(state = rememberUpdatedMarkerState(position = LatLng(lat, lng)), title = "Destino")
+                Marker(state = rememberUpdatedMarkerState(position = LatLng(lat, lng)), title = destinationTitle)
             }
         } else {
             Marker(state = staticMarkerState, title = markerTitle)

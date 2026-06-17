@@ -1,14 +1,13 @@
 package com.juanpablo0612.tucargo.core.ui
 
-fun Double.toCurrencyString(): String {
-    val cents = kotlin.math.round(this * 100).toLong()
-    val intPart = cents / 100
-    val decPart = kotlin.math.abs(cents % 100)
-    return "$$intPart.${decPart.toString().padStart(2, '0')}"
-}
+import com.juanpablo0612.tucargo.domain.model.formatCopAmount
+import kotlin.math.roundToLong
 
-fun Int.toCurrencyString(): String = this.toDouble().toCurrencyString()
-fun Long.toCurrencyString(): String = this.toDouble().toCurrencyString()
+// All money in the app is whole Colombian pesos; delegate to the single COP formatter
+// (`"$ 12.345"`) so prices and balances render identically everywhere.
+fun Double.toCurrencyString(): String = formatCopAmount(this.roundToLong())
+fun Int.toCurrencyString(): String = formatCopAmount(this.toLong())
+fun Long.toCurrencyString(): String = formatCopAmount(this)
 
 fun Double.toDistanceString(): String {
     val tenths = kotlin.math.round(this * 10).toLong()

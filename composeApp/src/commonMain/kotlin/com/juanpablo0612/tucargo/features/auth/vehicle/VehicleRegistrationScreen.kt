@@ -18,8 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -49,6 +48,7 @@ import com.juanpablo0612.tucargo.domain.model.VehicleType
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.arrow_back
 import tucargo.composeapp.generated.resources.onboarding_step_documents
 import tucargo.composeapp.generated.resources.onboarding_step_personal
 import tucargo.composeapp.generated.resources.onboarding_step_review
@@ -128,7 +128,7 @@ internal fun VehicleRegistrationScreenContent(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painter = painterResource(Res.drawable.arrow_back),
                             contentDescription = stringResource(Res.string.vehicle_reg_back_button),
                         )
                     }

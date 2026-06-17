@@ -9,19 +9,7 @@ value class Cop(val amount: Int) {
         require(amount >= 0) { "Cop amount cannot be negative: $amount" }
     }
 
-    fun format(): String {
-        val s = amount.toString()
-        val sb = StringBuilder("$ ")
-        val remainder = s.length % 3
-        if (remainder > 0) sb.append(s.substring(0, remainder))
-        var i = remainder
-        while (i < s.length) {
-            if (sb.length > 2) sb.append('.')
-            sb.append(s.substring(i, i + 3))
-            i += 3
-        }
-        return sb.toString()
-    }
+    fun format(): String = formatCopAmount(amount.toLong())
 
     operator fun plus(other: Cop): Cop = Cop(amount + other.amount)
 
@@ -30,4 +18,23 @@ value class Cop(val amount: Int) {
         require(result >= 0) { "Cop subtraction would produce a negative value: $amount - ${other.amount}" }
         return Cop(result)
     }
+}
+
+/**
+ * Single source of truth for Colombian-peso formatting: `"$ 12.345"` — a `$ ` prefix with
+ * period thousands separators and no decimals (COP has no fractional unit in practice).
+ * Negative inputs are clamped to zero so callers never have to guard.
+ */
+fun formatCopAmount(amount: Long): String {
+    val s = amount.coerceAtLeast(0).toString()
+    val sb = StringBuilder("$ ")
+    val remainder = s.length % 3
+    if (remainder > 0) sb.append(s.substring(0, remainder))
+    var i = remainder
+    while (i < s.length) {
+        if (sb.length > 2) sb.append('.')
+        sb.append(s.substring(i, i + 3))
+        i += 3
+    }
+    return sb.toString()
 }

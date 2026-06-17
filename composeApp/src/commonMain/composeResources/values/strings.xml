@@ -12,7 +12,7 @@
 
     <!-- Login -->
     <string name="login_title">Welcome back</string>
-    <string name="login_subtitle">Log in to access your account and start delivering.</string>
+    <string name="login_subtitle">Log in to your account to continue.</string>
     <string name="login_email_label">Email address</string>
     <string name="login_email_placeholder">courier@tucargo.com</string>
     <string name="login_password_label">Password</string>
@@ -26,11 +26,11 @@
     <string name="register_back_button">Go back</string>
     <string name="register_title">Create your account</string>
     <string name="register_role_label">Select your role</string>
-    <string name="register_role_client">I need to send cargo</string>
-    <string name="register_role_driver">I am a driver</string>
+    <string name="register_role_client">Send cargo</string>
+    <string name="register_role_driver">Driver</string>
     <string name="register_name_label">Full name</string>
     <string name="register_email_label">Email address</string>
-    <string name="register_phone_label">Phone number (E.164, e.g. +13001234567)</string>
+    <string name="register_phone_label">Phone number</string>
     <string name="register_password_label">Password</string>
     <string name="register_button">Create account</string>
     <string name="register_name_placeholder">John Doe</string>
@@ -42,6 +42,7 @@
 
     <!-- Reset Password -->
     <string name="reset_password_title">Reset password</string>
+    <string name="reset_password_subtitle">Enter your email and we\'ll send you a link to create a new password.</string>
     <string name="reset_password_email_label">Email address</string>
     <string name="reset_password_email_placeholder">your@email.com</string>
     <string name="reset_password_submit_button">Send reset link</string>
@@ -217,44 +218,62 @@
     <string name="trip_status_cancelled_admin">Cancelled by admin</string>
 
     <!-- Quote flow -->
-    <string name="pick_location_confirm_button">Confirmar ubicación</string>
-    <string name="pick_origin_title">Punto de origen</string>
-    <string name="pick_dest_title">Punto de destino</string>
-    <string name="cargo_title">Detalles de la carga</string>
-    <string name="cargo_description_label">¿Qué vas a enviar?</string>
-    <string name="cargo_description_placeholder">Ej: Caja de repuestos, 5 kg</string>
-    <string name="cargo_weight_confirm">Confirmo que la carga cabe en un platón estándar y no supera 400 kg.</string>
-    <string name="cargo_next_button">Siguiente</string>
-    <string name="quote_title">Tu cotización</string>
+    <string name="pick_location_confirm_button">Confirm location</string>
+    <string name="pick_origin_title">Pickup point</string>
+    <string name="pick_dest_title">Destination point</string>
+    <string name="cargo_title">Cargo details</string>
+    <string name="cargo_description_label">What are you sending?</string>
+    <string name="cargo_description_placeholder">e.g. Box of spare parts, 5 kg</string>
+    <string name="cargo_weight_confirm">I confirm the cargo fits in a standard truck bed and does not exceed 400 kg.</string>
+    <string name="cargo_next_button">Next</string>
+    <string name="quote_title">Your quote</string>
     <string name="quote_distance_label">%1$s km</string>
-    <string name="quote_commission_note">Comisión del conductor: %1$s</string>
-    <string name="quote_valid_for">Cotización válida por %1$s</string>
-    <string name="quote_expired">Esta cotización expiró. Solicita una nueva.</string>
-    <string name="quote_new_button">Nueva cotización</string>
-    <string name="quote_request_button">Pedir moto-carguero</string>
-    <string name="quote_error_same_origin">El origen y el destino no pueden ser iguales</string>
-    <string name="quote_error_out_of_range">La distancia máxima permitida es 60 km</string>
-    <string name="quote_error_no_route">No encontramos una ruta. Verifica las direcciones.</string>
-    <string name="quote_error_service_unavailable">No pudimos calcular el precio. Intenta de nuevo.</string>
+    <string name="quote_commission_note">Driver commission: %1$s</string>
+    <string name="quote_valid_for">Quote valid for %1$s</string>
+    <string name="quote_expired">This quote has expired. Request a new one.</string>
+    <string name="quote_new_button">New quote</string>
+    <string name="quote_request_button">Request courier</string>
+    <string name="quote_error_same_origin">Origin and destination can\'t be the same</string>
+    <string name="quote_error_out_of_range">The maximum allowed distance is 60 km</string>
+    <string name="quote_error_no_route">We couldn\'t find a route. Check the addresses.</string>
+    <string name="quote_error_service_unavailable">We couldn\'t calculate the price. Please try again.</string>
 
     <!-- Searching screen -->
-    <string name="searching_title">Buscando tu moto-carguero…</string>
-    <string name="searching_no_driver_title">Sin conductores disponibles</string>
-    <string name="searching_no_driver_message">No encontramos un conductor cerca. ¿Quieres intentar de nuevo?</string>
-    <string name="searching_retry_button">Intentar de nuevo</string>
-    <string name="searching_cancel_button">Cancelar</string>
+    <string name="searching_title">Finding your courier…</string>
+    <string name="searching_no_driver_title">No drivers available</string>
+    <string name="searching_no_driver_message">We couldn\'t find a driver nearby. Do you want to try again?</string>
+    <string name="searching_retry_button">Try again</string>
+    <string name="searching_cancel_button">Cancel</string>
 
     <!-- Offer screen (driver) -->
-    <string name="offer_title">Nueva solicitud</string>
-    <string name="offer_commission_label">Comisión: %1$s</string>
+    <string name="offer_title">New request</string>
+    <string name="offer_commission_label">Commission: %1$s</string>
     <string name="offer_distance_label">%1$s km</string>
-    <string name="offer_accept_button">Aceptar</string>
-    <string name="offer_reject_button">Rechazar</string>
-    <string name="offer_error_expired">La oferta ha expirado</string>
-    <string name="offer_error_wallet">Saldo insuficiente para aceptar viajes</string>
+    <string name="offer_accept_button">Accept</string>
+    <string name="offer_reject_button">Reject</string>
+    <string name="offer_error_expired">The offer has expired</string>
+    <string name="offer_error_wallet">Insufficient balance to accept trips</string>
 
     <!-- Map -->
     <string name="map_your_location">Your location</string>
+    <string name="map_marker_driver">Driver</string>
+    <string name="map_marker_origin">Origin</string>
+    <string name="map_marker_destination">Destination</string>
+    <string name="map_content_description">Map showing the location</string>
+
+    <!-- Background location disclosure -->
+    <string name="bg_location_dialog_title">Background location access</string>
+    <string name="bg_location_dialog_intro">TuCargo needs to access your location at all times to:</string>
+    <string name="bg_location_dialog_bullet_updates">• Send location updates to the client while you are on an active trip.</string>
+    <string name="bg_location_dialog_bullet_tracking">• Keep tracking the trip even when the app is in the background.</string>
+    <string name="bg_location_dialog_instruction">On the next screen select \"Allow all the time\" to enable this feature.</string>
+    <string name="bg_location_dialog_continue">Continue</string>
+    <string name="bg_location_dialog_not_now">Not now</string>
+
+    <!-- Driver location foreground service -->
+    <string name="service_notification_text">You\'re online — waiting for trips</string>
+    <string name="service_channel_name">Driver location</string>
+    <string name="service_channel_description">Channel for driver location tracking</string>
 
     <!-- Global errors -->
     <string name="network_error">Network error. Check your connection and try again.</string>

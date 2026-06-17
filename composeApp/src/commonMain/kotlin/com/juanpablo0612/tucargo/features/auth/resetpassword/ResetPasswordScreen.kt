@@ -17,9 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CheckCircle
+import tucargo.composeapp.generated.resources.arrow_back
+import tucargo.composeapp.generated.resources.check_circle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -50,12 +49,14 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.lock_24px
 import tucargo.composeapp.generated.resources.mail
 import tucargo.composeapp.generated.resources.network_error
 import tucargo.composeapp.generated.resources.reset_password_back_to_login_button
 import tucargo.composeapp.generated.resources.reset_password_email_label
 import tucargo.composeapp.generated.resources.reset_password_email_placeholder
 import tucargo.composeapp.generated.resources.reset_password_submit_button
+import tucargo.composeapp.generated.resources.reset_password_subtitle
 import tucargo.composeapp.generated.resources.reset_password_success_message
 import tucargo.composeapp.generated.resources.reset_password_title
 import tucargo.composeapp.generated.resources.unknown_error
@@ -90,7 +91,7 @@ internal fun ResetPasswordScreenContent(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painter = painterResource(Res.drawable.arrow_back),
                             contentDescription = stringResource(Res.string.reset_password_back_to_login_button),
                         )
                     }
@@ -128,7 +129,7 @@ internal fun ResetPasswordScreenContent(
                             contentAlignment = Alignment.Center,
                         ) {
                             Icon(
-                                imageVector = Icons.Default.CheckCircle,
+                                painter = painterResource(Res.drawable.check_circle),
                                 contentDescription = null,
                                 modifier = Modifier.size(48.dp),
                                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -157,8 +158,36 @@ internal fun ResetPasswordScreenContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = dimensions.formHorizontalPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(32.dp))
+
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(MaterialTheme.shapes.extraLarge)
+                            .background(MaterialTheme.colorScheme.secondaryContainer),
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.lock_24px),
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                        )
+                    }
+
+                    Spacer(Modifier.height(24.dp))
+
+                    Text(
+                        text = stringResource(Res.string.reset_password_subtitle),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                    Spacer(Modifier.height(32.dp))
 
                     ErrorBanner(
                         message = uiState.authError?.let {
@@ -194,7 +223,7 @@ internal fun ResetPasswordScreenContent(
                         },
                     )
 
-                    Spacer(Modifier.weight(1f))
+                    Spacer(Modifier.height(32.dp))
 
                     LoadingButton(
                         onClick = onSubmit,
@@ -206,8 +235,6 @@ internal fun ResetPasswordScreenContent(
                             style = MaterialTheme.typography.titleSmall,
                         )
                     }
-
-                    Spacer(Modifier.height(24.dp))
                 }
             }
         }

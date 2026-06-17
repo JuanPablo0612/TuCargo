@@ -10,9 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
+import org.jetbrains.compose.resources.painterResource
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.add
+import tucargo.composeapp.generated.resources.check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -78,7 +79,7 @@ fun DocumentPickerItem(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector = if (isLoaded) Icons.Default.Check else Icons.Default.Add,
+                    painter = painterResource(if (isLoaded) Res.drawable.check else Res.drawable.add),
                     contentDescription = null,
                     tint = iconTint,
                     modifier = Modifier.size(22.dp),

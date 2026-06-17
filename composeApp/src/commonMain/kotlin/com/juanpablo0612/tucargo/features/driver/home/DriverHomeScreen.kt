@@ -11,9 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.History
+import tucargo.composeapp.generated.resources.exit_to_app
+import tucargo.composeapp.generated.resources.history
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -152,13 +151,13 @@ fun DriverHomeScreen(
                 actions = {
                     IconButton(onClick = onHistoryClick) {
                         Icon(
-                            imageVector = Icons.Filled.History,
+                            painter = painterResource(Res.drawable.history),
                             contentDescription = stringResource(Res.string.driver_home_history_desc),
                         )
                     }
                     IconButton(onClick = onSignOut) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                            painter = painterResource(Res.drawable.exit_to_app),
                             contentDescription = stringResource(Res.string.client_home_sign_out_desc),
                         )
                     }

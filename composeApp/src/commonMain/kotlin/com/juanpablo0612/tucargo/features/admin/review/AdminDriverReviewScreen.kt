@@ -12,8 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,6 +54,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import tucargo.composeapp.generated.resources.Res
 import tucargo.composeapp.generated.resources.admin_review_action_error
+import tucargo.composeapp.generated.resources.arrow_back
 import tucargo.composeapp.generated.resources.admin_review_approve
 import tucargo.composeapp.generated.resources.admin_review_back_button
 import tucargo.composeapp.generated.resources.admin_review_load_error
@@ -161,7 +161,7 @@ internal fun AdminDriverReviewScreenContent(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painter = painterResource(Res.drawable.arrow_back),
                             contentDescription = stringResource(Res.string.admin_review_back_button),
                         )
                     }

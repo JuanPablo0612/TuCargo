@@ -15,6 +15,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.bg_location_dialog_bullet_tracking
+import tucargo.composeapp.generated.resources.bg_location_dialog_bullet_updates
+import tucargo.composeapp.generated.resources.bg_location_dialog_continue
+import tucargo.composeapp.generated.resources.bg_location_dialog_instruction
+import tucargo.composeapp.generated.resources.bg_location_dialog_intro
+import tucargo.composeapp.generated.resources.bg_location_dialog_not_now
+import tucargo.composeapp.generated.resources.bg_location_dialog_title
 
 @Composable
 fun BackgroundLocationDisclosureDialog(
@@ -25,7 +34,7 @@ fun BackgroundLocationDisclosureDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = "Acceso a ubicación en segundo plano",
+                text = stringResource(Res.string.bg_location_dialog_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -33,22 +42,22 @@ fun BackgroundLocationDisclosureDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "TuCargo necesita acceder a tu ubicación en todo momento para:",
+                    text = stringResource(Res.string.bg_location_dialog_intro),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "• Enviar actualizaciones de ubicación al cliente mientras estás en un viaje activo.",
+                    text = stringResource(Res.string.bg_location_dialog_bullet_updates),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "• Mantener el seguimiento del viaje aunque la app esté en segundo plano.",
+                    text = stringResource(Res.string.bg_location_dialog_bullet_tracking),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "En la siguiente pantalla selecciona \"Permitir todo el tiempo\" para habilitar esta función.",
+                    text = stringResource(Res.string.bg_location_dialog_instruction),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -59,12 +68,12 @@ fun BackgroundLocationDisclosureDialog(
                 onClick = onContinue,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Continuar")
+                Text(stringResource(Res.string.bg_location_dialog_continue))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Ahora no")
+                Text(stringResource(Res.string.bg_location_dialog_not_now))
             }
         }
     )

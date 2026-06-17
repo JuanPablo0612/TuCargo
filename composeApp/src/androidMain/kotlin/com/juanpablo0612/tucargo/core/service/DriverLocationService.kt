@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.core.service
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -27,9 +28,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.resources.getString
 import org.koin.android.ext.android.inject
+import tucargo.composeapp.generated.resources.Res
+import tucargo.composeapp.generated.resources.service_channel_description
+import tucargo.composeapp.generated.resources.service_channel_name
+import tucargo.composeapp.generated.resources.service_notification_text
 
 class DriverLocationService : Service() {
 
@@ -42,6 +49,11 @@ class DriverLocationService : Service() {
 
         private const val NOTIFICATION_ID = 1001
         const val CHANNEL_ID = "tucargo_driver_location"
+
+        // Brand name (not translated — see app_name translatable="false"). Used as the
+        // immediate notification title and channel-name fallback so startForeground can
+        // fire synchronously before the localized strings are resolved.
+        private const val BRAND_TITLE = "TuCargo"
 
         private const val INTERVAL_ACTIVE_MS = 4_000L
         private const val INTERVAL_AVAILABLE_MS = 30_000L
@@ -79,7 +91,15 @@ class DriverLocationService : Service() {
     override fun onCreate() {
         super.onCreate()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        createNotificationChannel()
+        // Create the channel immediately with the brand name so startForeground works,
+        // then update it with the localized name/description once resources resolve.
+        createNotificationChannel(name = BRAND_TITLE, description = null)
+        serviceScope.launch {
+            createNotificationChannel(
+                name = getString(Res.string.service_channel_name),
+                description = getString(Res.string.service_channel_description),
+            )
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -114,14 +134,27 @@ class DriverLocationService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun startForegroundService() {
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("MotoCargo Conductor")
-            .setContentText("Estás en línea — esperando viajes")
+        // Show immediately with the brand title (no localized text needed yet) so the
+        // foreground-service start deadline is met, then enrich with the localized body.
+        promoteToForeground(buildNotification(contentText = null))
+        serviceScope.launch {
+            val text = getString(Res.string.service_notification_text)
+            withContext(Dispatchers.Main) {
+                promoteToForeground(buildNotification(contentText = text))
+            }
+        }
+    }
+
+    private fun buildNotification(contentText: String?): Notification =
+        NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(BRAND_TITLE)
+            .apply { if (!contentText.isNullOrEmpty()) setContentText(contentText) }
             .setSmallIcon(android.R.drawable.ic_menu_mylocation)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
 
+    private fun promoteToForeground(notification: Notification) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
         } else {
@@ -147,13 +180,15 @@ class DriverLocationService : Service() {
         startLocationUpdates(intervalMs)
     }
 
-    private fun createNotificationChannel() {
+    // Re-creating a channel with the same id updates its name/description (API 26+), so this
+    // is safe to call first with a fallback name and again with the localized strings.
+    private fun createNotificationChannel(name: CharSequence, description: String?) {
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "Ubicación del conductor",
+            name,
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = "Canal para el seguimiento de ubicación del conductor"
+            if (description != null) this.description = description
         }
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(channel)
