@@ -79,6 +79,7 @@ actual fun MapComponent(
     driverLocation: DriverLocation?,
     originLatLng: Pair<Double, Double>?,
     destinationLatLng: Pair<Double, Double>?,
+    myLocationEnabled: Boolean,
 ) {
     // Animatable lat/lng for smooth driver marker movement (mirrors the Android actual).
     val animLat = remember { Animatable(driverLocation?.lat?.toFloat() ?: latitude.toFloat()) }
@@ -111,6 +112,8 @@ actual fun MapComponent(
             )
             val mapView = GMSMapView(frame = CGRectZero.readValue(), camera = camera)
             mapView.settings.zoomGestures = true
+            mapView.myLocationEnabled = myLocationEnabled
+            mapView.settings.myLocationButton = myLocationEnabled
             mapView.delegate = object : NSObject(), GMSMapViewDelegateProtocol {
                 override fun mapView(mapView: GMSMapView, didTapAtCoordinate: CValue<CLLocationCoordinate2D>) {
                     // `latitude`/`longitude` here resolve to the tapped coordinate's
@@ -176,7 +179,8 @@ actual fun MapComponent(
                 }.also { markers.staticMarker = it }
                 marker.position = CLLocationCoordinate2DMake(latitude, longitude)
 
-                if (!hasSetInitialBounds) {
+                val posChanged = markers.lastLat != latitude || markers.lastLng != longitude
+                if (!hasSetInitialBounds || posChanged) {
                     mapView.animateWithCameraUpdate(
                         cameraUpdate = GMSCameraUpdate.setTarget(
                             target = CLLocationCoordinate2DMake(latitude, longitude),
@@ -184,6 +188,8 @@ actual fun MapComponent(
                         )
                     )
                     hasSetInitialBounds = true
+                    markers.lastLat = latitude
+                    markers.lastLng = longitude
                 }
             }
         },
@@ -195,4 +201,6 @@ private class MapMarkers {
     var staticMarker: GMSMarker? = null
     var origin: GMSMarker? = null
     var destination: GMSMarker? = null
+    var lastLat: Double = Double.NaN
+    var lastLng: Double = Double.NaN
 }

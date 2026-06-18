@@ -64,10 +64,13 @@ fun PickOriginScreen(
         onDispose { viewModel.clearAutocomplete() }
     }
 
+    val fallbackLat = state.userLat ?: DEFAULT_LAT
+    val fallbackLng = state.userLng ?: DEFAULT_LNG
+
     PickLocationScreenContent(
         title = stringResource(Res.string.pick_origin_title),
-        lat = state.originLat ?: DEFAULT_LAT,
-        lng = state.originLng ?: DEFAULT_LNG,
+        lat = state.originLat ?: fallbackLat,
+        lng = state.originLng ?: fallbackLng,
         addressText = state.originAddr,
         predictions = state.predictions,
         isAutocompleteLoading = state.isAutocompleteLoading,
@@ -78,8 +81,8 @@ fun PickOriginScreen(
         onClearSearch = { viewModel.clearAutocomplete() },
         onConfirm = {
             viewModel.confirmOrigin(
-                state.originLat ?: DEFAULT_LAT,
-                state.originLng ?: DEFAULT_LNG,
+                state.originLat ?: fallbackLat,
+                state.originLng ?: fallbackLng,
                 state.originAddr
             )
             onConfirmed()
@@ -101,10 +104,13 @@ fun PickDestScreen(
         onDispose { viewModel.clearAutocomplete() }
     }
 
+    val fallbackLat = state.userLat ?: DEFAULT_LAT
+    val fallbackLng = state.userLng ?: DEFAULT_LNG
+
     PickLocationScreenContent(
         title = stringResource(Res.string.pick_dest_title),
-        lat = state.destLat ?: DEFAULT_LAT,
-        lng = state.destLng ?: DEFAULT_LNG,
+        lat = state.destLat ?: fallbackLat,
+        lng = state.destLng ?: fallbackLng,
         addressText = state.destAddr,
         predictions = state.predictions,
         isAutocompleteLoading = state.isAutocompleteLoading,
@@ -115,8 +121,8 @@ fun PickDestScreen(
         onClearSearch = { viewModel.clearAutocomplete() },
         onConfirm = {
             viewModel.confirmDest(
-                state.destLat ?: DEFAULT_LAT,
-                state.destLng ?: DEFAULT_LNG,
+                state.destLat ?: fallbackLat,
+                state.destLng ?: fallbackLng,
                 state.destAddr
             )
             onConfirmed()
@@ -163,7 +169,8 @@ private fun PickLocationScreenContent(
                 modifier = Modifier.fillMaxSize(),
                 latitude = lat,
                 longitude = lng,
-                onMapClick = onMapClick
+                onMapClick = onMapClick,
+                myLocationEnabled = true
             )
 
             Column(

@@ -16,7 +16,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import android.annotation.SuppressLint
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -33,6 +35,7 @@ import tucargo.composeapp.generated.resources.map_your_location
 private const val ANIMATION_DURATION_MS = 1500
 private const val BOUNDS_PADDING_PX = 120
 
+@SuppressLint("MissingPermission")
 @Composable
 actual fun MapComponent(
     modifier: Modifier,
@@ -43,6 +46,7 @@ actual fun MapComponent(
     driverLocation: DriverLocation?,
     originLatLng: Pair<Double, Double>?,
     destinationLatLng: Pair<Double, Double>?,
+    myLocationEnabled: Boolean,
 ) {
     val staticLocation = remember(latitude, longitude) { LatLng(latitude, longitude) }
 
@@ -83,10 +87,14 @@ actual fun MapComponent(
             } catch (_: Exception) {
                 // bounds too small or map not yet sized; skip silently
             }
-        } else if (driverLocation == null && !hasSetInitialBounds) {
+        }
+    }
+
+    LaunchedEffect(staticLocation) {
+        if (driverLocation == null) {
             cameraPositionState.animate(
                 CameraUpdateFactory.newLatLngZoom(staticLocation, zoom),
-                durationMs = 1000
+                durationMs = 600
             )
         }
     }
@@ -103,10 +111,13 @@ actual fun MapComponent(
         onMapClick = onMapClick?.let { callback ->
             { latLng -> callback(latLng.latitude, latLng.longitude) }
         },
-        uiSettings = remember {
+        properties = remember(myLocationEnabled) {
+            MapProperties(isMyLocationEnabled = myLocationEnabled)
+        },
+        uiSettings = remember(myLocationEnabled) {
             MapUiSettings(
                 zoomControlsEnabled = false,
-                myLocationButtonEnabled = false
+                myLocationButtonEnabled = myLocationEnabled
             )
         }
     ) {

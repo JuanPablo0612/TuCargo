@@ -14,4 +14,5 @@ expect fun MapComponent(
     driverLocation: DriverLocation? = null,
     originLatLng: Pair<Double, Double>? = null,
     destinationLatLng: Pair<Double, Double>? = null,
+    myLocationEnabled: Boolean = false,
 )

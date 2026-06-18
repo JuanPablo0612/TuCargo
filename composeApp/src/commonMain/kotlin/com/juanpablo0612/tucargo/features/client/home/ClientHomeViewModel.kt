@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.features.client.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juanpablo0612.tucargo.core.location.LocationProvider
 import com.juanpablo0612.tucargo.domain.usecase.trip.GetClientTripsUseCase
 import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserIdUseCase
 import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserUseCase
@@ -17,7 +18,8 @@ class ClientHomeViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val getClientTripsUseCase: GetClientTripsUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val locationProvider: LocationProvider
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ClientHomeState())
@@ -32,8 +34,19 @@ class ClientHomeViewModel(
             ClientHomeAction.LoadData -> loadData()
             ClientHomeAction.RefreshTrips -> loadRecentTrips()
             ClientHomeAction.SignOut -> viewModelScope.launch { logoutUseCase() }
+            is ClientHomeAction.LocationPermissionResult -> if (action.granted) fetchLocation()
             is ClientHomeAction.OnLocationUpdated -> _uiState.update {
                 it.copy(userLatitude = action.latitude, userLongitude = action.longitude)
+            }
+        }
+    }
+
+    private fun fetchLocation() {
+        viewModelScope.launch {
+            locationProvider.getCurrentLocation()?.let { location ->
+                _uiState.update {
+                    it.copy(userLatitude = location.latitude, userLongitude = location.longitude)
+                }
             }
         }
     }

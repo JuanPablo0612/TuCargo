@@ -2,6 +2,7 @@ package com.juanpablo0612.tucargo.features.client.quote
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juanpablo0612.tucargo.core.location.LocationProvider
 import com.juanpablo0612.tucargo.domain.model.AppError
 import com.juanpablo0612.tucargo.domain.model.PlacePrediction
 import com.juanpablo0612.tucargo.domain.model.QuoteResult
@@ -45,7 +46,9 @@ data class QuoteUiState(
     val deliveryCode: String? = null,
     val predictions: List<PlacePrediction> = emptyList(),
     val isAutocompleteLoading: Boolean = false,
-    val isReverseGeocoding: Boolean = false
+    val isReverseGeocoding: Boolean = false,
+    val userLat: Double? = null,
+    val userLng: Double? = null
 )
 
 @OptIn(ExperimentalUuidApi::class)
@@ -55,11 +58,26 @@ class TripRequestViewModel(
     private val requestTripUseCase: RequestTripUseCase,
     private val autocompleteAddressUseCase: AutocompleteAddressUseCase,
     private val getPlaceDetailsUseCase: GetPlaceDetailsUseCase,
-    private val reverseGeocodeUseCase: ReverseGeocodeUseCase
+    private val reverseGeocodeUseCase: ReverseGeocodeUseCase,
+    private val locationProvider: LocationProvider
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(QuoteUiState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        fetchCurrentLocation()
+    }
+
+    private fun fetchCurrentLocation() {
+        viewModelScope.launch {
+            locationProvider.getCurrentLocation()?.let { location ->
+                _uiState.update {
+                    it.copy(userLat = location.latitude, userLng = location.longitude)
+                }
+            }
+        }
+    }
 
     private var autocompleteJob: Job? = null
     private var sessionToken: String = Uuid.random().toString()
