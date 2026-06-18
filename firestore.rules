@@ -42,7 +42,8 @@ service cloud.firestore {
       allow update: if
         (isSelf(userId) && changedKeys().hasOnly(
           ['full_name', 'phone', 'is_online', 'last_status_update',
-           'fcm_token', 'vehicle', 'current_trip_id']))
+           'fcm_token', 'vehicle', 'current_trip_id',
+           'last_lat', 'last_lng', 'last_location_at']))
         || (isAdmin() && changedKeys().hasOnly(['is_verified', 'status']));
 
       allow delete: if false;

@@ -16,6 +16,7 @@ import kotlinx.serialization.Serializable
 import kotlin.time.Clock
 
 private val DELIVERY_CODE_INVALID_REGEX = Regex("DELIVERY_CODE_INVALID:(\\d+)")
+private const val ACTIVE_TRIPS_LIMIT = 5
 
 @Serializable
 private data class RequestTripRequest(
@@ -225,19 +226,24 @@ class TripRepositoryImpl(
         tripsCollection.document(tripId).snapshots
             .map { it.data<TripDto>().toDomain() }
 
+    // Server-side status filter (backed by the trips driver_id+status index)
+    // instead of reading every trip the driver has ever had and filtering in
+    // memory. A driver has at most one active trip; the limit is headroom.
     override fun observeDriverActiveTrips(driverId: String): Flow<List<Trip>> =
         tripsCollection
             .where { "driver_id" equalTo driverId }
+            .where {
+                "status" inArray listOf(
+                    TripStatus.ACCEPTED.name,
+                    TripStatus.AT_PICKUP.name,
+                    TripStatus.IN_TRANSIT.name,
+                    TripStatus.AT_DROPOFF.name
+                )
+            }
+            .limit(ACTIVE_TRIPS_LIMIT)
             .snapshots
             .map { querySnapshot ->
-                querySnapshot.documents
-                    .map { it.data<TripDto>().toDomain() }
-                    .filter { it.status in listOf(
-                        TripStatus.ACCEPTED,
-                        TripStatus.AT_PICKUP,
-                        TripStatus.IN_TRANSIT,
-                        TripStatus.AT_DROPOFF
-                    )}
+                querySnapshot.documents.map { it.data<TripDto>().toDomain() }
             }
 
     override fun observeAvailableTrips(limit: Int): Flow<List<Trip>> =

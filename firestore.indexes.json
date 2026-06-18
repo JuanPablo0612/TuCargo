@@ -25,6 +25,14 @@
       ]
     },
     {
+      "collectionGroup": "trips",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "driver_id", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "trip_offers",
       "queryScope": "COLLECTION",
       "fields": [

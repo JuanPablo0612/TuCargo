@@ -61,7 +61,7 @@ async function fetchRouteWithRetry(
   }
   throw new HttpsError(
     "unavailable",
-        "SERVICE_UNAVAILABLE",
+    "SERVICE_UNAVAILABLE",
     lastError instanceof Error ? lastError.message : undefined
   );
 }
