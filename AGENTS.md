@@ -32,7 +32,7 @@ npm --prefix functions run lint     # eslint (also runs as a deploy predeploy st
 npm --prefix functions run build    # tsc -> functions/lib
 
 # Deploy server-side pieces (requires firebase-tools + firebase login)
-firebase deploy --only firestore:rules,firestore:indexes,storage
+firebase deploy --only firestore:rules,firestore:indexes,storage,database
 firebase deploy --only functions
 
 # Local emulators (auth/firestore/functions/storage/database + UI)
@@ -61,7 +61,7 @@ Code in `commonMain` is organized into four layers; dependencies point downward 
 
 - **`domain/model/`** — flat package of plain domain models (`Trip`, `User`, `KycDocument`, `AppError`, pricing/quote/offer types). Money is modeled as **`Int`** (Colombian pesos, COP) — never floats.
 - **`domain/usecase/`** — one tiny class per action, sub-packaged by concern (`auth`, `user`, `trip`, `quote`, `tracking`, `document`, `admin`). Each exposes `operator fun invoke(...)` and just delegates to a repository (see `domain/usecase/trip/AcceptOfferUseCase.kt`). ViewModels depend on use cases, not repositories.
-- **`data/`** — repositories grouped by entity (`auth`, `user`, `trip`, `quote`, `tracking`, `document`, `config`). Each is an `interface` + `…Impl`. Repositories talk to Firestore/Storage/Functions **directly** via the GitLive SDK; only `auth`/`user` keep dedicated `RemoteDataSource` classes.
+- **`data/`** — repositories grouped by entity (`auth`, `user`, `trip`, `quote`, `tracking`, `document`, `config`). Each is an `interface` + `…Impl`. Repositories talk to Firestore/Storage/Realtime Database/Functions **directly** via the GitLive SDK; only `auth`/`user` keep dedicated `RemoteDataSource` classes. (Live driver location uses Realtime Database — see Location tracking pipeline.)
 - **`core/`** — cross-cutting helpers: `validation/`, `ui/` (theme, reusable components, `LocalDimensions`/`ResponsiveContainer` responsive design), `location/`, `service/`, `permissions/`, `fcm/`, `coroutines/AppDispatchers`, `logging/`, `time/`.
 
 ### Feature package convention (MVI-ish)
@@ -127,18 +127,15 @@ Note: `TripRepositoryImpl` still contains an older client-side `acceptTrip`/`cre
 
 `firebase.json` runs `npm run lint` and `npm run build` as **predeploy** steps, so functions must lint-clean and compile before they deploy. ESLint config is Google style: **double quotes, 2-space indent** (`functions/.eslintrc.js`).
 
-### Configuration documents (gotcha)
+### Configuration document
 
-There are **two** Firestore config documents with different consumers — do not conflate them:
-
-- **`config/system`** — read by the **client app** (`ConfigRepositoryImpl`, `SystemConfig`). Reads fail loudly if absent. The README's "Seed the pricing config" step documents this doc's fields.
-- **`config/app_config`** — read by the **Cloud Functions** (`createQuote`, `acceptOffer`, `dispatchTrip`) for `base_fare`, `per_km_fare`, `commission_rate`, `commission_floor`, `max_dispatch_attempts`. This is the authoritative pricing/dispatch config for the server flow.
+`config/system` is the **single** Firestore config document, read by **both** the client app (`ConfigRepositoryImpl`, `SystemConfig`) and the Cloud Functions (`createQuote`, `acceptOffer`, `dispatchTrip`). Reads fail loudly if it is absent. Fields: `base_price`, `base_km_included`, `price_per_km`, `commission_percentage` (a fraction, e.g. `0.15`), `min_wallet_balance` (accept-offer wallet gate), `max_dispatch_attempts` (dispatch retries before `CANCELLED_NO_DRIVER`), `android_version_min`, `maintenance_mode`. Monetary fields are COP. The README's "Seed the system config" step documents the seed. (There is no longer a separate `config/app_config`; server and client share this one doc — older code/comments may still reference the split.)
 
 `config/*` is world-readable to signed-in users but **`allow write: if false`** — only editable from the Firebase console / admin SDK.
 
 ### Location tracking pipeline
 
-`core/location/LocationProvider` is an `expect`/`actual` GPS source (Android = `AndroidLocationProvider` via fused location; iOS = `IosLocationProvider`, **currently a stub** that reports unavailable). `domain/trip/TripTracker` samples the location flow (~4s), maps to `DriverLocation`, and pushes via `SendLocationUseCase`. Persistence buffering is platform-specific: Android uses a **Room** database (`data/tracking/room/…`, `RoomLocationBuffer`, KSP-generated) drained by a `DriverLocationService` **foreground service**; iOS uses `InMemoryLocationBuffer`. FCM offer/cancel events are bridged into common code through the `core/fcm/OfferEventBus` singleton, fed by `TuCargoFirebaseMessagingService` on Android.
+`core/location/LocationProvider` is an `expect`/`actual` GPS source (Android = `AndroidLocationProvider` via fused location; iOS = `IosLocationProvider`, **currently a stub** that reports unavailable). `domain/trip/TripTracker` samples the location flow (~4s), maps to `DriverLocation`, and pushes via `SendLocationUseCase`, which fans out to two destinations at different cadences: the **live feed** for the client map goes to **Realtime Database** at `driver_locations/{driverId}` (`TrackingRepository.writeLocation`, throttled by ~25 m of movement with a ~15 s heartbeat), while a much slower **dispatch feed** (`updateDispatchLocation`, ~45 s) writes `last_lat`/`last_lng`/`last_location_at` onto the driver's `users` doc for `dispatchTrip` nearest-driver matching. The older per-tick Firestore writes (drivers mirror + `trip_locations` breadcrumbs) were dropped; the trip doc's `driver_last_lat`/`driver_last_lng` is still written separately as a map fallback. Persistence buffering is platform-specific: Android uses a **Room** database (`data/tracking/room/…`, `RoomLocationBuffer`, KSP-generated) drained by a `DriverLocationService` **foreground service**; iOS uses `InMemoryLocationBuffer`. FCM offer/cancel events are bridged into common code through the `core/fcm/OfferEventBus` singleton, fed by `TuCargoFirebaseMessagingService` on Android.
 
 ### expect/actual platform code
 
@@ -157,7 +154,6 @@ Firestore composite indexes live in `firestore.indexes.json` (queries on `trips`
 
 ## Notes / known gotchas
 
-- The **README's "Security model" section uses outdated status names** (`SEARCHING/ASSIGNED/ON_WAY/...`). The authoritative lifecycle is `TripTransitions.kt` + `firestore.rules` (`REQUESTED/OFFERED/ACCEPTED/AT_PICKUP/IN_TRANSIT/AT_DROPOFF/COMPLETED`).
 - **iOS GPS is a stub** — `IosLocationProvider` reports denied, so location-dependent driver UI shows its unavailable states. Maps on iOS use the Google Maps SDK for iOS via Kotlin's direct Swift Package Manager integration (`swiftPMDependencies` in `composeApp/build.gradle.kts`), no CocoaPods.
 - There is no `commonTest` source set yet; `:composeApp:allTests` currently has no tests to run but is wired into CI for when they are added.
 - UI strings exist in Spanish and English (`composeResources/values` and `values-es`); user-facing copy is Spanish-first.
