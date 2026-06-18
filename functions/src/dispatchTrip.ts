@@ -28,7 +28,7 @@ export async function dispatchTrip(tripId: string): Promise<void> {
     if (!tripSnap.exists) return;
     const trip = tripSnap.data()!;
 
-    const configSnap = await db.collection("config").doc("app_config").get();
+    const configSnap = await db.collection("config").doc("system").get();
     const config = configSnap.data() ?? {};
     const maxAttempts: number = (config["max_dispatch_attempts"] as number) ?? 5;
 

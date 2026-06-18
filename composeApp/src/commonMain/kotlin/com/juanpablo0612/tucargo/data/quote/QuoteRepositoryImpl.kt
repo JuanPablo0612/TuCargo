@@ -5,6 +5,29 @@ import com.juanpablo0612.tucargo.domain.model.AppError
 import com.juanpablo0612.tucargo.domain.model.Cop
 import com.juanpablo0612.tucargo.domain.model.QuoteResult
 import dev.gitlive.firebase.functions.FirebaseFunctions
+import kotlinx.serialization.Serializable
+
+@Serializable
+private data class CreateQuoteRequest(
+    val originLat: Double,
+    val originLng: Double,
+    val originAddr: String,
+    val destLat: Double,
+    val destLng: Double,
+    val destAddr: String
+)
+
+@Serializable
+private data class CreateQuoteResponse(
+    val quoteId: String = "",
+    val distanceKm: Double = 0.0,
+    val polyline: String = "",
+    val baseFare: Int = 0,
+    val perKmFare: Int = 0,
+    val totalPrice: Int = 0,
+    val commissionFee: Int = 0,
+    val validUntil: Long = 0L
+)
 
 class QuoteRepositoryImpl(private val functions: FirebaseFunctions) : QuoteRepository {
 
@@ -21,13 +44,13 @@ class QuoteRepositoryImpl(private val functions: FirebaseFunctions) : QuoteRepos
         println("TuCargo: CF invoke — calling createQuote")
         val response = runCatching {
             callable.invoke(
-                mapOf(
-                    "originLat" to originLat,
-                    "originLng" to originLng,
-                    "originAddr" to originAddr,
-                    "destLat" to destLat,
-                    "destLng" to destLng,
-                    "destAddr" to destAddr
+                CreateQuoteRequest(
+                    originLat = originLat,
+                    originLng = originLng,
+                    originAddr = originAddr,
+                    destLat = destLat,
+                    destLng = destLng,
+                    destAddr = destAddr
                 )
             )
         }.getOrElse { e ->
@@ -43,23 +66,26 @@ class QuoteRepositoryImpl(private val functions: FirebaseFunctions) : QuoteRepos
             }
         }
 
-        val data = response.data<Map<String, Any?>?>() ?: throw AppError.DataCorruption("Empty response from createQuote")
+        val data = response.data<CreateQuoteResponse>()
+        if (data.quoteId.isEmpty()) throw AppError.DataCorruption("Missing quoteId")
+        if (data.totalPrice == 0) throw AppError.DataCorruption("Missing totalPrice")
+        if (data.validUntil == 0L) throw AppError.DataCorruption("Missing validUntil")
 
         QuoteResult(
-            id = data["quoteId"] as? String ?: throw AppError.DataCorruption("Missing quoteId"),
-            distanceKm = (data["distanceKm"] as? Number)?.toDouble() ?: 0.0,
-            polyline = data["polyline"] as? String ?: "",
-            baseFare = Cop((data["baseFare"] as? Number)?.toInt() ?: 0),
-            perKmFare = Cop((data["perKmFare"] as? Number)?.toInt() ?: 0),
-            totalPrice = Cop((data["totalPrice"] as? Number)?.toInt() ?: throw AppError.DataCorruption("Missing totalPrice")),
-            commissionFee = Cop((data["commissionFee"] as? Number)?.toInt() ?: throw AppError.DataCorruption("Missing commissionFee")),
+            id = data.quoteId,
+            distanceKm = data.distanceKm,
+            polyline = data.polyline,
+            baseFare = Cop(data.baseFare),
+            perKmFare = Cop(data.perKmFare),
+            totalPrice = Cop(data.totalPrice),
+            commissionFee = Cop(data.commissionFee),
             originLat = originLat,
             originLng = originLng,
             originAddr = originAddr,
             destLat = destLat,
             destLng = destLng,
             destAddr = destAddr,
-            validUntil = (data["validUntil"] as? Number)?.toLong() ?: throw AppError.DataCorruption("Missing validUntil")
+            validUntil = data.validUntil
         )
     }
 }

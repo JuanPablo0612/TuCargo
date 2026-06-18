@@ -61,7 +61,7 @@ async function fetchRouteWithRetry(
   }
   throw new HttpsError(
     "unavailable",
-    "SERVICE_UNAVAILABLE",
+        "SERVICE_UNAVAILABLE",
     lastError instanceof Error ? lastError.message : undefined
   );
 }
@@ -115,20 +115,22 @@ export const createQuote = onCall(
     const distanceKm = Math.round(distanceKmRaw * 10) / 10;
 
     const db = admin.firestore();
-    const configSnap = await db.collection("config").doc("app_config").get();
+    const configSnap = await db.collection("config").doc("system").get();
     if (!configSnap.exists) {
-      throw new HttpsError("internal", "Missing app_config");
+      throw new HttpsError("internal", "Missing config/system");
     }
     const config = configSnap.data()!;
-    const baseFare: number = config["base_fare"] as number;
-    const perKmFare: number = config["per_km_fare"] as number;
-    const commissionRate: number = config["commission_rate"] as number;
+    const basePrice: number = config["base_price"] as number;
+    const baseKmIncluded: number = config["base_km_included"] as number;
+    const pricePerKm: number = config["price_per_km"] as number;
+    const commissionPercentage: number = config["commission_percentage"] as number;
 
     const { totalPrice, commissionFee } = computePrice(
       distanceKm,
-      baseFare,
-      perKmFare,
-      commissionRate
+      basePrice,
+      baseKmIncluded,
+      pricePerKm,
+      commissionPercentage
     );
 
     const validUntil = Date.now() + 5 * 60 * 1000;
@@ -145,8 +147,8 @@ export const createQuote = onCall(
       dest_addr: destAddr,
       distance_km: distanceKm,
       polyline,
-      base_fare: baseFare,
-      per_km_fare: perKmFare,
+      base_fare: basePrice,
+      per_km_fare: pricePerKm,
       total_price: totalPrice,
       commission_fee: commissionFee,
       valid_until: validUntil,
@@ -163,8 +165,8 @@ export const createQuote = onCall(
       totalPrice,
       commissionFee,
       validUntil,
-      baseFare,
-      perKmFare,
+      baseFare: basePrice,
+      perKmFare: pricePerKm,
       originLat,
       originLng,
       originAddr,

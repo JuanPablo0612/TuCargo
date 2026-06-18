@@ -89,7 +89,7 @@ class TrackingRepositoryImpl(
             .valueEvents
             .mapNotNull { snapshot ->
                 @Suppress("UNCHECKED_CAST")
-                val value = snapshot.value<Map<String, Any?>>() ?: return@mapNotNull null
+                val value = snapshot.value as? Map<String, Any?> ?: return@mapNotNull null
                 DriverLocation(
                     lat = (value["lat"] as? Double) ?: return@mapNotNull null,
                     lng = (value["lng"] as? Double) ?: return@mapNotNull null,

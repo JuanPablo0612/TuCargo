@@ -1,5 +1,6 @@
 package com.juanpablo0612.tucargo.data.trip
 
+import dev.gitlive.firebase.firestore.DoubleAsTimestampSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -7,10 +8,13 @@ import kotlinx.serialization.Serializable
 data class TripDto(
     val id: String = "",
     val status: String = "REQUESTED",
+    // Firestore serverTimestamp() fields: stored as Timestamp, exposed here as epoch millis.
     @SerialName("created_at")
-    val createdAt: Long = 0L,
+    @Serializable(with = DoubleAsTimestampSerializer::class)
+    val createdAt: Double? = null,
     @SerialName("completed_at")
-    val completedAt: Long? = null,
+    @Serializable(with = DoubleAsTimestampSerializer::class)
+    val completedAt: Double? = null,
 
     // Actores
     @SerialName("client_id")
@@ -56,13 +60,17 @@ data class TripDto(
     @SerialName("delivery_code_attempts")
     val deliveryCodeAttempts: Int = 0,
     @SerialName("arrived_pickup_at")
-    val arrivedPickupAt: Long? = null,
+    @Serializable(with = DoubleAsTimestampSerializer::class)
+    val arrivedPickupAt: Double? = null,
     @SerialName("started_at")
-    val startedAt: Long? = null,
+    @Serializable(with = DoubleAsTimestampSerializer::class)
+    val startedAt: Double? = null,
     @SerialName("arrived_dropoff_at")
-    val arrivedDropoffAt: Long? = null,
+    @Serializable(with = DoubleAsTimestampSerializer::class)
+    val arrivedDropoffAt: Double? = null,
     @SerialName("delivery_code_verified_at")
-    val deliveryCodeVerifiedAt: Long? = null,
+    @Serializable(with = DoubleAsTimestampSerializer::class)
+    val deliveryCodeVerifiedAt: Double? = null,
     @SerialName("quote_id")
     val quoteId: String = "",
     @SerialName("cancelled_by")

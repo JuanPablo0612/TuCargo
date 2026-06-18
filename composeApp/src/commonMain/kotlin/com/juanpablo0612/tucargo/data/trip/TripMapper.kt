@@ -15,8 +15,8 @@ fun TripDto.toDomain(): Trip = Trip(
         logError("TripMapper", "Unknown trip status '$status' for trip $id, defaulting to REQUESTED")
         TripStatus.REQUESTED
     },
-    createdAt = createdAt,
-    completedAt = completedAt,
+    createdAt = createdAt?.toLong() ?: 0L,
+    completedAt = completedAt?.toLong(),
     clientId = clientId,
     clientName = clientName,
     clientPhone = clientPhone,
@@ -42,10 +42,10 @@ fun TripDto.toDomain(): Trip = Trip(
     cargoDescription = cargoDescription,
     deliveryCode = deliveryCode,
     deliveryCodeAttempts = deliveryCodeAttempts,
-    arrivedPickupAt = arrivedPickupAt,
-    startedAt = startedAt,
-    arrivedDropoffAt = arrivedDropoffAt,
-    deliveryCodeVerifiedAt = deliveryCodeVerifiedAt,
+    arrivedPickupAt = arrivedPickupAt?.toLong(),
+    startedAt = startedAt?.toLong(),
+    arrivedDropoffAt = arrivedDropoffAt?.toLong(),
+    deliveryCodeVerifiedAt = deliveryCodeVerifiedAt?.toLong(),
     quoteId = quoteId,
     cancelledBy = cancelledBy?.let {
         try {
@@ -66,8 +66,8 @@ fun TripLocationDto.toDomain(): TripLocation = TripLocation(
 fun Trip.toDto(): TripDto = TripDto(
     id = id,
     status = status.name,
-    createdAt = createdAt,
-    completedAt = completedAt,
+    createdAt = createdAt.toDouble(),
+    completedAt = completedAt?.toDouble(),
     clientId = clientId,
     clientName = clientName,
     clientPhone = clientPhone,
@@ -88,10 +88,10 @@ fun Trip.toDto(): TripDto = TripDto(
     cargoDescription = cargoDescription,
     deliveryCode = deliveryCode,
     deliveryCodeAttempts = deliveryCodeAttempts,
-    arrivedPickupAt = arrivedPickupAt,
-    startedAt = startedAt,
-    arrivedDropoffAt = arrivedDropoffAt,
-    deliveryCodeVerifiedAt = deliveryCodeVerifiedAt,
+    arrivedPickupAt = arrivedPickupAt?.toDouble(),
+    startedAt = startedAt?.toDouble(),
+    arrivedDropoffAt = arrivedDropoffAt?.toDouble(),
+    deliveryCodeVerifiedAt = deliveryCodeVerifiedAt?.toDouble(),
     quoteId = quoteId,
     cancelledBy = cancelledBy?.name
 )

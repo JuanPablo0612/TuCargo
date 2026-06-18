@@ -2,16 +2,19 @@ export function roundToNearest100(value: number): number {
   return Math.round(value / 100) * 100;
 }
 
+// Mirrors CalculateTripPriceUseCase in the app. Inputs come from config/system
+// (see README "Seed the pricing config"); commissionPercentage is a fraction
+// (e.g. 0.15), not a whole-number percent.
 export function computePrice(
   distanceKm: number,
-  baseFare: number,
-  perKmFare: number,
-  commissionRate: number
+  basePrice: number,
+  baseKmIncluded: number,
+  pricePerKm: number,
+  commissionPercentage: number
 ): { totalPrice: number; commissionFee: number } {
-  const distanceCharged = Math.max(distanceKm, 1.0);
-  const rawTotal = baseFare + (distanceCharged - 1) * perKmFare;
+  const distanceCharged = Math.max(distanceKm - baseKmIncluded, 0);
+  const rawTotal = basePrice + distanceCharged * pricePerKm;
   const totalPrice = roundToNearest100(rawTotal);
-  const rawCommission = Math.floor((totalPrice * commissionRate) / 100);
-  const commissionFee = roundToNearest100(rawCommission);
+  const commissionFee = roundToNearest100(totalPrice * commissionPercentage);
   return { totalPrice, commissionFee };
 }

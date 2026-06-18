@@ -12,9 +12,24 @@ import dev.gitlive.firebase.functions.FirebaseFunctions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
 import kotlin.time.Clock
 
 private val DELIVERY_CODE_INVALID_REGEX = Regex("DELIVERY_CODE_INVALID:(\\d+)")
+
+@Serializable
+private data class RequestTripRequest(
+    val quoteId: String,
+    val cargoDescription: String,
+    val weightConfirmed: Boolean
+)
+
+@Serializable
+private data class RequestTripResponse(
+    val tripId: String = "",
+    val deliveryCode: String = "",
+    val code: String? = null
+)
 
 class TripRepositoryImpl(
     private val firestore: FirebaseFirestore,
@@ -70,23 +85,22 @@ class TripRepositoryImpl(
     ): Result<Pair<String, String>> = safeCall {
         val callable = functions.httpsCallable("requestTrip")
         val response = callable.invoke(
-            mapOf(
-                "quoteId" to quoteId,
-                "cargoDescription" to cargoDescription,
-                "weightConfirmed" to weightConfirmed
+            RequestTripRequest(
+                quoteId = quoteId,
+                cargoDescription = cargoDescription,
+                weightConfirmed = weightConfirmed
             )
         )
-        val data = response.data<Map<String, Any?>?>() ?: throw AppError.DataCorruption("Empty response from requestTrip")
-        val errorMsg = data["code"] as? String
-        when (errorMsg) {
+        val data = response.data<RequestTripResponse>()
+        when (data.code) {
             "QUOTE_EXPIRED" -> throw AppError.Trip.QuoteExpired
             "QUOTE_ALREADY_USED" -> throw AppError.Trip.QuoteAlreadyUsed
             null -> Unit
-            else -> throw AppError.DataCorruption("Unknown requestTrip error code: $errorMsg")
+            else -> throw AppError.DataCorruption("Unknown requestTrip error code: ${data.code}")
         }
-        val tripId = data["tripId"] as? String ?: throw AppError.DataCorruption("Missing tripId")
-        val deliveryCode = data["deliveryCode"] as? String ?: throw AppError.DataCorruption("Missing deliveryCode")
-        Pair(tripId, deliveryCode)
+        if (data.tripId.isEmpty()) throw AppError.DataCorruption("Missing tripId")
+        if (data.deliveryCode.isEmpty()) throw AppError.DataCorruption("Missing deliveryCode")
+        Pair(data.tripId, data.deliveryCode)
     }
 
     override suspend fun updateTripStatus(

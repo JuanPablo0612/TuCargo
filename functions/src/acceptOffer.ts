@@ -59,10 +59,10 @@ export const acceptOffer = onCall(
       if (!driverSnap.exists) throw new HttpsError("not-found", "Driver not found");
       const driver = driverSnap.data()!;
       const walletBalance: number = driver["wallet_balance"] ?? 0;
-      const configSnap = await db.collection("config").doc("app_config").get();
-      const commissionFloor: number =
-        (configSnap.data()?.["commission_floor"] as number) ?? 0;
-      if (walletBalance < commissionFloor) {
+      const configSnap = await db.collection("config").doc("system").get();
+      const minWalletBalance: number =
+        (configSnap.data()?.["min_wallet_balance"] as number) ?? 0;
+      if (walletBalance < minWalletBalance) {
         throw new HttpsError("failed-precondition", "WALLET_INSUFFICIENT");
       }
 
