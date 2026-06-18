@@ -216,6 +216,10 @@
     <string name="trip_status_cancelled_driver">Cancelado por el conductor</string>
     <string name="trip_status_cancelled_admin">Cancelado por administrador</string>
 
+    <!-- Búsqueda de direcciones -->
+    <string name="place_search_hint">Buscar una dirección</string>
+    <string name="place_clear_search">Limpiar búsqueda</string>
+
     <!-- Flujo de cotización -->
     <string name="pick_location_confirm_button">Confirmar ubicación</string>
     <string name="pick_origin_title">Punto de origen</string>

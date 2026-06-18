@@ -66,6 +66,10 @@ kotlin {
             implementation(libs.firebase.messaging.native)
             implementation(libs.room.runtime)
             implementation(libs.room.ktx)
+            implementation(libs.ktor.client.okhttp)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -94,6 +98,9 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
             implementation(libs.firebase.database)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
     }
 }
@@ -103,6 +110,7 @@ buildkonfig {
     defaultConfigs {
         buildConfigField(Type.STRING, "GOOGLE_MAPS_API_KEY", secrets.getProperty("GOOGLE_MAPS_API_KEY") ?: "")
         buildConfigField(Type.STRING, "GOOGLE_MAPS_IOS_API_KEY", secrets.getProperty("GOOGLE_MAPS_IOS_API_KEY") ?: "")
+        buildConfigField(Type.STRING, "GOOGLE_PLACES_API_KEY", secrets.getProperty("GOOGLE_PLACES_API_KEY") ?: secrets.getProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
 }
 

@@ -1,5 +1,8 @@
 package com.juanpablo0612.tucargo.di
 
+import com.juanpablo0612.tucargo.domain.usecase.places.AutocompleteAddressUseCase
+import com.juanpablo0612.tucargo.domain.usecase.places.GetPlaceDetailsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.places.ReverseGeocodeUseCase
 import com.juanpablo0612.tucargo.domain.usecase.admin.GetPendingDriversUseCase
 import com.juanpablo0612.tucargo.domain.usecase.admin.ReviewKycDocumentUseCase
 import com.juanpablo0612.tucargo.domain.usecase.admin.SetDriverVerifiedUseCase
@@ -78,6 +81,10 @@ val domainModule = module {
     singleOf(::ObserveCurrentUserUseCase)
     singleOf(::UploadKycDocumentUseCase)
     singleOf(::ObserveKycDocumentsUseCase)
+
+    singleOf(::AutocompleteAddressUseCase)
+    singleOf(::GetPlaceDetailsUseCase)
+    singleOf(::ReverseGeocodeUseCase)
 
     singleOf(::GetPendingDriversUseCase)
     singleOf(::ReviewKycDocumentUseCase)

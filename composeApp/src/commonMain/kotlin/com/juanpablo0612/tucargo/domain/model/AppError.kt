@@ -35,6 +35,11 @@ sealed class AppError(message: String? = null, cause: Throwable? = null) : Excep
         data object NoActiveVehicle : Driver()
         data object WalletInsufficient : Driver()
     }
+    sealed class Places : AppError() {
+        data object AutocompleteUnavailable : Places()
+        data object GeocodingUnavailable : Places()
+        data object PlaceNotFound : Places()
+    }
     data class DataCorruption(override val message: String) : AppError(message)
     data object Network : AppError()
     data class Unknown(override val cause: Throwable?) : AppError(cause?.message, cause)

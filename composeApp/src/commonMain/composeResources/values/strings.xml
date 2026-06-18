@@ -217,6 +217,10 @@
     <string name="trip_status_cancelled_driver">Cancelled by driver</string>
     <string name="trip_status_cancelled_admin">Cancelled by admin</string>
 
+    <!-- Places / address search -->
+    <string name="place_search_hint">Search for an address</string>
+    <string name="place_clear_search">Clear search</string>
+
     <!-- Quote flow -->
     <string name="pick_location_confirm_button">Confirm location</string>
     <string name="pick_origin_title">Pickup point</string>

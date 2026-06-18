@@ -6,6 +6,9 @@ import com.juanpablo0612.tucargo.data.auth.AuthRepository
 import com.juanpablo0612.tucargo.data.auth.AuthRepositoryImpl
 import com.juanpablo0612.tucargo.data.config.ConfigRepository
 import com.juanpablo0612.tucargo.data.config.ConfigRepositoryImpl
+import com.juanpablo0612.tucargo.data.places.PlacesRepository
+import com.juanpablo0612.tucargo.data.places.PlacesRepositoryImpl
+import com.juanpablo0612.tucargo.data.places.createPlacesHttpClient
 import com.juanpablo0612.tucargo.data.document.DocumentRepository
 import com.juanpablo0612.tucargo.data.document.DocumentRepositoryImpl
 import com.juanpablo0612.tucargo.data.quote.QuoteRepository
@@ -53,4 +56,6 @@ val dataModule = module {
     single<QuoteRepository> { QuoteRepositoryImpl(get()) }
     single<TrackingRepository> { TrackingRepositoryImpl(get(), get()) }
     single { TripTracker(get(), get(), get(named("ApplicationScope"))) }
+    single { createPlacesHttpClient() }
+    single<PlacesRepository> { PlacesRepositoryImpl(get(), get()) }
 }

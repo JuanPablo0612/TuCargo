@@ -3,14 +3,22 @@ package com.juanpablo0612.tucargo.features.client.quote
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juanpablo0612.tucargo.domain.model.AppError
+import com.juanpablo0612.tucargo.domain.model.PlacePrediction
 import com.juanpablo0612.tucargo.domain.model.QuoteResult
+import com.juanpablo0612.tucargo.domain.usecase.places.AutocompleteAddressUseCase
+import com.juanpablo0612.tucargo.domain.usecase.places.GetPlaceDetailsUseCase
+import com.juanpablo0612.tucargo.domain.usecase.places.ReverseGeocodeUseCase
 import com.juanpablo0612.tucargo.domain.usecase.user.GetCurrentUserUseCase
 import com.juanpablo0612.tucargo.domain.usecase.quote.RequestQuoteUseCase
 import com.juanpablo0612.tucargo.domain.usecase.trip.RequestTripUseCase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 enum class QuoteError {
     SAME_ORIGIN_DEST,
@@ -34,17 +42,27 @@ data class QuoteUiState(
     val isLoading: Boolean = false,
     val error: QuoteError? = null,
     val createdTripId: String? = null,
-    val deliveryCode: String? = null
+    val deliveryCode: String? = null,
+    val predictions: List<PlacePrediction> = emptyList(),
+    val isAutocompleteLoading: Boolean = false,
+    val isReverseGeocoding: Boolean = false
 )
 
+@OptIn(ExperimentalUuidApi::class)
 class TripRequestViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val requestQuoteUseCase: RequestQuoteUseCase,
-    private val requestTripUseCase: RequestTripUseCase
+    private val requestTripUseCase: RequestTripUseCase,
+    private val autocompleteAddressUseCase: AutocompleteAddressUseCase,
+    private val getPlaceDetailsUseCase: GetPlaceDetailsUseCase,
+    private val reverseGeocodeUseCase: ReverseGeocodeUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(QuoteUiState())
     val uiState = _uiState.asStateFlow()
+
+    private var autocompleteJob: Job? = null
+    private var sessionToken: String = Uuid.random().toString()
 
     fun confirmOrigin(lat: Double, lng: Double, addr: String) {
         _uiState.update {
@@ -64,6 +82,104 @@ class TripRequestViewModel(
         }
     }
 
+    fun onAutocompleteQueryChanged(query: String, isOrigin: Boolean) {
+        if (isOrigin) {
+            _uiState.update { it.copy(originAddr = query) }
+        } else {
+            _uiState.update { it.copy(destAddr = query) }
+        }
+
+        autocompleteJob?.cancel()
+        if (query.length < 3) {
+            _uiState.update { it.copy(predictions = emptyList(), isAutocompleteLoading = false) }
+            return
+        }
+
+        autocompleteJob = viewModelScope.launch {
+            delay(300)
+            _uiState.update { it.copy(isAutocompleteLoading = true) }
+            autocompleteAddressUseCase(query, sessionToken).fold(
+                onSuccess = { predictions ->
+                    _uiState.update { it.copy(predictions = predictions, isAutocompleteLoading = false) }
+                },
+                onFailure = {
+                    _uiState.update { it.copy(predictions = emptyList(), isAutocompleteLoading = false) }
+                }
+            )
+        }
+    }
+
+    fun onPredictionSelected(prediction: PlacePrediction, isOrigin: Boolean) {
+        _uiState.update { it.copy(predictions = emptyList(), isAutocompleteLoading = false) }
+
+        val currentToken = sessionToken
+        sessionToken = Uuid.random().toString()
+
+        viewModelScope.launch {
+            getPlaceDetailsUseCase(prediction.placeId, currentToken).fold(
+                onSuccess = { details ->
+                    if (isOrigin) {
+                        _uiState.update {
+                            it.copy(
+                                originLat = details.latitude,
+                                originLng = details.longitude,
+                                originAddr = details.formattedAddress
+                            )
+                        }
+                    } else {
+                        _uiState.update {
+                            it.copy(
+                                destLat = details.latitude,
+                                destLng = details.longitude,
+                                destAddr = details.formattedAddress
+                            )
+                        }
+                    }
+                },
+                onFailure = {
+                    if (isOrigin) {
+                        _uiState.update { it.copy(originAddr = prediction.fullText) }
+                    } else {
+                        _uiState.update { it.copy(destAddr = prediction.fullText) }
+                    }
+                }
+            )
+        }
+    }
+
+    fun onMapTapped(lat: Double, lng: Double, isOrigin: Boolean) {
+        if (isOrigin) {
+            _uiState.update { it.copy(originLat = lat, originLng = lng) }
+        } else {
+            _uiState.update { it.copy(destLat = lat, destLng = lng) }
+        }
+
+        _uiState.update { it.copy(isReverseGeocoding = true, predictions = emptyList()) }
+        viewModelScope.launch {
+            reverseGeocodeUseCase(lat, lng).fold(
+                onSuccess = { details ->
+                    if (isOrigin) {
+                        _uiState.update { it.copy(originAddr = details.formattedAddress, isReverseGeocoding = false) }
+                    } else {
+                        _uiState.update { it.copy(destAddr = details.formattedAddress, isReverseGeocoding = false) }
+                    }
+                },
+                onFailure = {
+                    _uiState.update { it.copy(isReverseGeocoding = false) }
+                }
+            )
+        }
+    }
+
+    fun clearAutocomplete() {
+        autocompleteJob?.cancel()
+        _uiState.update { it.copy(predictions = emptyList(), isAutocompleteLoading = false) }
+    }
+
+    fun resetSessionToken() {
+        sessionToken = Uuid.random().toString()
+    }
+
     fun requestQuote() {
         val state = _uiState.value
         val originLat = state.originLat
@@ -71,23 +187,17 @@ class TripRequestViewModel(
         val destLat = state.destLat
         val destLng = state.destLng
 
-        println("TuCargo: requestQuote called — origin=($originLat,$originLng) dest=($destLat,$destLng)")
-
         if (originLat == null || originLng == null || destLat == null || destLng == null) {
-            println("TuCargo: requestQuote ABORT — coordinates are null")
             _uiState.update { it.copy(isLoading = false, error = QuoteError.UNKNOWN) }
             return
         }
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
-            println("TuCargo: requestQuote — getting current user")
             val clientId = getCurrentUserUseCase().getOrNull()?.id ?: run {
-                println("TuCargo: requestQuote ABORT — getCurrentUser returned null")
                 _uiState.update { it.copy(isLoading = false, error = QuoteError.UNKNOWN) }
                 return@launch
             }
-            println("TuCargo: requestQuote — clientId=$clientId, calling createQuote CF")
             requestQuoteUseCase(
                 clientId = clientId,
                 originLat = originLat,
@@ -98,11 +208,9 @@ class TripRequestViewModel(
                 destAddr = state.destAddr
             ).fold(
                 onSuccess = { quote ->
-                    println("TuCargo: requestQuote SUCCESS — quoteId=${quote.id}")
                     _uiState.update { it.copy(isLoading = false, quote = quote, error = null) }
                 },
                 onFailure = { e ->
-                    println("TuCargo: requestQuote FAILED — ${e::class.simpleName}: ${e.message}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,
